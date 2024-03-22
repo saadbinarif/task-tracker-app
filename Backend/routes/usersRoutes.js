@@ -12,11 +12,6 @@ router.get('/:id', (req, res)=>{
     res.send("get a specific user by id")
 })
 
-//create a new user
-router.post('/', (req, res)=>{
-    res.send("create a new user")
-})
-
 //update a user
 router.put('/:id', (req, res)=>{
     res.send("update a user")
