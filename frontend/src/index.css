@@ -52,13 +52,14 @@ header a {
   color: var(--primary);
   max-width: 700px;
 }
-.task-details p {
+.description {
   margin: 0;
   font-size: 0.9em;
   color: #555;
   max-width: 700px;
+  
 }
-.task-details span {
+.delete-btn {
   position: absolute;
   top: 20px;
   right: 20px;
@@ -67,6 +68,17 @@ header a {
   padding: 6px;
   border-radius: 50%;
   color: #333;
+}
+
+.task-details-bottom {
+  border-top: 2px solid rgba(0, 0, 0, .1);;
+  margin: 0;
+  margin-top:15px;
+  font-size: 0.8em;
+}
+.task-details-bottom p{
+  margin:0;
+  padding-top:10px
 }
 
 /* new task form */

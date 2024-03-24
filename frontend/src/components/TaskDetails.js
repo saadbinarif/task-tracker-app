@@ -16,11 +16,17 @@ export default function Navbar({task}){
     }
 
     return (
+        
         <div className="task-details">
             <h4>{task.title}</h4>
-            <p><strong>Status </strong>{task.status}</p>
-            <p><strong>Description: </strong> {task.description} </p>
-            <span onClick={deleteHandler}>Delete</span>
+            <p className="description"><strong>Description: </strong> {task.description} </p>
+            <span className="delete-btn" onClick={deleteHandler}>Delete</span>
+            <div className="task-details-bottom">
+            <p style={{textAlign: "left"}}><strong>Status: </strong>{task.status}</p>
+            <span >2 days left</span>
+            </div>
         </div>
+        
+        
     );
 }
