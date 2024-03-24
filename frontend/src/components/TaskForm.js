@@ -6,12 +6,13 @@ const {dispatch} = useTaskContext();
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [status, setStatus] = useState('')
+  const [dueDate, setDueDate] = useState('')
   const [error, setError] = useState(null)
   const [emptyFields, setEmptyFields] = useState([])
 
   const handleSubmit = async(e)=>{
     e.preventDefault();
-    const task = {title, description, status} ;
+    const task = {title, description, status, dueDate} ;
 
     const response = await fetch("/tasks", {
         method: "POST",
@@ -65,6 +66,14 @@ const {dispatch} = useTaskContext();
         onChange={(e) => setStatus(e.target.value)} 
         value={status} 
         className={emptyFields.includes("status")? "error" : ""}
+      />
+
+      <label>Due Date</label>
+      <input 
+        type="date" 
+        onChange={(e) => setDueDate(e.target.value)} 
+        value={dueDate} 
+        
       />
 
       <button>Add Task</button>

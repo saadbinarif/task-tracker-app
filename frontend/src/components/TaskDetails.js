@@ -1,4 +1,5 @@
 import { useTaskContext } from "../hook/useTaskContext";
+import formatDistanceToNow from "date-fns/formatDistanceToNow"
 
 
 export default function Navbar({task}){
@@ -23,7 +24,7 @@ export default function Navbar({task}){
             <span className="delete-btn" onClick={deleteHandler}>Delete</span>
             <div className="task-details-bottom">
             <p style={{textAlign: "left"}}><strong>Status: </strong>{task.status}</p>
-            <span >2 days left</span>
+            {/* <span >{formatDistanceToNow(new Date(task.dueDate), {addSuffix: true})}</span> */}
             </div>
         </div>
         

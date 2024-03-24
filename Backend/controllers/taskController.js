@@ -27,7 +27,7 @@ const getTask = async(req,res)=>{
 
 //to create a task
 const createTask = async (req, res) => {
-    const { title, description, status } = req.body;
+    const { title, description, status, dueDate } = req.body;
 
     let emptyFields = [];
 
@@ -45,7 +45,8 @@ const createTask = async (req, res) => {
     }
 
     try {
-        const task = await taskModel.create({ title, description, status });
+        const parsedDueDate = new Date(dueDate);
+        const task = await taskModel.create({ title, description, status, dueDate:parsedDueDate });
         res.status(200).json(task)
     } catch (error) {
         res.status(400).json({ error: error.message })
