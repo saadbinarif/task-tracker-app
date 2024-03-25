@@ -1,5 +1,6 @@
 import { useTaskContext } from "../hook/useTaskContext";
 import formatDistanceToNow from "date-fns/formatDistanceToNow"
+const { format } = require('date-fns');
 
 
 export default function Navbar({task}){
@@ -16,6 +17,9 @@ export default function Navbar({task}){
 
     }
 
+    
+    console.log('my date', task.dueDate)
+
     return (
         
         <div className="task-details">
@@ -24,10 +28,12 @@ export default function Navbar({task}){
             <span className="delete-btn" onClick={deleteHandler}>Delete</span>
             <div className="task-details-bottom">
             <p style={{textAlign: "left"}}><strong>Status: </strong>{task.status}</p>
-            {/* <span >{formatDistanceToNow(new Date(task.dueDate), {addSuffix: true})}</span> */}
+            <span >{task.dueDate ? <span>{format(task.dueDate, 'yyyy-mm-dd')}</span> : <strong>Date not set</strong>}</span>
+            
+  
             </div>
         </div>
         
-        
+        // formatDistanceToNow(new Date(task.dueDate), {addSuffix: true})
     );
 }

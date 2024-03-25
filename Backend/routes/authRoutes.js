@@ -1,20 +1,14 @@
 const express = require('express');
+const userModel = require("../models/userModel")
+const {loginUser, signupUser} = require('../controllers/authController')
 
 const router = express.Router();
 
-// create a new user
-router.post('/register/:id', (req, res)=>{
-    res.send("create a new user")
-})
+// Login
+router.post('/login', loginUser)
 
-// login
-router.post('/login/:id', (req, res)=>{
-    res.send("logged in")
-})
+// Sign up
+router.post('/Signup', signupUser)
 
-// logout
-router.post('/logout/:id', (req, res)=>{
-    res.send("logged out")
-})
 
 module.exports = router;
