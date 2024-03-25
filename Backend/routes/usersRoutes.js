@@ -1,11 +1,10 @@
 const express = require('express');
+const {getUsers, deleteUser} = require("../controllers/userController")
 
 const router = express.Router();
 
 //get all users
-router.get('/', (req, res)=>{
-    res.send("get all users")
-})
+router.get('/', getUsers)
 
 //get a specific user by id
 router.get('/:id', (req, res)=>{
@@ -18,8 +17,6 @@ router.put('/:id', (req, res)=>{
 })
 
 //delete a user
-router.delete('/:id', (req, res)=>{
-    res.send("delete a user")
-})
+router.delete('/:id', deleteUser)
 
 module.exports = router
