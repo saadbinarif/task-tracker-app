@@ -1,5 +1,5 @@
 const express = require('express');
-const {getUsers, deleteUser} = require("../controllers/userController")
+const {getUsers, deleteUser, updateUser} = require("../controllers/userController")
 
 const router = express.Router();
 
@@ -12,9 +12,7 @@ router.get('/:id', (req, res)=>{
 })
 
 //update a user
-router.put('/:id', (req, res)=>{
-    res.send("update a user")
-})
+router.put('/:id', updateUser)
 
 //delete a user
 router.delete('/:id', deleteUser)
