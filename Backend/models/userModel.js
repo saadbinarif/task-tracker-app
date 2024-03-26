@@ -58,7 +58,7 @@ if(!user)throw Error("NO user found with this email")
     const match = await bcrypt.compare(password, user.password)
 
     if(!match){
-        throw Error("Invalid password")
+        throw Error("Password is not correct")
     }
 
     return user;
