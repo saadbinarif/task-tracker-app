@@ -2,6 +2,11 @@ const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = new Sequelize('postgres');
 
 const User = sequelize.define('User', {
+  _id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
    
     email: {
         type: DataTypes.STRING,

@@ -21,7 +21,7 @@ const deleteUser = async(req, res)=>{
         const {id} = req.params;
         const validId = mongoose.Types.ObjectId.isValid(id);
         if(!validId){
-            res.status(400).json({error: "no such user"})
+            res.status(400).json({error: "Invalid id"})
         }
 
         const user = await userModel.findOneAndDelete({_id:id})

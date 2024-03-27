@@ -2,6 +2,11 @@ const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = new Sequelize('postgres');
 // Define the Task model
 const Task = sequelize.define('task', {
+  _id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    autoIncrement: true
+  },
   title: {
     type: DataTypes.STRING,
     allowNull: false
@@ -18,7 +23,7 @@ const Task = sequelize.define('task', {
     type: DataTypes.DATE
   }
 }, {
-  // Other model options go here
+  
 });
 
 module.exports = Task;
