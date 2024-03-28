@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js",
-    "start:postgres": "SET USE_POSTGRES=true && npm start",
-    "start:mongo": "SET USE_POSTGRES=false && npm start"
+    "start:postgres": "nodemon app.js --database postgres",
+    "start:mongo": "nodemon app.js --database mongo"
     
   },
   "author": "",

@@ -36,20 +36,22 @@ app.use(cors());
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs))
 
-const usePostgres = process.env.USE_POSTGRES = false;
+// const usePostgres = process.env.USE_POSTGRES = false;
+
+const usePostgres = process.argv[2] === '--database' && process.argv[3] === 'postgres';
 
 
 if(usePostgres){
     //postgres connection
     connectDB();
-    console.log('USE_POSTGRES val:', process.env.USE_POSTGRES);
+    console.log('usePostgres val:', usePostgres);
 }else{
     //Mongo connection
     mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         app.listen(process.env.PORT, () => {
         console.log('Connected to mongoDB database');
-        console.log('USE_POSTGRES value:', process.env.USE_POSTGRES);
+        console.log('usePostgres value:', usePostgres);
       });
     })
     .catch(err => console.log(err))
