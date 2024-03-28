@@ -1,12 +1,7 @@
-const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = new Sequelize('postgres');
+const { DataTypes } = require('sequelize');
+const { sequelize } = require("../../db/postgres/config");
 
-const User = sequelize.define('User', {
-  _id: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true
-  },
+const User = sequelize.define('user', {
    
     email: {
         type: DataTypes.STRING,
@@ -21,6 +16,15 @@ const User = sequelize.define('User', {
         allowNull: false,
       }
   }, );
+
+  (async () => {
+    try {
+      await sequelize.sync({ alter: true }); // Sync models with database, alter if necessary
+      console.log("user model synced successfully");
+    } catch (error) {
+      console.error("Error syncing user model:", error);
+    }
+  })();
   
   // `sequelize.define` also returns the model
-  console.log(User === sequelize.models.User); // 
+  console.log(User === sequelize.models.user); // 

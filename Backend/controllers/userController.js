@@ -1,18 +1,37 @@
+require("dotenv").config();
 const express = require('express');
 const userModel = require("../models/userModel");
-const { default: mongoose } = require('mongoose');
+const userModelp = require("../models/postgresModels/userModelp.js");
+const mongoose = require('mongoose');
 const bcrypt = require('bcrypt')
 const validator = require('validator')
 
+const usePosgres = require("../db/connect")
+
 //to get all users for admin
 const getUsers = async(req,res)=>{
-    // try{
-        const users = await userModel.find({}).select("id email").sort({createdAt:-1})
-        res.status(200).json(users)
 
-    // }catch(error){
-    //     res.status(500).json({error: error.message})
-    // }
+    if(usePosgres === false){
+        try{
+            const users = await userModel.find({}).select("id email").sort({createdAt:-1})
+            res.status(200).json(users)
+    
+        }catch(error){
+            res.status(500).json({error: error.message})
+        }
+
+    }
+    else{
+        try{
+            const users = await userModelp.findAll({attributes: ['id', 'email']})
+            res.status(200).json(users)
+                     
+        }catch(error){
+            res.status(500).json({ error: error.message }); 
+        }
+    }
+
+    
 }
 
 //to delete user for admin
@@ -43,7 +62,7 @@ const updateUser = async(req, res)=>{
 
     //Check if the user with the provided id is in the database
     const user = await userModel.findById(id);
-    if (!user) throw new Error("User not found")
+    if (!user) throw Error("User not found")
 
     //validate the email and password format in the params
     if(!email) throw Error("Email is required")
