@@ -94,6 +94,30 @@ module.exports = router
 
 /**
  * @swagger
+ * /tasks/{id}:
+ *   get:
+ *     summary: Returns a single task by ID
+ *     tags: [Tasks]
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         description: ID of the task to retrieve
+ *         schema:
+ *           type: string
+ *     responses:
+ *       200:
+ *         description: A single task object
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Task'
+ *       404:
+ *         description: Task not found
+ */
+
+/**
+ * @swagger
  * paths:
  *   /tasks/{id}:
  *     delete:
@@ -171,44 +195,43 @@ module.exports = router
 
 /**
  * @swagger
- *  paths:
+ * paths:
  *   /tasks/{id}:
  *     put:
- *       summary: "Update Task"
- *       description: "Update an existing task in the database"
- *       parameters:
- *         - name: "id"
- *           in: "path"
- *           description: "ID of the task to update"
- *           required: true
- *           type: "string"
- *         - name: "body"
- *           in: "body"
- *           description: "Updated task object"
- *           required: true
- *           schema:
- *             type: "object"
- *             properties:
- *               title:
- *                 type: "string"
- *                 description: "Title of the task"
- *               description:
- *                 type: "string"
- *                 description: "Description of the task"
- *               status:
- *                 type: "string"
- *                 description: "Status of the task"
- *               dueDate:
- *                 type: "string"
- *                 format: "date"
- *                 description: "Due date of the task (format: YYYY-MM-DD)"
+ *       summary: 'Update a Task'
+ *       tags:
+ *         - Tasks
+ *       requestBody:
+ *         required: true
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               required:
+ *                 - id
+ *                 - title
+ *                 - description
+ *                 - dueDate
+ *               properties:
+ *                 id:
+ *                  type: string
+ *                 title:
+ *                   type: string
+ *                 description:
+ *                   type: string
+ *                 dueDate:
+ *                  type: date
+ *               example:
+ *                 id: 1234
+ *                 title: Updated Task
+ *                 noteDescription: This is a new task
+ *                 date: "2022-12-31"
  *       responses:
- *         200:
- *           description: "Task updated successfully"
- *         400:
- *           description: "Invalid input, object invalid"
- *         404:
- *           description: "Task not found"
- *         500:
- *           description: "Internal server error"
+ *         '200':
+ *           description: Task updated successfully
+ *         '400':
+ *           description: Invalid Id
+ *         '404':
+ *           description: Task not found
  */
+

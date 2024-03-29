@@ -1,6 +1,7 @@
 const express = require('express');
 const userModel = require("../models/userModel")
-const {loginUser, signupUser} = require('../controllers/authController')
+const {loginUser, signupUser, signupUserPosgres, loginUserPosgres} = require('../controllers/authController')
+const usePosgres = require('../db/connect')
 
 
 
@@ -13,86 +14,87 @@ const {loginUser, signupUser} = require('../controllers/authController')
 const router = express.Router();
 
 // Login
-router.post('/login', loginUser)
+router.post('/login', usePosgres? loginUserPosgres : loginUser)
 
 // Sign up
-router.post('/Signup', signupUser)
+router.post('/signup', usePosgres? signupUserPosgres : signupUser)
 
 
 module.exports = router;
 
 /**
-@swagger
- * components:
- *   schemas:
- *     Users:
- *       type: object
- *       required:
- *         - id
- *         - email 
- *       properties:
- *         _id:
- *           type: string
- *           description: Auto generated ID of the user
- *         email:
- *           type: string
- *           description: unique email of the user
- *          
- *         
- *       example:
- *         _id: aslkdjskdjlad3add
- *         email: example@mail.com
- *         
+ * securityDefinitions:
+ * bearerAuth:
+ *   type: apiKey
+ *   in: header
+ *   name: Authorization
+ *   description: Bearer token to access these API endpoints
+ *   scheme: bearer
+ *   bearerFormat: JWT
+
+security:
+ * - bearerAuth: []
  */
+
+
 
 
 
 /**
  * @swagger
  *  paths:
- *  /auth/signup:
+ *   /auth/signup:
  *    post:
- *      summary: "User Signup"
- *      description: "Register a new user"
- *      consumes:
- *        - "application/json"
- *      produces:
- *        - "application/json"
- *      parameters:
- *        - name: "body"
- *          in: "body"
- *          description: "User email and password"
- *          required: true
- *          schema:
- *            type: "object"
- *          
- *            properties:
- *              email:
- *                type: "string"
- *                format: "email"
- *                description: "User's email address"
- *              password:
- *                type: "string"
- *                description: "User's password"
- *            items:
- *              $ref: '#/components/schemas/Users'
+ *      summary: Sign up a new user
+ *      tags: [Auth Routes]
+ *      description: Register a new user with email and password
+ *      requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            schema:
+ *              type: object
+ *              properties:
+ *                email:
+ *                  type: string
+ *                  format: email
+ *                password:
+ *                  type: string
+ *                  format: password
  *      responses:
- *        200:
- *          description: "User registered successfully"
- *          schema:
- *            type: "object"
- *            properties:
- *              email:
- *                type: "string"
- *                format: "email"
- *                description: "User's email address"
- *              token:
- *                type: "string"
- *                description: "JWT token for authentication"
- *        400:
- *          description: "Invalid input, validation error"
- *        409:
- *          description: "Email already exists"
- *        500:
- *          description: "Internal server error"
+ *        '201':
+ *          description: User signed up successfully
+ *        '400':
+ *          description: Bad request, invalid input
+ */
+
+/**
+ * @swagger
+ *   paths:
+ *    /auth/login:
+ *      post:
+ *        summary: Sign in a user
+ *        tags:
+ *          - Auth Routes
+ *        description: Sign in an existing user with email and password
+ *        requestBody:
+ *          required: true
+ *          content:
+ *            application/json:
+ *              schema:
+ *                type: object
+ *                properties:
+ *                  email:
+ *                    type: string
+ *                    format: email
+ *                  password:
+ *                    type: string
+ *                    format: password
+ *        responses:
+ *          '200':
+ *            description: User signed in successfully
+ *          '401':
+ *            description: Unauthorized, invalid credentials
+ *          '404':
+ *            description: User not found
  */

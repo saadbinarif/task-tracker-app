@@ -37,13 +37,15 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 
 
+
+
 if (usePosgres) {
   //postgres connection
   connectDB();
-
+ 
   app.listen(process.env.PORT, () => {
     console.log("listening to port 4000");
-    console.log("usePosgres:", usePosgres);
+    console.log("usePostgres:", usePosgres);
   });
 } else {
   //Mongo connection

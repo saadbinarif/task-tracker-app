@@ -12,11 +12,11 @@ const getAllTasks = async (req, res) => {
   if (usePosgres === false) {
     const task = await taskModel.find({}).sort({ createdAt: -1 });
     res.status(200).json(task);
-  } //else {
-  //   //postgre GET ALL
-  //   const task = await taskModelp.findAll();
-  //   res.status(200).json(task);
-  // }
+  } else {
+    //postgre GET ALL
+    const task = await taskModelp.findAll();
+    res.status(200).json(task);
+  }
 };
 
 //to get a single task
@@ -170,6 +170,7 @@ const deleteTask = async (req, res) => {
 
 //to update task
 const updateTask = async (req, res) => {
+  console.log(req.body)
   if (usePosgres === false) {
     try {
       const { id } = req.params;
