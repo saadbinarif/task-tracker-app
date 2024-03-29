@@ -5,62 +5,58 @@ const tasksRoutes = require("./routes/tasksRoutes");
 const usersRoutes = require("./routes/usersRoutes");
 const authRoutes = require("./routes/authRoutes");
 const { connectDB } = require("./db/postgres/config.js");
-const swaggerUi = require('swagger-ui-express');
-const swaggerJsDoc= require('swagger-jsdoc');
-var cors = require('cors')
-
-
+const swaggerUi = require("swagger-ui-express");
+const swaggerJsDoc = require("swagger-jsdoc");
+var cors = require("cors");
+let usePosgres = require("./db/connect.js")
 
 const options = {
-    definition: {
-        openapi: "3.0.0",
-        info: {
-            title: "Task-Tracker-APIs",
-            version: "1.0.0",
-            description: "piecyfer project"
-        },
-    
-    server:[
-        {
-            url: "http://localhost:4000"
-        }
-    ],
-},
-    apis: ["./routes/*.js"]
-}
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Task-Tracker-APIs",
+      version: "1.0.0",
+      description: "piecyfer project",
+    },
 
-const specs = swaggerJsDoc(options)
+    server: [
+      {
+        url: "http://localhost:4000",
+      },
+    ],
+  },
+  apis: ["./routes/*.js"],
+};
+
+const specs = swaggerJsDoc(options);
 
 const app = express();
 app.use(cors());
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs))
-
-// const usePostgres = process.env.USE_POSTGRES = false;
-
-const usePostgres = process.argv[2] === '--database' && process.argv[3] === 'postgres';
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
 
-if(usePostgres){
-    //postgres connection
-    connectDB();
-    console.log('usePostgres val:', usePostgres);
-}else{
-    //Mongo connection
-    mongoose.connect(process.env.MONGO_URI)
+
+if (usePosgres) {
+  //postgres connection
+  connectDB();
+
+  app.listen(process.env.PORT, () => {
+    console.log("listening to port 4000");
+    console.log("usePosgres:", usePosgres);
+  });
+} else {
+  //Mongo connection
+  mongoose
+    .connect(process.env.MONGO_URI)
     .then(() => {
-        app.listen(process.env.PORT, () => {
-        console.log('Connected to mongoDB database');
-        console.log('usePostgres value:', usePostgres);
+      app.listen(process.env.PORT, () => {
+        console.log("Connected to mongoDB database");
+        console.log("usePosgres", usePosgres);
       });
     })
-    .catch(err => console.log(err))
-
-
+    .catch((err) => console.log(err));
 }
-
-
-
 
 app.use(express.json());
 

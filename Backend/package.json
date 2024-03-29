@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js",
-    "start:postgres": "nodemon app.js --database postgres",
+    "start:posgres": "nodemon app.js --database posgres",
     "start:mongo": "nodemon app.js --database mongo"
     
   },
