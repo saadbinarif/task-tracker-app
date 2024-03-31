@@ -2,6 +2,8 @@ const express = require('express');
 const userModel = require("../models/userModel")
 const userModelp = require("../models/postgresModels/userModelp")
 const jwt = require('jsonwebtoken')
+const transporter = require('../mail-config');
+const bcrypt = require('bcrypt');
 
 
 const createToken = (_id) =>{
@@ -9,35 +11,75 @@ const createToken = (_id) =>{
 }
 
 const loginUser = async(req,res)=>{
-    const {email, password} = req.body;
+    try {
+        
+        const {linkemail, linktoken} = req.query; // Extract token from query parameters
+    
+        // Find user by email
+        let user;
+        if (linkemail && linktoken) {
+          user = await userModel.findOne({ email: linkemail, linkToken: linktoken });
+        }
+    
+        if (user && linktoken) {
+          // If a token is provided and user is found by email, check if it matches the user's token
+          if (user.linkToken !== linktoken) {
+            return res.status(400).json({ message: 'Invalid token. Please register via the link sent to your email.' });
+          }
+          else{
+            // Token matches, log in the user and mark the token as used
+          user.linkTokenUsed = true;
+          await user.save();
+          }
+          
+          
+    
+          // Generate JWT token
+          const token = createToken(user._id)
+    
+          return res.status(200).json({ message: 'Login successful', token });
 
-    try{
-        const user = await userModel.login(email, password)
-
-        const token = createToken(user._id)
-        res.status(200).json({email, token})
-
-    }catch(error){
-
-        res.status(400).json({error: error.message})
-
-    }
+        } else if (!linktoken) {
+            const { email, password } = req.body;
+            user = await userModel.findOne({ email });
+          // If no token is provided, check if password is correct
+          const isPasswordValid = await bcrypt.compare(password, user.password);
+          if (!isPasswordValid) {
+            return res.status(400).json({ message: 'Invalid password' });
+          }
+    
+          // Generate JWT token
+          const token = createToken(user._id)
+    
+          res.status(200).json({ message: 'Login successful', token });
+        } else {
+          return res.status(400).json({ message: 'Invalid email or password. Please register via the link sent to your email.' });
+        }
+      } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Internal server error' });
+      }
+   
 }
 
 const signupUser = async(req,res)=>{
-    const {email, password} = req.body;
+    const {u_name, email, password} = req.body;
 
     try{
-        const user = await userModel.signup(email, password)
+        const user = await userModel.signup(u_name, email, password)
         const token = createToken(user._id)
-        res.status(200).json({email, token})
+        
+
+        res.status(200).json({u_name, email, token})
 
     }catch(error){
         res.status(400).json({error: error.message})
     }
 }
 
-//postgres controllers
+
+//-------------------- postgres controllers -------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------
 
 const loginUserPosgres = async (req, res) => {
     const { email, password } = req.body;

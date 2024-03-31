@@ -1,5 +1,27 @@
 const express = require('express');
-const {getUsers, deleteUser, updateUser} = require("../controllers/userController")
+const usePosgres = require('../db/connect')
+const {getUsers, deleteUser, updateUser, getUsersPosgres, deleteUserPosgres, updateUserPosgres} = require("../controllers/userController")
+
+
+const router = express.Router();
+
+//get all users
+router.get('/', usePosgres? getUsersPosgres : getUsers)
+
+//get a specific user by id
+// router.get('/:id', (req, res)=>{
+//     res.send("get a specific user by id")
+// })
+
+
+//update a user
+router.put('/:id', usePosgres? updateUserPosgres : updateUser)
+
+//delete a user
+router.delete('/:id', usePosgres? deleteUserPosgres : deleteUser)
+
+module.exports = router
+
 
 /**
  * @swagger
@@ -48,28 +70,6 @@ const {getUsers, deleteUser, updateUser} = require("../controllers/userControlle
  *                 $ref: '#/components/schemas/Users'
  */
 
-
-
-
-
-
-
-
-const router = express.Router();
-
-//get all users
-router.get('/', getUsers)
-
-//get a specific user by id
-// router.get('/:id', (req, res)=>{
-//     res.send("get a specific user by id")
-// })
-
-
-
-//update a user
-router.put('/:id', updateUser)
-
 /**
  * @swagger
  * paths:
@@ -91,10 +91,3 @@ router.put('/:id', updateUser)
  *         '400':
  *           description: Unauthorized
  */
-
-
-
-//delete a user
-router.delete('/:id', deleteUser)
-
-module.exports = router

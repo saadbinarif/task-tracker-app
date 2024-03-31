@@ -12,7 +12,7 @@ console.log("value in userCont", usePosgres);
 
 //to get all users for admin
 const getUsers = async (req, res) => {
-  if (usePosgres == false) {
+  
     try {
       const users = await userModel
         .find({})
@@ -22,19 +22,12 @@ const getUsers = async (req, res) => {
     } catch (error) {
       res.status(500).json({ error: error.message });
     }
-  } else {
-    try {
-      const users = await userModelp.findAll({ attributes: ["id", "email"] });
-      res.status(200).json(users);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  }
+  
 };
 
 //to delete user for admin
 const deleteUser = async (req, res) => {
-  if (usePosgres === false) {
+  
     try {
       const { id } = req.params;
       const validId = mongoose.Types.ObjectId.isValid(id);
@@ -50,28 +43,7 @@ const deleteUser = async (req, res) => {
     } catch (error) {
       res.status(500).json({ error: "server error" });
     }
-  } else {
-    //posgres DELETE user
-    try {
-      const { id } = req.params;
-
-      if (typeof id !== "string" || id.trim() === "") {
-        return res.status(404).json({ error: "Invalid Id" });
-      }
-      try {
-        const task = await userModelp.findOne({ where: { id } });
-        if (!task) {
-          return res.status(404).json({ error: "User not found" });
-        }
-        await task.destroy();
-        res.status(200).json(task);
-      } catch (error) {
-        res.status(500).json({ error: "server error" });
-      }
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
-  }
+  
 };
 
 //to update user
@@ -120,8 +92,104 @@ const updateUser = async (req, res) => {
   }
 };
 
+//------ Posgres controllers --------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------------------------------------------------------------------
+
+const getUsersPosgres = async(req, res)=>{
+  try {
+    const users = await userModelp.findAll({ attributes: ["id", "email"] });
+    res.status(200).json(users);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+
+}
+
+const deleteUserPosgres = async(req, res) => {
+  try {
+    const { id } = req.params;
+
+    if (typeof id !== "string" || id.trim() === "") {
+      return res.status(404).json({ error: "Invalid Id" });
+    }
+    try {
+      const task = await userModelp.findOne({ where: { id } });
+      if (!task) {
+        return res.status(404).json({ error: "User not found" });
+      }
+      await task.destroy();
+      res.status(200).json(task);
+    } catch (error) {
+      res.status(500).json({ error: "server error" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+
+
+const updateUserPosgres = async (req, res) => {
+  const { id } = req.params;
+  const { email, currentPassword, newPassword } = req.body;
+
+  try {
+    // Check if the given value in request params is valid
+    if (typeof id !== "string" || id.trim() === "") {
+      return res.status(404).json({ error: "Invalid Id" });
+    }
+
+    // Check if the user with the provided id is in the database
+    const user = await User.findByPk(id);
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    // Validate the email format in the params
+    if (!email) {
+      throw new Error("Email is required");
+    }
+    if (!validator.isEmail(email)) {
+      throw new Error("Invalid email format");
+    }
+    if (!currentPassword) {
+      throw new Error("Current password is required to make changes");
+    }
+
+    // Check if new email already exists for some other user
+    const emailExists = await userModelp.findOne({ where: { email, id: { [Op.ne]: id } } });
+    if (emailExists) {
+      throw new Error("Email already exists");
+    }
+
+    user.email = email;
+
+    // Match the current password
+    const matchPassword = await bcrypt.compare(currentPassword, user.password);
+    if (!matchPassword) {
+      throw new Error("Password is incorrect");
+    }
+
+    // Hash the new password if provided
+    if (newPassword) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedNewPassword = await bcrypt.hash(newPassword, salt);
+      user.password = hashedNewPassword;
+    }
+
+    await user.save();
+
+    res.status(200).json({ message: "User details updated successfully" });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 module.exports = {
   getUsers,
   deleteUser,
   updateUser,
+  getUsersPosgres,
+  deleteUserPosgres,
+  updateUserPosgres
 };

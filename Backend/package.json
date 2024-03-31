@@ -8,7 +8,6 @@
     "start": "nodemon app.js",
     "start:posgres": "nodemon app.js --database posgres",
     "start:mongo": "nodemon app.js --database mongo"
-    
   },
   "author": "",
   "license": "ISC",
@@ -20,11 +19,13 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.2.3",
     "nanoid": "^5.0.6",
+    "nodemailer": "^6.9.13",
     "pg": "^8.11.3",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.1",
     "swagger-jsdoc": "^6.2.8",
     "swagger-ui-express": "^5.0.0",
+    "uuid": "^9.0.1",
     "validator": "^13.11.0"
   }
 }
