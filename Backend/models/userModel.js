@@ -28,9 +28,12 @@ const userSchema = new Schema({
         default: null,
         unique: true
     },
-    linkTokenUsed: {
+    isEmailVerified: {
         type: Boolean,
         default: false
+    },
+    expiryTimestamp: {
+        type: Date
     }
 })
 
@@ -58,19 +61,22 @@ userSchema.statics.signup = async function (u_name, email, password) {
     const hash = await bcrypt.hash(password, salt)
 
     const linkToken = uuidv4();
-    const verificationLink = `http://localhost:4000/auth/login?linkemail=${email}&linktoken=${linkToken}`;
+    const expiryDate = new Date();
+    expiryDate.setMinutes(expiryDate.getMinutes() + 2); // Link expires in 2 minutes
+    const expiryTimestamp = expiryDate.getTime();
+    const verificationLink = `http://localhost:4000/auth/verify-email?linkemail=${email}&linktoken=${linkToken}&expiry=${expiryTimestamp}`;
 
     const sendMail = await transporter.sendMail({
-        from: "<naeemali1996@outlook.com>",
+        from: "<robertsmithrs97@outlook.com>",
         to: email,
         subject: 'Verification Link for Login',
-        text: `This link will expire in 2 minutes. Please verify your email by clicking on this link: ${verificationLink}.`
+        text: `This link will expire in 2 minutes. Please verify your email by clicking on this link: ${verificationLink}`
     });
     if (!sendMail) {
         return res.status(502).json({ error: "bad_gateway: wasn't able to send email at this time" })
     }
 
-    const user = await this.create({ u_name, email, password: hash, linkToken } )
+    const user = await this.create({ u_name, email, password: hash, linkToken, expiryTimestamp } )
 
     return user;
 

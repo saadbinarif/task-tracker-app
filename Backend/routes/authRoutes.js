@@ -1,6 +1,6 @@
 const express = require('express');
 const userModel = require("../models/userModel")
-const {loginUser, signupUser, signupUserPosgres, loginUserPosgres} = require('../controllers/authController')
+const {loginUser, signupUser, signupUserPosgres, loginUserPosgres, verifyEmail, resendLink} = require('../controllers/authController')
 const usePosgres = require('../db/connect')
 
 
@@ -18,6 +18,12 @@ router.post('/login', usePosgres? loginUserPosgres : loginUser)
 
 // Sign up
 router.post('/signup', usePosgres? signupUserPosgres : signupUser)
+
+//email Verification link
+router.get('/verify-email', verifyEmail)
+
+//resend veriication link
+router.post('/resend-link', resendLink)
 
 
 module.exports = router;

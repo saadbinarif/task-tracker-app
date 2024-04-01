@@ -16,7 +16,7 @@ const getUsers = async (req, res) => {
     try {
       const users = await userModel
         .find({})
-        .select("id email")
+        // .select("id email")
         .sort({ createdAt: -1 });
       res.status(200).json(users);
     } catch (error) {
