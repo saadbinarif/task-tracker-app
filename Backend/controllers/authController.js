@@ -1,4 +1,4 @@
-const express = require('express');
+
 const userModel = require("../models/userModel")
 const userModelp = require("../models/postgresModels/userModelp")
 const jwt = require('jsonwebtoken')

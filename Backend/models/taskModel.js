@@ -19,6 +19,11 @@ const taskSchema = new Schema({
     },
     dueDate: {
         type: Date
+    },
+    creator_id: {
+        type: String,
+        required: true
+
     }
 }, {timestamps: true})
 

@@ -1,6 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
+const tagsRoutes = require("./routes/tagsRoutes.js")
 const tasksRoutes = require("./routes/tasksRoutes");
 const usersRoutes = require("./routes/usersRoutes");
 const authRoutes = require("./routes/authRoutes");
@@ -62,6 +63,9 @@ if (usePosgres) {
 
 app.use(express.json());
 
+app.use("/auth", authRoutes);
+app.use("/tags", tagsRoutes);
+
 app.use("/tasks", tasksRoutes);
 app.use("/users", usersRoutes);
-app.use("/auth", authRoutes);
+

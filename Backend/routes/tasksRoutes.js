@@ -1,16 +1,23 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const requireAuth = require('../middlewares/requireAuth')
 const {
     createTask,
     getAllTasks,
     getTask,
     deleteTask,
-    updateTask
+    updateTask,
+    autoComplete
 
 } = require('../controllers/taskController');
 
 
 const router = express.Router();
+
+// router.use(requireAuth)
+
+//searchparams
+router.get('/autocomplete', autoComplete)
 
 //get all tasks
 router.get('/', getAllTasks)
@@ -26,6 +33,9 @@ router.put('/:id', updateTask)
 
 //delete a task
 router.delete('/:id', deleteTask)
+
+
+
 
 module.exports = router
 
