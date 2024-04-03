@@ -27,6 +27,10 @@ const loginUser = async(req, res)=>{
       const match = await bcrypt.compare(password, user.password)
       if (!match) return res.status(400).json({error: "Invalid password"})
 
+      if(user.isTwoFA){
+        return res.status(400).json({message: "OTP required"})
+      }
+
       const token = createToken(user._id);
       res.status(200).json({message: 'Login successful', token})
     }

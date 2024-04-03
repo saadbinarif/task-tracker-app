@@ -39,7 +39,7 @@ const getTask = async (req, res) => {
 
 //to create a task
 const createTask = async (req, res) => {
-  const { title, description, status, dueDate } = req.body;
+  const { title, description, status, dueDate, creator_id } = req.body;
 
   let emptyFields = [];
 
@@ -60,7 +60,7 @@ const createTask = async (req, res) => {
 
   try {
     // coming from req headers via requireAuth middleware
-    const creator_id = req.user._id;
+    // const creator_id = req.user._id;
     const parsedDueDate = new Date(dueDate);
     const task = await taskModel.create({
       title,
@@ -70,6 +70,7 @@ const createTask = async (req, res) => {
       creator_id,
     });
     res.status(200).json(task);
+    
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

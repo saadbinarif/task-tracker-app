@@ -23,6 +23,19 @@ const userSchema = new Schema({
         type: String,
         required: true,
     },
+    isTwoFA: {
+        type: Boolean,
+        default: true
+
+    },
+    otp: {
+        type: Number,
+        default: null
+    },
+    otpExpiryTime: {
+        type: Date,
+        default: null
+    },
     linkToken: {
         type: String,
         default: null,

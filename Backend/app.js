@@ -11,6 +11,9 @@ const swaggerJsDoc = require("swagger-jsdoc");
 var cors = require("cors");
 let usePosgres = require("./db/connect.js")
 
+const notificationService = require('./notificationService');
+const WebSocket = require('ws');
+
 const options = {
   definition: {
     openapi: "3.0.0",
@@ -69,3 +72,15 @@ app.use("/tags", tagsRoutes);
 app.use("/tasks", tasksRoutes);
 app.use("/users", usersRoutes);
 
+
+// WebSocket setup
+
+const wss = new WebSocket.Server({ port: 5000 });
+
+wss.on('connection', (ws) => {
+  console.log('WebSocket connection established');
+  // Handle WebSocket messages
+  ws.on('message', (message) => {
+    console.log(`Received message: ${message}`);
+  });
+});
