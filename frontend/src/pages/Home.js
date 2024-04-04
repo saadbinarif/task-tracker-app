@@ -2,6 +2,9 @@ import {  useEffect } from "react"
 import TaskDetails from "../components/TaskDetails"
 import TaskForm from "../components/TaskForm"
 import { useTaskContext } from "../hook/useTaskContext"
+import io from 'socket.io-client';
+
+const socket = io('http://localhost:3000');
 
 export default function Home(){
     
@@ -18,9 +21,14 @@ export default function Home(){
             }
         }
         fetchTasks();
+
+        socket.on('task_expires', (notification) => {
+            alert(notification.message);
+          });
     }, [])
     return (
       <div className="home">
+
         <div className="tasks">
             {
                 tasks && tasks.map(task =>{

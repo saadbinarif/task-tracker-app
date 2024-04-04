@@ -94,7 +94,7 @@ io.on('connection', (socket) => {
 async function checkTaskExpiry() {
     const tasks = await taskModel.find({ dueDate: { $gt: new Date(), $lt: moment().add(30, 'minutes').toDate() } });
     tasks.forEach(task => {
-        io.emit(`task_expires_${task.creator_id}`, { message: `Your task "${task.title}" is due in 30 minutes.` });
+        io.emit(`task_expires`, { message: `Your task "${task.title}" is due in 30 minutes.` });
     });
 }
 
