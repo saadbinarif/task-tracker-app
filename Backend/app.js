@@ -11,8 +11,13 @@ const swaggerJsDoc = require("swagger-jsdoc");
 var cors = require("cors");
 let usePosgres = require("./db/connect.js")
 
-const notificationService = require('./notificationService');
-const WebSocket = require('ws');
+// const {checkTaskExpiry } = require('./notificationService');
+const http = require('http');
+const cron = require('node-cron');
+const socketIo = require('socket.io');
+const taskModel = require("./models/taskModel.js");
+const moment = require('moment');
+
 
 const options = {
   definition: {
@@ -39,7 +44,8 @@ app.use(cors());
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
-
+const server = http.createServer(app);
+const io = socketIo(server);
 
 
 
@@ -56,7 +62,7 @@ if (usePosgres) {
   mongoose
     .connect(process.env.MONGO_URI)
     .then(() => {
-      app.listen(process.env.PORT, () => {
+      server.listen(process.env.PORT, () => {
         console.log("Connected to mongoDB database");
         console.log("usePosgres", usePosgres);
       });
@@ -66,6 +72,38 @@ if (usePosgres) {
 
 app.use(express.json());
 
+// ---------------------------------------------------------------
+
+
+
+// Notification cron job
+// cron.schedule('* * * * *', () => {
+//   checkTaskExpiry(io);
+// });
+
+io.on('connection', (socket) => {
+  console.log('a user connected');
+  
+  // Disconnect event
+  socket.on('disconnect', () => {
+      console.log('user disconnected');
+  });
+});
+
+// Function to check for tasks due within 30 minutes and send notifications
+async function checkTaskExpiry() {
+    const tasks = await taskModel.find({ dueDate: { $gt: new Date(), $lt: moment().add(30, 'minutes').toDate() } });
+    tasks.forEach(task => {
+        io.emit(`task_expires_${task.creator_id}`, { message: `Your task "${task.title}" is due in 30 minutes.` });
+    });
+}
+
+// Check task expiry every minute
+setInterval(checkTaskExpiry, 60 * 1000);
+
+// ---------------------------------------------------------------
+
+
 app.use("/auth", authRoutes);
 app.use("/tags", tagsRoutes);
 
@@ -73,14 +111,3 @@ app.use("/tasks", tasksRoutes);
 app.use("/users", usersRoutes);
 
 
-// WebSocket setup
-
-const wss = new WebSocket.Server({ port: 5000 });
-
-wss.on('connection', (ws) => {
-  console.log('WebSocket connection established');
-  // Handle WebSocket messages
-  ws.on('message', (message) => {
-    console.log(`Received message: ${message}`);
-  });
-});
