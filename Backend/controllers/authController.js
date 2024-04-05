@@ -6,6 +6,7 @@ const transporter = require('../mail-config');
 const bcrypt = require('bcrypt');
 const { v4: uuidv4 } = require('uuid');
 const validator = require('validator')
+const otpGenerator = require('otp-generator')
 
 
 const createToken = (_id) =>{
@@ -28,8 +29,28 @@ const loginUser = async(req, res)=>{
       if (!match) return res.status(400).json({error: "Invalid password"})
 
       if(user.isTwoFA){
-        return res.status(400).json({message: "OTP required"})
+        const otp = otpGenerator.generate(6, { lowerCaseAlphabets: false, upperCaseAlphabets: false, specialChars: false });
+        const expiryDate = new Date();
+        expiryDate.setMinutes(expiryDate.getMinutes() + 2); // Link expires in 2 minutes
+        const otpExpiryTime = expiryDate;
+
+        const sendMail = await transporter.sendMail({
+          from: "<robertsmithrs97@outlook.com>",
+          to: email,
+          subject: 'OTP For Verification',
+          text: `This OTP will expire in 2 minutes. Please enter this OTP to login: ${otp}`
+      });
+      if (!sendMail) {
+          return res.status(502).json({ error: "bad_gateway: wasn't able to send email at this time" })
       }
+      user.otp = otp;
+      user.otpExpiryTime = otpExpiryTime;
+      await user.save();
+      return res.status(400).json({message: "OTP required"})
+
+      }
+
+      
 
       const token = createToken(user._id);
       res.status(200).json({message: 'Login successful', token})
@@ -130,6 +151,41 @@ const resendLink = async(req, res)=>{
   }
 }
 
+//verify otp
+const verifyOTP = async(req, res)=>{
+  const { email, otp} = req.body;
+
+  try{
+    const user = await userModel.findOne({email})
+    if(!user) return res.status(404).json({msg: "user not found"})
+    const currentTimestamp = new Date();
+    
+    if(currentTimestamp>user.otpExpiryTime){
+      return res.status(410).json({error: "The otp is expired"})
+    }
+      if(user.otp === otp){
+        // user.otp = null
+        // user.otpExpiryTime = null
+        // await user.save();
+        const token = createToken(user._id);
+        return res.status(200).json({msg: "Verification successful", token})
+      }
+      return res.status(401).json({error: "Invalid otp"})
+    
+
+    
+
+    
+
+
+    
+
+  }catch(error){
+    res.status(500).json({error: error.message})
+  }
+  
+}
+
 
 //-------------------- postgres controllers -------------------------------------------------------------------
 //---------------------------------------------------------------------------------------------------------------
@@ -173,6 +229,7 @@ module.exports = {
     loginUserPosgres,
     signupUserPosgres,
     verifyEmail,
-    resendLink
+    resendLink,
+    verifyOTP
 }
 

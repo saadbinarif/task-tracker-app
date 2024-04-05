@@ -95,38 +95,7 @@ userSchema.statics.signup = async function (u_name, email, password) {
 
 }
 
-//login user
-// userSchema.statics.login = async function (email, password, linkToken) {
 
-    
-//         const user = await this.findOne({ email, linkToken })
-//         if (!user) throw Error("Email is not registered")
-
-//         const match = await bcrypt.compare(password, user.password)
-//         if (!match) {
-//             throw Error("Password is not correct")
-//         }
-
-//         if (user.linkTokenUsed) {
-//             return res.status(400).json({ message: 'Token already used' });
-//         }
-
-//         // Mark token as used
-//         user.linkTokenUsed = true;
-//         await user.save();
-        
-    
-//         //validation
-//         if (!email || !password) throw Error("All fields should be filled")
-
-//         user = await this.findOne({ email })
-//         if (!user) throw Error("NO user found with this email")
-
-       
-    
-        
-//     return user;
-//     }
 
     
 
