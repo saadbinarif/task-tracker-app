@@ -13,22 +13,20 @@ console.log("value in userCont", usePosgres);
 //to get all users for admin
 const getUsers = async (req, res) => {
   
-    try {
+    
       const users = await userModel
         .find({})
         // .select("id email")
         .sort({ createdAt: -1 });
       res.status(200).json(users);
-    } catch (error) {
-      res.status(500).json({ error: error.message });
-    }
+    
   
 };
 
 //to delete user for admin
 const deleteUser = async (req, res) => {
   
-    try {
+    
       const { id } = req.params;
       const validId = mongoose.Types.ObjectId.isValid(id);
       if (!validId) {
@@ -40,9 +38,7 @@ const deleteUser = async (req, res) => {
         return res.status(404).json({ error: "no such user" });
       }
       res.status(200).json(user);
-    } catch (error) {
-      res.status(500).json({ error: "server error" });
-    }
+    
   
 };
 
@@ -51,7 +47,7 @@ const updateUser = async (req, res) => {
   const { id } = req.params;
   const { email, currentPassword, newPassword } = req.body;
 
-  try {
+  
     //check if the given value in request params is valid
     const validId = mongoose.Types.ObjectId.isValid(id);
     if (!validId) throw Error("Invalid user ID");
@@ -86,10 +82,8 @@ const updateUser = async (req, res) => {
 
     await user.save();
 
-    res.status(200).json({ message: "User details updated successfully" });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
+    return res.status(200).json({ message: "User details updated successfully" });
+  
 };
 
 //------ Posgres controllers --------------------------------------------------------------------------------------------------

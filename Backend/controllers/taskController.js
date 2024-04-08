@@ -7,15 +7,15 @@ const taskModelp = require("../models/postgresModels/taskModelp");
 
 // to get all tasks
 const getAllTasks = async (req, res) => {
-  
+
   // const creator_id = req.user._id;
   const task = await taskModel.find({}).sort({ createdAt: -1 });
-  res.status(200).json(task);
+  return res.status(200).json(task);
 };
 
 //to get a single task
-const getTask = async (req, res) => {
-  
+const getTask = async (req, res, next) => {
+
   const { id } = req.params;
 
   //to check valid mongoID
@@ -23,18 +23,17 @@ const getTask = async (req, res) => {
 
   if (!validId) {
     return res.status(400).json({ error: "Invalid Id" });
-  }
-  try {
-    const task = await taskModel.findById(id);
 
-    if (!task) {
-      return res.status(404).json({ error: "task not found" });
-    }
-    res.status(200).json(task);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Server Error" });
   }
+
+  const task = await taskModel.findById(id);
+
+  if (!task) {
+    return res.status(404).json({ error: "task not found" });
+    
+  }
+  return res.status(200).json(task);
+
 };
 
 //to create a task
@@ -58,95 +57,85 @@ const createTask = async (req, res) => {
       .json({ error: "Please fill all the fields", emptyFields });
   }
 
-  try {
-    // coming from req headers via requireAuth middleware
-    // const creator_id = req.user._id;
-    const parsedDueDate = new Date(dueDate);
-    const task = await taskModel.create({
-      title,
-      description,
-      status,
-      dueDate: parsedDueDate,
-      creator_id,
-    });
-    res.status(200).json(task);
-    
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
+
+  // coming from req headers via requireAuth middleware
+  // const creator_id = req.user._id;
+  const parsedDueDate = new Date(dueDate);
+  const task = await taskModel.create({
+    title,
+    description,
+    status,
+    dueDate: parsedDueDate,
+    creator_id,
+  });
+  res.status(200).json(task);
+
+
 };
 
 //to delete task
 const deleteTask = async (req, res) => {
-  try {
-    
-    const { id } = req.params;
-    const validId = mongoose.Types.ObjectId.isValid(id);
 
-    if (!validId) {
-      return res.status(400).json({ error: "Invalid Id" });
-    }
 
-    const task = await taskModel.findOneAndDelete({ _id: id });
+  const { id } = req.params;
+  const validId = mongoose.Types.ObjectId.isValid(id);
 
-    if (!task) {
-      return res.status(404).json({ error: "task not found" });
-    }
-    res.status(200).json(task);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "Server Error" });
+  if (!validId) {
+    return res.status(400).json({ error: "Invalid Id" });
   }
+
+  const task = await taskModel.findOneAndDelete({ _id: id });
+
+  if (!task) {
+    return res.status(404).json({ error: "task not found" });
+  }
+  res.status(200).json(task);
+
 };
 
 //to update task
 const updateTask = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const validId = mongoose.Types.ObjectId.isValid(id);
 
-    if (!validId) {
-      return res.status(400).json({ error: "Invalid Id" });
-    }
+  const { id } = req.params;
+  const validId = mongoose.Types.ObjectId.isValid(id);
 
-    const task = await taskModel.findOneAndUpdate(
-      { _id: id },
-      {
-        ...req.body,
-      }
-    );
-
-    if (!task) {
-      return res.status(404).json({ error: "no such task" });
-    }
-    res.status(200).json(task);
-  } catch (error) {
-    res.status(500).json({ error: "server error" });
+  if (!validId) {
+    return res.status(400).json({ error: "Invalid Id" });
   }
+
+  const task = await taskModel.findOneAndUpdate(
+    { _id: id },
+    {
+      ...req.body,
+    }
+  );
+
+  if (!task) {
+    return res.status(404).json({ error: "no such task" });
+  }
+  res.status(200).json(task);
+
 };
 
 
 
 const autoComplete = async (req, res) => {
-  try {
-    const { query } = req.query;
-    if (!query) {
-      return res.status(400).json({ error: 'Query parameter is required' });
-    }
 
-    const suggestions = await taskModel.find({
-      $or: [
-        { title: { $regex: query, $options: 'i' } }, // Case-insensitive title match
-        { description: { $regex: query, $options: 'i' } }, // Case-insensitive description match
-        // { tags: { $regex: query, $options: 'i' } } // Case-insensitive tag match
-      ]
-    }).limit(10); // Limit to 10 suggestions
-    console.log(suggestions)
-    res.json(suggestions);
-  } catch (error) {
-    console.error(error.messaage);
-    res.status(500).json({ error: 'Server error' });
+  const { query } = req.query;
+  if (!query) {
+    return res.status(400).json({ error: 'Query parameter is required' });
   }
+
+  const suggestions = await taskModel.find({
+    $or: [
+      { title: { $regex: query, $options: 'i' } }, // Case-insensitive title match
+      { description: { $regex: query, $options: 'i' } }, // Case-insensitive description match
+      // { tags: { $regex: query, $options: 'i' } } // Case-insensitive tag match
+    ]
+  }).limit(10); // Limit to 10 suggestions
+  console.log(suggestions)
+  res.json(suggestions);
+
 }
 
 

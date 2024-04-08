@@ -1,7 +1,8 @@
 const express = require('express');
 const userModel = require("../models/userModel")
 const {loginUser, signupUser, signupUserPosgres, loginUserPosgres, verifyEmail, resendLink, verifyOTP} = require('../controllers/authController')
-const usePosgres = require('../db/connect')
+const usePosgres = require('../db/connect');
+const tryCatch = require('../middlewares/tryCatch');
 
 
 
@@ -14,19 +15,19 @@ const usePosgres = require('../db/connect')
 const router = express.Router();
 
 // Login
-router.post('/login', usePosgres? loginUserPosgres : loginUser)
+router.post('/login', usePosgres? loginUserPosgres : tryCatch(loginUser))
 
 // Sign up
-router.post('/signup', usePosgres? signupUserPosgres : signupUser)
+router.post('/signup', usePosgres? signupUserPosgres : tryCatch(signupUser))
 
 //email Verification link
-router.get('/verify-email', verifyEmail)
+router.get('/verify-email', tryCatch(verifyEmail))
 
 //resend veriication link
-router.post('/resend-link', resendLink)
+router.post('/resend-link', tryCatch(resendLink))
 
 //verify OTP
-router.post('/verify-otp', verifyOTP)
+router.post('/verify-otp', tryCatch(verifyOTP))
 
 
 module.exports = router;

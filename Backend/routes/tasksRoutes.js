@@ -1,6 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const requireAuth = require('../middlewares/requireAuth')
+const tryCatch = require('../middlewares/tryCatch');
 const {
     createTask,
     getAllTasks,
@@ -12,27 +13,28 @@ const {
 } = require('../controllers/taskController');
 
 
+
 const router = express.Router();
 
 // router.use(requireAuth)
 
 //searchparams
-router.get('/autocomplete', autoComplete)
+router.get('/autocomplete', tryCatch(autoComplete))
 
 //get all tasks
-router.get('/', getAllTasks)
+router.get('/', tryCatch(getAllTasks))
 
 //get a specific task by id
-router.get('/:id', getTask)
+router.get('/:id', tryCatch(getTask) )
 
 //post a task
-router.post('/', createTask)
+router.post('/', tryCatch(createTask))
 
 //update a task
-router.put('/:id', updateTask)
+router.put('/:id', tryCatch(updateTask))
 
 //delete a task
-router.delete('/:id', deleteTask)
+router.delete('/:id', tryCatch(deleteTask))
 
 
 

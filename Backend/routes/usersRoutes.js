@@ -1,12 +1,13 @@
 const express = require('express');
 const usePosgres = require('../db/connect')
-const {getUsers, deleteUser, updateUser, getUsersPosgres, deleteUserPosgres, updateUserPosgres} = require("../controllers/userController")
+const tryCatch = require('../middlewares/tryCatch');
+const {getUsers, deleteUser, updateUser, getUsersPosgres, deleteUserPosgres, updateUserPosgres} = require("../controllers/userController");
 
 
 const router = express.Router();
 
 //get all users
-router.get('/', usePosgres? getUsersPosgres : getUsers)
+router.get('/', usePosgres? getUsersPosgres : tryCatch(getUsers))
 
 //get a specific user by id
 // router.get('/:id', (req, res)=>{
@@ -15,10 +16,10 @@ router.get('/', usePosgres? getUsersPosgres : getUsers)
 
 
 //update a user
-router.put('/:id', usePosgres? updateUserPosgres : updateUser)
+router.put('/:id', usePosgres? updateUserPosgres : tryCatch(updateUser))
 
 //delete a user
-router.delete('/:id', usePosgres? deleteUserPosgres : deleteUser)
+router.delete('/:id', usePosgres? deleteUserPosgres : tryCatch(deleteUser))
 
 module.exports = router
 

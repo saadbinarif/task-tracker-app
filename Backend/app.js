@@ -10,6 +10,7 @@ const swaggerUi = require("swagger-ui-express");
 const swaggerJsDoc = require("swagger-jsdoc");
 var cors = require("cors");
 let usePosgres = require("./db/connect.js")
+const errorHandler = require("./middlewares/errorHandler.js");
 
 // const {checkTaskExpiry } = require('./notificationService');
 const http = require('http');
@@ -110,4 +111,5 @@ app.use("/tags", tagsRoutes);
 app.use("/tasks", tasksRoutes);
 app.use("/users", usersRoutes);
 
+app.use(errorHandler);
 
