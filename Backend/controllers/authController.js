@@ -9,8 +9,8 @@ const validator = require('validator')
 const otpGenerator = require('otp-generator')
 
 
-const createToken = (_id) => {
-  return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "3d" })
+const createToken = (_id, expiry="3d") => {
+  return jwt.sign({ _id }, process.env.SECRET, { expiresIn: expiry })
 }
 
 //---- /auth/login
@@ -164,16 +164,57 @@ const verifyOTP = async (req, res) => {
   }
   return res.status(401).json({ error: "Invalid otp" })
 
+}
 
+// auth/forgot-password
+const forgotPassword = async(req,res)=>{
+  const { email } = req.body;
+    const user = await userModel.findOne({email});
+    if (!user) {
+        return res.status(404).json({ message: "User not found." });
+    }
 
+    const token = createToken(user._id, '1h');
 
+    const sendMail = await transporter.sendMail({
+      from: "<robertsmithrs97@outlook.com>",
+      to: email,
+      subject: 'Password Reset',
+      text: `To reset your password, click on the following link: http://localhost:4000/auth/reset-password/${token}`
+    });
+    if (!sendMail) {
+      return res.status(502).json({ error: "bad_gateway: wasn't able to send email at this time" })
+    }
+    return res.status(200).json({message: "Reset link has been sent to your email"})
+}
 
+//auth/reset-password
+const resetPassword = async(req, res)=>{
+  const { token } = req.params;
+    const { newPassword } = req.body;
 
+    jwt.verify(token, process.env.SECRET, async (err, decoded) => {
+      if (err) {
+          return res.status(401).json({ message: 'Invalid or expired token.' });
+      }
+      
+      const userId = decoded._id;
+      const user = await userModel.findById(userId);
+      if (!user) {
+          return res.status(404).json({ message: 'User not found.' });
+      }
 
+      const salt = await bcrypt.genSalt(10)
+      const hash = await bcrypt.hash(newPassword, salt)
 
+      user.password = hash;
+      await user.save();
 
+      return res.status(200).json({ message: 'Password reset successful.' });
 
+    });
 
+    
 }
 
 
@@ -218,6 +259,8 @@ module.exports = {
   signupUserPosgres,
   verifyEmail,
   resendLink,
-  verifyOTP
+  verifyOTP,
+  forgotPassword,
+  resetPassword
 }
 

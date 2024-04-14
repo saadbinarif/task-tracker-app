@@ -1,6 +1,6 @@
 const express = require('express');
 const userModel = require("../models/userModel")
-const {loginUser, signupUser, signupUserPosgres, loginUserPosgres, verifyEmail, resendLink, verifyOTP} = require('../controllers/authController')
+const {loginUser, signupUser, signupUserPosgres, loginUserPosgres, verifyEmail, resendLink, verifyOTP, forgotPassword, resetPassword} = require('../controllers/authController')
 const usePosgres = require('../db/connect');
 const tryCatch = require('../middlewares/tryCatch');
 
@@ -28,6 +28,12 @@ router.post('/resend-link', tryCatch(resendLink))
 
 //verify OTP
 router.post('/verify-otp', tryCatch(verifyOTP))
+
+//Forgot password
+router.post('/forgot-password', tryCatch(forgotPassword))
+
+//Password reset
+router.post('/reset-password/:token', tryCatch(resetPassword))
 
 
 module.exports = router;

@@ -63,10 +63,12 @@ if (usePosgres) {
   mongoose
     .connect(process.env.MONGO_URI)
     .then(() => {
-      server.listen(process.env.PORT, () => {
-        console.log("Connected to mongoDB database");
-        console.log("usePosgres", usePosgres);
-      });
+    //  module.exports = server.listen(process.env.PORT, () => {
+    //     console.log("Connected to mongoDB database", process.env.MONGO_URI);
+    //     console.log("usePosgres", usePosgres);
+        
+
+    //   });
     })
     .catch((err) => console.log(err));
 }
@@ -113,3 +115,6 @@ app.use("/users", usersRoutes);
 
 app.use(errorHandler);
 
+
+module.exports = server.listen(process.env.PORT, () => {
+  console.log("Connected to mongoDB database", process.env.MONGO_URI) });
