@@ -15,7 +15,6 @@ const errorHandler = require("./middlewares/errorHandler.js");
 // const {checkTaskExpiry } = require('./notificationService');
 const http = require('http');
 const cron = require('node-cron');
-const socketIo = require('socket.io');
 const taskModel = require("./models/taskModel.js");
 const moment = require('moment');
 
@@ -45,8 +44,12 @@ app.use(cors());
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
-const server = http.createServer(app);
-const io = socketIo(server);
+const server = require('http').createServer(app)
+const io = require('socket.io')(server, {
+    cors:{
+        origin:"*"
+    }
+})
 
 
 
@@ -102,7 +105,7 @@ async function checkTaskExpiry() {
 }
 
 // Check task expiry every minute
-setInterval(checkTaskExpiry, 60 * 1000);
+// setInterval(checkTaskExpiry, 60 * 1000);
 
 // ---------------------------------------------------------------
 

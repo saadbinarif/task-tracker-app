@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useTaskContext } from '../hook/useTaskContext'
+import ButtonPrimary from '../ui/ButtonPrimary'
 
 export default function TaskForm(){
 const {dispatch} = useTaskContext();
@@ -42,7 +43,7 @@ const {dispatch} = useTaskContext();
 
   return (
     <form className="create" onSubmit={handleSubmit}> 
-      <h3>Add a New Task</h3>
+      <h3 className='text-secondary'>Add a New Task</h3>
 
       <label>Task Title:</label>
       <input 
@@ -77,6 +78,7 @@ const {dispatch} = useTaskContext();
       />
 
       <button>Add Task</button>
+      <ButtonPrimary>Add task</ButtonPrimary>
       {error && <div className="error">{error}</div>}
     </form>
   )

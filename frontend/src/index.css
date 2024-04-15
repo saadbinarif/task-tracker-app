@@ -1,4 +1,8 @@
 /* google font */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;800&family=VT323&display=swap');
 
 /* layout */
@@ -6,6 +10,7 @@
   --primary: #1aac83;
   --error: #e7195a;
 }
+
 body {
   background: #f1f1f1;
   margin: 0;
@@ -14,6 +19,7 @@ body {
 header {
   background: #fff;
 }
+/*
 header .container {
   max-width: 1400px;
   margin: 0 auto;
@@ -32,7 +38,7 @@ header a {
   margin: 0 auto;
 }
 
-/* homepage */
+/* homepage here-----
 .home {
   display: grid;
   grid-template-columns: 3fr 1fr;
@@ -81,7 +87,7 @@ header a {
   padding-top:10px
 }
 
-/* new task form */
+/* new task form here=======
 label, input {
   display: block;
 }
@@ -94,7 +100,7 @@ input {
   border-radius: 4px;
   box-sizing: border-box;
 }
-form button {
+/* form button {
   background: var(--primary);
   border: 0;
   color: #fff;
@@ -102,7 +108,7 @@ form button {
   font-family: "Poppins";
   border-radius: 4px;
   cursor: pointer;
-}
+} here=========
 div.error {
   padding: 10px;
   background: #ffefef;
@@ -114,3 +120,4 @@ div.error {
 input.error {
   border: 1px solid var(--error);
 }
+*/

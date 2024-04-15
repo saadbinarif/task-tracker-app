@@ -38,7 +38,7 @@ const getTask = async (req, res, next) => {
 
 //to create a task
 const createTask = async (req, res) => {
-  const { title, description, status, dueDate, creator_id } = req.body;
+  const { title, description, status, dueDate, creator_id="6619a78db6b20d62a6bb56e0" } = req.body;
 
   let emptyFields = [];
 
