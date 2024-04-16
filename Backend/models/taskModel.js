@@ -17,6 +17,15 @@ const taskSchema = new Schema({
         type: String,
         required: true,
     },
+    // subtasks:[
+    //     {title: String, isCompleted: Boolean}
+    // ],
+    subtasks: [
+        { type: mongoose.Schema.Types.ObjectId, ref: 'subtaskModel' }
+    ],
+    progress:{
+        type: Number
+    },
     dueDate: {
         type: Date
     },

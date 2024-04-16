@@ -3,7 +3,14 @@ const mongoose = require("mongoose");
 const taskModel = require("../models/taskModel");
 const taskModelp = require("../models/postgresModels/taskModelp");
 
+//To calculate progress while creating and updating task
+const calculateProgress = (subtasks)=>{
+  const totalSubtasks = subtasks.length;
+  if(subtasks.length === 0) return 0;
+  const CompletedSubtasks = subtasks.filter(subtask=>subtask.isComplete).length;
+  return (CompletedSubtasks / totalSubtasks) * 100
 
+}
 
 // to get all tasks
 const getAllTasks = async (req, res) => {
@@ -14,7 +21,7 @@ const getAllTasks = async (req, res) => {
 };
 
 //to get a single task
-const getTask = async (req, res, next) => {
+const getTask = async (req, res) => {
 
   const { id } = req.params;
 
@@ -38,7 +45,7 @@ const getTask = async (req, res, next) => {
 
 //to create a task
 const createTask = async (req, res) => {
-  const { title, description, status, dueDate, creator_id="6619a78db6b20d62a6bb56e0" } = req.body;
+  const { title, description, status, dueDate, creator_id="6619a78db6b20d62a6bb56e0", subtasks } = req.body;
 
   let emptyFields = [];
 
@@ -57,7 +64,7 @@ const createTask = async (req, res) => {
       .json({ error: "Please fill all the fields", emptyFields });
   }
 
-
+  const progress = calculateProgress(subtasks || [])
   // coming from req headers via requireAuth middleware
   // const creator_id = req.user._id;
   const parsedDueDate = new Date(dueDate);
@@ -65,10 +72,12 @@ const createTask = async (req, res) => {
     title,
     description,
     status,
+    subtasks,
+    progress,
     dueDate: parsedDueDate,
     creator_id,
   });
-  res.status(200).json(task);
+  return res.status(200).json(task);
 
 
 };
@@ -123,7 +132,7 @@ const autoComplete = async (req, res) => {
 
   const { query } = req.query;
   if (!query) {
-    return res.status(400).json({ error: 'Query parameter is required' });
+    return res.status(400).json({ error: 'Search field is empty' });
   }
 
   const suggestions = await taskModel.find({
