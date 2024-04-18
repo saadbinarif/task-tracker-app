@@ -6,6 +6,7 @@ const taskSchema = new Schema({
     title: {
         type: String,
         required: true,
+        
     },
 
     description: {
@@ -17,11 +18,8 @@ const taskSchema = new Schema({
         type: String,
         required: true,
     },
-    // subtasks:[
-    //     {title: String, isCompleted: Boolean}
-    // ],
-    subtasks: [
-        { type: mongoose.Schema.Types.ObjectId, ref: 'subtaskModel' }
+    subtasks:[
+        {title: String, isComplete: Boolean}
     ],
     progress:{
         type: Number
@@ -33,7 +31,11 @@ const taskSchema = new Schema({
         type: String,
         required: true
 
-    }
+    },
+    tags: [{
+        type: Schema.Types.ObjectId,
+        ref: 'tag'
+    }]
 }, {timestamps: true})
 
 module.exports = mongoose.model('task', taskSchema);

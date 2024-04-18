@@ -1,4 +1,4 @@
-import {  useEffect } from "react"
+import {  useEffect, useState } from "react"
 import TaskDetails from "../components/TaskDetails"
 import TaskForm from "../components/TaskForm"
 import { useTaskContext } from "../hook/useTaskContext"
@@ -7,6 +7,12 @@ import io from 'socket.io-client';
 const socket = io('http://localhost:3000');
 
 export default function Home(){
+    const [val,setval] = useState('')
+
+    const handledate = (e)=>{
+        setval(e.target.value)
+        console.log(val)
+    }
     
     const {tasks, dispatch} = useTaskContext()
 
@@ -36,7 +42,9 @@ export default function Home(){
                 })
             }
         </div>
-            <TaskForm />
+           
+            <input type="datetime-local" onChange={handledate } value={val}></input>
+            
       </div>
     )
   }

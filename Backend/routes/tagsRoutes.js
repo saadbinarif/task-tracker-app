@@ -1,13 +1,16 @@
 const express = require('express')
+const requireAuth = require('../middlewares/requireAuth')
+const tryCatch = require('../middlewares/tryCatch');
 const {getTags, deleteTag, createTag} = require('../controllers/tagController')
 
 const router = express.Router();    
 
 
-router.get('/', getTags)
+router.use(requireAuth)
+router.get('/', tryCatch(getTags))
 
-router.post('/', createTag)
+router.post('/', tryCatch(createTag))
 
-router.delete('/:id', deleteTag)
+router.delete('/:id', tryCatch(deleteTag))
 
 module.exports = router

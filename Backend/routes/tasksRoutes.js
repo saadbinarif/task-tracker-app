@@ -8,7 +8,10 @@ const {
     getTask,
     deleteTask,
     updateTask,
-    autoComplete
+    autoComplete,
+    createSubtask,
+    updateSubtask,
+    deleteSubtask
 
 } = require('../controllers/taskController');
 
@@ -16,7 +19,7 @@ const {
 
 const router = express.Router();
 
-// router.use(requireAuth)
+router.use(requireAuth)
 
 //searchparams
 router.get('/autocomplete', tryCatch(autoComplete))
@@ -35,6 +38,15 @@ router.put('/:id', tryCatch(updateTask))
 
 //delete a task
 router.delete('/:id', tryCatch(deleteTask))
+
+//create a subtask
+router.post('/:taskid/subtask', tryCatch(createSubtask))
+
+//update subtask
+router.put('/:taskid/subtask/:subtaskid', tryCatch(updateSubtask))
+
+//delete subtask
+router.delete('/:taskid/subtask/:subtaskid', tryCatch(deleteSubtask))
 
 
 

@@ -15,7 +15,7 @@ export default function Signup(){
             <ButtonPrimary>Sign up</ButtonPrimary>
 
             </form>
-            
+                      
             </div>
             
         </div>

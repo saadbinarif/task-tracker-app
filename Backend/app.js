@@ -12,11 +12,11 @@ var cors = require("cors");
 let usePosgres = require("./db/connect.js")
 const errorHandler = require("./middlewares/errorHandler.js");
 
-// const {checkTaskExpiry } = require('./notificationService');
+
 const http = require('http');
 const cron = require('node-cron');
-const taskModel = require("./models/taskModel.js");
-const moment = require('moment');
+const socketSetup = require('./socket'); 
+const { checkTaskExpiry } = require('./taskService');
 
 
 const options = {
@@ -44,12 +44,8 @@ app.use(cors());
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 
-const server = require('http').createServer(app)
-const io = require('socket.io')(server, {
-    cors:{
-        origin:"*"
-    }
-})
+const server = http.createServer(app);
+const io = socketSetup(server);
 
 
 
@@ -87,27 +83,11 @@ app.use(express.json());
 //   checkTaskExpiry(io);
 // });
 
-io.on('connection', (socket) => {
-  console.log('a user connected');
-  
-  // Disconnect event
-  socket.on('disconnect', () => {
-      console.log('user disconnected');
-  });
-});
+setInterval(() => {
+  checkTaskExpiry(io);
+}, 60000);
 
-// Function to check for tasks due within 30 minutes and send notifications
-async function checkTaskExpiry() {
-    const tasks = await taskModel.find({ dueDate: { $gt: new Date(), $lt: moment().add(30, 'minutes').toDate() } });
-    tasks.forEach(task => {
-        io.emit(`task_expires`, { message: `Your task "${task.title}" is due in 30 minutes.` });
-    });
-}
-
-// Check task expiry every minute
-// setInterval(checkTaskExpiry, 60 * 1000);
-
-// ---------------------------------------------------------------
+//----------------------------------------------------------------
 
 
 app.use("/auth", authRoutes);
