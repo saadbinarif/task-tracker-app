@@ -1,13 +1,14 @@
 
+import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 
 // pages & components
-import Home from './pages/Home'
+// import Home from './pages/Home'
 import Navbar from './components/Navbar'
 import Signup from './pages/Signup';
 import Signin from './pages/Signin';
 
-function App() {
+function App(): JSX.Element {
   return (
     <div className="App">
       <BrowserRouter>
@@ -16,7 +17,7 @@ function App() {
           <Routes>
             <Route 
               path="/" 
-              element={<Home />} 
+              element={<Signup />} 
             />
             <Route 
             path="/signup"

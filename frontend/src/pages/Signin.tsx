@@ -1,7 +1,8 @@
+import React from "react";
 import TextInput from "../ui/TextInput";
 import ButtonPrimary from "../ui/ButtonPrimary";
 
-export default function Signip(){
+export default function Signin():JSX.Element{
 
     return(
         <div>
@@ -12,6 +13,7 @@ export default function Signip(){
             <TextInput placeholderProp="Email" />
             <TextInput placeholderProp="Password" />
             <ButtonPrimary>Sign up</ButtonPrimary>
+            
 
             </form>
             

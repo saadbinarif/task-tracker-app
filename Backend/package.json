@@ -2,7 +2,7 @@
   "name": "task-tracker",
   "version": "1.0.0",
   "description": "\"internship mini project\"",
-  "main": "index.js",
+  "main": "index.tsx",
   "scripts": {
     "test": "jest --watchAll --verbose",
     "start": "nodemon app.js",

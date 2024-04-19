@@ -5,8 +5,7 @@ import "./index.css"
 import { TaskContextProvider } from './context/taskContext';
 
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
+ReactDOM.createRoot(document.getElementById('root')!).render(
 
   <React.StrictMode>
   <TaskContextProvider>
