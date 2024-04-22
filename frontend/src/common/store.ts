@@ -1,4 +1,4 @@
-import { createStore, combineReducers, applyMiddleware } from 'redux';
+import { createStore, combineReducers } from 'redux';
 import taskReducer from './reducers/taskReducers';
 
 const rootReducer = combineReducers({

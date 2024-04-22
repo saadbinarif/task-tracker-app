@@ -1,10 +1,10 @@
 import React, {useState} from "react"
-import TextInput from "../ui/TextInput";
-import ButtonPrimary from "../ui/ButtonPrimary";
+import TextInput from "../common/ui/TextInput";
+import ButtonPrimary from "../common/ui/ButtonPrimary";
 
 import Modal from '@mui/material/Modal';
 import { Box } from "@mui/material";
-import PrimaryButton from "../ui/ButtonPrimary";
+import PrimaryButton from "../common/ui/ButtonPrimary";
 
 export default function Signup(): JSX.Element{
 

@@ -1,4 +1,4 @@
-import { Task } from "../types/types";
+import { Task } from "../../types/types";
 import {
   FETCH_TASKS_REQUEST,
   FETCH_TASKS_SUCCESS,

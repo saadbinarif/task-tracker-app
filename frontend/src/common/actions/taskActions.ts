@@ -1,4 +1,4 @@
-import { Task } from "../types/types"; // Define Task type
+import { Task } from "../../types/types"; 
 
 // Action Types
 export const FETCH_TASKS_REQUEST = 'FETCH_TASKS_REQUEST';

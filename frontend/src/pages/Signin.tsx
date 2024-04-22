@@ -1,11 +1,13 @@
 import React from "react";
-import TextInput from "../ui/TextInput";
-import ButtonPrimary from "../ui/ButtonPrimary";
+import TextInput from "../common/ui/TextInput";
+import ButtonPrimary from "../common/ui/ButtonPrimary";
+import Sidebar from "../common/components/Sidebar";
 
 export default function Signin():JSX.Element{
 
     return(
         <div>
+            <Sidebar />
             <div className="bg-primary flex flex-col items-center justify-center h-screen ">
             <div className="bg-[#f1f1f1] w-full max-w-md rounded-lg shadow-md p-8">
             <h2 className="text-[28px] font-bold mb-6 text-center">Login</h2>
