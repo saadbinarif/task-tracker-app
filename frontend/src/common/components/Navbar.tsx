@@ -76,7 +76,7 @@ const Navbar: React.FC = ()=>{
     open={drawerOpen}
     onClose={handleDrawerToggle}
   >
-    <Typography sx={{textAlign:'right', my:'15px'}} onClick={handleDrawerToggle}> back</Typography>
+    <Typography sx={{textAlign:'right', my:'15px', mx:"10px", fontWeight:'800', cursor:'pointer' }} onClick={handleDrawerToggle}> &lt;</Typography>
     <List>
       <ListItemButton>
         <ListItemIcon>
