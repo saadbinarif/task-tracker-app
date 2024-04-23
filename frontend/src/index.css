@@ -121,3 +121,9 @@ input.error {
   border: 1px solid var(--error);
 }
 */
+.truncate-3-lines {
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3; /* Adjust this value to truncate after 2-3 lines */
+}

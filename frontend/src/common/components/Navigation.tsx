@@ -1,17 +1,14 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, IconButton, Button, MenuItem, ListItemIcon, Menu } from '@mui/material';
-import { Logout } from '@mui/icons-material';
-
-import { Box, Drawer, List, ListItem, ListItemButton,  ListItemText } from '@mui/material';
+import { AppBar, Toolbar, Typography, IconButton, Button, MenuItem, ListItemIcon, Menu, Box, Drawer, List, ListItem, ListItemButton,  ListItemText } from '@mui/material';
+import { FilterAlt, Logout, Dashboard, ArrowBack, Notifications } from '@mui/icons-material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Dashboard} from '@mui/icons-material'; 
-import CallIcon from '@mui/icons-material/Call';
-import SubscriptionsIcon from '@mui/icons-material/Subscriptions';
 
 
 
-const Navbar: React.FC = ()=>{
+
+
+const Navigation: React.FC = ()=>{
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -30,15 +27,16 @@ const Navbar: React.FC = ()=>{
 
   return (
     <>
-    <AppBar position="static" sx={{ backgroundColor: '#f1f1f1' }}>
+    <div>
+    <AppBar position="static" sx={{ backgroundColor: '#1aac83' }}>
       <Toolbar>
      
         <div className='flex justify-between container'>
         <IconButton edge="start" color="inherit" onClick={handleDrawerToggle}>
-          <MenuIcon sx={{color:'black'}}/>
+          <MenuIcon />
       </IconButton>
         <Typography variant="h6" component="div">
-          <span className='text-black'>Task Tracker</span>
+          <span className='text-white font-bold text-3xl'>Task Tracker</span>
         </Typography>
         <div>
           <Button
@@ -69,14 +67,20 @@ const Navbar: React.FC = ()=>{
         </div>
         </div>
       </Toolbar>
-    </AppBar>   
+    </AppBar> 
+    </div>  
+    <div>
     <Drawer
     variant="persistent"
     anchor="left"
     open={drawerOpen}
     onClose={handleDrawerToggle}
   >
-    <Typography sx={{textAlign:'right', my:'15px', mx:"10px", fontWeight:'800', cursor:'pointer' }} onClick={handleDrawerToggle}> &lt;</Typography>
+    {/* <Typography sx={{textAlign:'right', my:'15px', mx:"10px", fontWeight:'800', cursor:'pointer' }} onClick={handleDrawerToggle}> &lt;</Typography> */}
+    <Box sx={{textAlign:'right', my:'20px'}}>
+      <ArrowBack onClick={handleDrawerToggle}/>
+    </Box>
+    <hr />
     <List>
       <ListItemButton>
         <ListItemIcon>
@@ -86,20 +90,21 @@ const Navbar: React.FC = ()=>{
       </ListItemButton>
       <ListItemButton>
         <ListItemIcon>
-          <CallIcon />
+          <Notifications />
         </ListItemIcon>
-        <ListItemText primary="Today" />
+        <ListItemText primary="Notifications" />
       </ListItemButton>
       <ListItemButton>
         <ListItemIcon>
-          <SubscriptionsIcon />
+          <FilterAlt />
         </ListItemIcon>
         <ListItemText primary="Filters" />
       </ListItemButton>
     </List>
   </Drawer>
+  </div>
   </>
   )
 }
 
- export default Navbar
+ export default Navigation
