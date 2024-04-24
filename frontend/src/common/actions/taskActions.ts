@@ -1,4 +1,4 @@
-import { Task } from "../../types/types"; 
+
 
 // Action Types
 export const FETCH_TASKS_REQUEST = 'FETCH_TASKS_REQUEST';
@@ -22,7 +22,7 @@ export const fetchTasksRequest = () => ({
   type: FETCH_TASKS_REQUEST,
 });
 
-export const fetchTasksSuccess = (tasks: Task[]) => ({
+export const fetchTasksSuccess = (tasks: ITask[]) => ({
   type: FETCH_TASKS_SUCCESS,
   payload: tasks,
 });
@@ -33,12 +33,12 @@ export const fetchTasksFailure = (error: string) => ({
 });
 
 
-export const createTaskRequest = (taskData: Task) => ({
+export const createTaskRequest = (taskData: ITask) => ({
     type: CREATE_TASK_REQUEST,
     payload: taskData,
   });
   
-  export const createTaskSuccess = (task: Task) => ({
+  export const createTaskSuccess = (task: ITask) => ({
     type: CREATE_TASK_SUCCESS,
     payload: task,
   });
@@ -63,12 +63,12 @@ export const createTaskRequest = (taskData: Task) => ({
     payload: error,
   });
   
-  export const updateTaskRequest = (taskData: Task) => ({
+  export const updateTaskRequest = (taskData: ITask) => ({
     type: UPDATE_TASK_REQUEST,
     payload: taskData,
   });
   
-  export const updateTaskSuccess = (task: Task) => ({
+  export const updateTaskSuccess = (task: ITask) => ({
     type: UPDATE_TASK_SUCCESS,
     payload: task,
   });

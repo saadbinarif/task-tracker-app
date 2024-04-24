@@ -1,4 +1,4 @@
-import { Task } from "../../types/types";
+
 import {
   FETCH_TASKS_REQUEST,
   FETCH_TASKS_SUCCESS,
@@ -16,7 +16,7 @@ import {
 
 
 interface TaskState {
-  tasks: Task[];
+  tasks: ITask[];
   loading: boolean;
   error: string | null;
 }

@@ -1,6 +1,10 @@
 import React from "react";
 import Header from "../common/components/Header";
-import TaskCard from "../common/ui/TaskCard";
+// import TaskCard from "../common/ui/TaskCard";
+import TaskList from "../common/components/TaskList"
+import tasks from "../tasks";
+
+
 
 
 
@@ -27,7 +31,7 @@ const Dashboard: React.FC = ()=>{
         
     </div>        
        <div className="p-10">
-        <TaskCard />
+        <TaskList taskList={tasks}/>
        </div>
         
 
