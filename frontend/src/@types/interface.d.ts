@@ -1,5 +1,10 @@
 
 export declare global {
+    export interface IAction {
+        type: string
+        payload?: any
+    }
+
     export interface ISubtask {
         _id: string;
         title: string;
@@ -22,5 +27,7 @@ export declare global {
         subtasks: ISubtask[];
         tags: ITag[];
     }
+
+    
 
 }

@@ -1,97 +1,90 @@
-
+import { Reducer } from 'redux'
 import {
-  FETCH_TASKS_REQUEST,
-  FETCH_TASKS_SUCCESS,
-  FETCH_TASKS_FAILURE,
-  CREATE_TASK_REQUEST,
-  CREATE_TASK_SUCCESS,
-  CREATE_TASK_FAILURE,
-  DELETE_TASK_REQUEST,
-  DELETE_TASK_SUCCESS,
-  DELETE_TASK_FAILURE,
-  UPDATE_TASK_REQUEST,
-  UPDATE_TASK_SUCCESS,
-  UPDATE_TASK_FAILURE
+ TaskActions
 } from "../actions/taskActions";
 
 
-interface TaskState {
+interface ITaskState {
   tasks: ITask[];
   loading: boolean;
   error: string | null;
 }
 
-const initialState: TaskState = {
+const initialState: ITaskState = {
   tasks: [],
   loading: false,
   error: null,
 };
 
+const PENDING = "_PENDING"
+const FULFILLED = "_FULFILLED"
+const REJECT = "_REJECT"
+
 // Task Reducer
-const taskReducer = (state = initialState, action: any): TaskState => {
+const taskReducer : Reducer = (state = initialState, action: IAction): ITaskState => {
   switch (action.type) {
-    case FETCH_TASKS_REQUEST:
+    case TaskActions.FETCH_ALL_TASKS + PENDING:
       return {
         ...state,
         loading: true,
       };
-    case FETCH_TASKS_SUCCESS:
+    case  TaskActions.FETCH_ALL_TASKS + FULFILLED:
       return {
         ...state,
         loading: false,
         tasks: action.payload,
       };
-    case FETCH_TASKS_FAILURE:
+    case TaskActions.FETCH_ALL_TASKS + REJECT:
       return {
         ...state,
         loading: false,
         error: action.payload,
       };
-      case CREATE_TASK_REQUEST:
+      case TaskActions.CREATE_TASK + PENDING:
       return {
         ...state,
         loading: true,
       };
-    case CREATE_TASK_SUCCESS:
+    case TaskActions.CREATE_TASK + FULFILLED:
       return {
         ...state,
         tasks: [...state.tasks, action.payload],
       };
-      case CREATE_TASK_FAILURE:
+      case TaskActions.CREATE_TASK + REJECT:
       return {
         ...state,
         loading: false,
         error: action.payload,
       };
-      case DELETE_TASK_REQUEST:
+      case TaskActions.DELETE_TASK + PENDING:
         return {
           ...state,
           loading: true,
         };
-    case DELETE_TASK_SUCCESS:
+    case TaskActions.DELETE_TASK + FULFILLED:
       return {
         ...state,
-        tasks: state.tasks.filter(task => task._id !== action.payload),
+        tasks: state.tasks.filter((task:ITask) => task._id !== action.payload),
       };
-      case DELETE_TASK_FAILURE:
+      case TaskActions.DELETE_TASK + REJECT:
       return {
         ...state,
         loading: false,
         error: action.payload,
       };
-      case UPDATE_TASK_REQUEST:
+      case TaskActions.UPDATE_TASK + PENDING:
         return {
           ...state,
           loading: true,
         };
-    case UPDATE_TASK_SUCCESS:
+    case TaskActions.UPDATE_TASK + FULFILLED:
       return {
         ...state,
-        tasks: state.tasks.map(task =>
+        tasks: state.tasks.map((task:ITask) =>
           task._id === action.payload._id ? action.payload : task
         ),
       };
-      case UPDATE_TASK_FAILURE:
+      case TaskActions.UPDATE_TASK + REJECT:
       return {
         ...state,
         loading: false,

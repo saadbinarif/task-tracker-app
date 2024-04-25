@@ -1,79 +1,44 @@
 
 
 // Action Types
-export const FETCH_TASKS_REQUEST = 'FETCH_TASKS_REQUEST';
-export const FETCH_TASKS_SUCCESS = 'FETCH_TASKS_SUCCESS';
-export const FETCH_TASKS_FAILURE = 'FETCH_TASKS_FAILURE';
+export enum TaskActions {
+   FETCH_ALL_TASKS = 'FETCH_ALL_TASKS',
+   CREATE_TASK = 'CREATE_TASK',
+   UPDATE_TASK = 'UPDATE_TASK',
+   DELETE_TASK = 'DELETE_TASK',
+   CREATE_SUBTASK = 'CREATE_SUBTASK'
+ 
 
-export const CREATE_TASK_REQUEST = 'CREATE_TASK_REQUEST';
-export const CREATE_TASK_SUCCESS = 'CREATE_TASK_SUCCESS';
-export const CREATE_TASK_FAILURE = 'CREATE_TASK_FAILURE';
+}
 
-export const DELETE_TASK_REQUEST = 'DELETE_TASK_REQUEST';
-export const DELETE_TASK_SUCCESS = 'DELETE_TASK_SUCCESS';
-export const DELETE_TASK_FAILURE = 'DELETE_TASK_FAILURE';
-
-export const UPDATE_TASK_REQUEST = 'UPDATE_TASK_REQUEST';
-export const UPDATE_TASK_SUCCESS = 'UPDATE_TASK_SUCCESS';
-export const UPDATE_TASK_FAILURE = 'UPDATE_TASK_FAILURE';
 
 // Action Creators
-export const fetchTasksRequest = () => ({
-  type: FETCH_TASKS_REQUEST,
-});
 
-export const fetchTasksSuccess = (tasks: ITask[]) => ({
-  type: FETCH_TASKS_SUCCESS,
+export const fetchAllTasks = (tasks: ITask[]) => ({
+  type: TaskActions.FETCH_ALL_TASKS,
   payload: tasks,
 });
 
-export const fetchTasksFailure = (error: string) => ({
-  type: FETCH_TASKS_FAILURE,
-  payload: error,
-});
-
-
-export const createTaskRequest = (taskData: ITask) => ({
-    type: CREATE_TASK_REQUEST,
-    payload: taskData,
-  });
   
-  export const createTaskSuccess = (task: ITask) => ({
-    type: CREATE_TASK_SUCCESS,
+  export const createTask = (task: ITask) => ({
+    type: TaskActions.CREATE_TASK,
     payload: task,
   });
   
-  export const createTaskFailure = (error: string) => ({
-    type: CREATE_TASK_FAILURE,
-    payload: error,
-  });
   
-  export const deleteTaskRequest = (taskId: string) => ({
-    type: DELETE_TASK_REQUEST,
+  export const deleteTask = (taskId: string) => ({
+    type: TaskActions.DELETE_TASK,
     payload: taskId,
   });
   
-  export const deleteTaskSuccess = (taskId: string) => ({
-    type: DELETE_TASK_SUCCESS,
-    payload: taskId,
-  });
   
-  export const deleteTaskFailure = (error: string) => ({
-    type: DELETE_TASK_FAILURE,
-    payload: error,
-  });
   
-  export const updateTaskRequest = (taskData: ITask) => ({
-    type: UPDATE_TASK_REQUEST,
-    payload: taskData,
-  });
-  
-  export const updateTaskSuccess = (task: ITask) => ({
-    type: UPDATE_TASK_SUCCESS,
+  export const updateTask = (task: ITask) => ({
+    type: TaskActions.UPDATE_TASK,
     payload: task,
   });
   
-  export const updateTaskFailure = (error: string) => ({
-    type: UPDATE_TASK_FAILURE,
-    payload: error,
-  });
+  export const createSubtask = (task: ITask) => ({
+    type: TaskActions.CREATE_SUBTASK
+  })
+  

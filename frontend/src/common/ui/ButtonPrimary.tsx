@@ -1,5 +1,5 @@
 import React, {ReactNode, MouseEvent} from 'react'
-import { Interface } from 'readline';
+
 
 interface PrimaryButtonProps {
     children:ReactNode;
