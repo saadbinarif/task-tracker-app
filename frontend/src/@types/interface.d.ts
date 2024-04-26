@@ -28,6 +28,19 @@ export declare global {
         tags: ITag[];
     }
 
+    export interface IUser {
+        _id: string;
+        email: string,
+        isEmailVerified: boolean,
+        isTwoFA: boolean,
+    }
+        
+        
+        
+        
+
+    
+
     
 
 }

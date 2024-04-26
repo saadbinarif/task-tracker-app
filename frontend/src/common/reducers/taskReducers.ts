@@ -1,6 +1,6 @@
 import { Reducer } from 'redux'
 import {
- TaskActions
+  TaskActions
 } from "../actions/taskActions";
 
 
@@ -21,14 +21,14 @@ const FULFILLED = "_FULFILLED"
 const REJECT = "_REJECT"
 
 // Task Reducer
-const taskReducer : Reducer = (state = initialState, action: IAction): ITaskState => {
+const taskReducer: Reducer = (state = initialState, action: IAction): ITaskState => {
   switch (action.type) {
     case TaskActions.FETCH_ALL_TASKS + PENDING:
       return {
         ...state,
         loading: true,
       };
-    case  TaskActions.FETCH_ALL_TASKS + FULFILLED:
+    case TaskActions.FETCH_ALL_TASKS + FULFILLED:
       return {
         ...state,
         loading: false,
@@ -40,7 +40,7 @@ const taskReducer : Reducer = (state = initialState, action: IAction): ITaskStat
         loading: false,
         error: action.payload,
       };
-      case TaskActions.CREATE_TASK + PENDING:
+    case TaskActions.CREATE_TASK + PENDING:
       return {
         ...state,
         loading: true,
@@ -50,41 +50,41 @@ const taskReducer : Reducer = (state = initialState, action: IAction): ITaskStat
         ...state,
         tasks: [...state.tasks, action.payload],
       };
-      case TaskActions.CREATE_TASK + REJECT:
+    case TaskActions.CREATE_TASK + REJECT:
       return {
         ...state,
         loading: false,
         error: action.payload,
       };
-      case TaskActions.DELETE_TASK + PENDING:
-        return {
-          ...state,
-          loading: true,
-        };
+    case TaskActions.DELETE_TASK + PENDING:
+      return {
+        ...state,
+        loading: true,
+      };
     case TaskActions.DELETE_TASK + FULFILLED:
       return {
         ...state,
-        tasks: state.tasks.filter((task:ITask) => task._id !== action.payload),
+        tasks: state.tasks.filter((task: ITask) => task._id !== action.payload),
       };
-      case TaskActions.DELETE_TASK + REJECT:
+    case TaskActions.DELETE_TASK + REJECT:
       return {
         ...state,
         loading: false,
         error: action.payload,
       };
-      case TaskActions.UPDATE_TASK + PENDING:
-        return {
-          ...state,
-          loading: true,
-        };
+    case TaskActions.UPDATE_TASK + PENDING:
+      return {
+        ...state,
+        loading: true,
+      };
     case TaskActions.UPDATE_TASK + FULFILLED:
       return {
         ...state,
-        tasks: state.tasks.map((task:ITask) =>
+        tasks: state.tasks.map((task: ITask) =>
           task._id === action.payload._id ? action.payload : task
         ),
       };
-      case TaskActions.UPDATE_TASK + REJECT:
+    case TaskActions.UPDATE_TASK + REJECT:
       return {
         ...state,
         loading: false,

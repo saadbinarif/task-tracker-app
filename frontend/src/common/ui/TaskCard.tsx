@@ -14,19 +14,21 @@ const TaskCard:React.FC<TaskCardProps> = ({taskData})=>{
 
     const [open, setOpen] = useState(false);
     const handleOpen = () => {
-        setOpen(prevState=>!prevState);
+        setOpen(true);
         console.log('onHandleOpen', open)
     }
     const handleClose = () => {
-        setOpen(prevState=>!prevState);
+        setOpen(false);
         console.log('onHandleClose', open)
     }
-
     
+
+    {console.log(open)}
     return (
         <>
         <div className="bg-white w-3/5 min-w-60 p-4 rounded-xl mb-4" id="main-card" onClick={handleOpen}>
             <p className="font-semibold text-xl">{taskData.title}</p>
+            
             <p className="font-light text-sm truncate-3-lines">{taskData.description}</p>
             <div className="flex gap-2 p-1">
                 {
@@ -46,8 +48,9 @@ const TaskCard:React.FC<TaskCardProps> = ({taskData})=>{
                 <p className="mb-1">Due date: <span className="text-black"><CalendarTodayIcon sx={{fontSize:"14px"}}/> {taskData.dueDate}</span></p>
                 <p>Progress: <span  className="text-black">{taskData.progress}%</span></p>
             </div>
-            <DisplayTask isOpen={open} onClose={handleClose} />
+            
         </div>
+        <DisplayTask isOpen={open} onClose={handleClose} />
         </>
 
         
