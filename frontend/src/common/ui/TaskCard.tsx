@@ -43,7 +43,7 @@ const TaskCard:React.FC<TaskCardProps> = ({taskData})=>{
             <div className="p-2">
             <hr />
             </div>
-            <div className="text-[#9ca3af] text-xs">
+            <div className="text-[#999999] text-xs">
                 <p className="mb-1">Status: <span className="text-black">{taskData.status}</span></p>
                 <p className="mb-1">Due date: <span className="text-black"><CalendarTodayIcon sx={{fontSize:"14px"}}/> {taskData.dueDate}</span></p>
                 <p>Progress: <span  className="text-black">{taskData.progress}%</span></p>
