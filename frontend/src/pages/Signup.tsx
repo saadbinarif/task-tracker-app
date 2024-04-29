@@ -19,9 +19,9 @@ export default function Signup(): JSX.Element{
             <div className="bg-[#f1f1f1] w-full max-w-md rounded-lg shadow-md p-8">
             <h2 className="text-[28px] font-bold mb-6 text-center">Sign up</h2>
             <form className="flex flex-col">
-            <TextInput placeholderProp="Username" />
-            <TextInput placeholderProp="Email" />
-            <TextInput placeholderProp="Password" />
+            <TextInput placeholderProp="Username" nameProp="username" />
+            <TextInput placeholderProp="Email" nameProp="Email" />
+            <TextInput placeholderProp="Password" nameProp="Password"/>
             <ButtonPrimary onClickProp = {handleOpen}>Sign up</ButtonPrimary>
             
              <Modal

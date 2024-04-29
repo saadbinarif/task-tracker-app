@@ -1,4 +1,5 @@
 import React, { useState, ChangeEvent, useEffect, useRef } from "react";
+import { Controller } from 'react-hook-form';
 
 interface PlainTextInputProps{
     placeHolderProp: string,
