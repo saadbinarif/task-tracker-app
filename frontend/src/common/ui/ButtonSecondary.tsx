@@ -12,7 +12,7 @@ const ButtonSecondary: React.FC<ButtonSecondaryProps> = ({children, paddingProp=
         onClickProp && onClickProp();
     }
     return(
-        <button className={`bg-transparent border-2 border-primary text-primary p-${paddingProp} text-sm rounded-sm `} onClick={handleClick}>{children}</button>
+        <button className={`bg-transparent border border-primary text-primary p-${paddingProp} text-sm rounded-sm `} onClick={handleClick}>{children}</button>
     )
 }
 

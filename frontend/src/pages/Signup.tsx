@@ -1,28 +1,48 @@
 import React, {useState} from "react"
 import TextInput from "../common/ui/TextInput";
 import ButtonPrimary from "../common/ui/ButtonPrimary";
+import { useForm } from "react-hook-form";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from "zod";
+
 
 import Modal from '@mui/material/Modal';
 import { Box } from "@mui/material";
 import PrimaryButton from "../common/ui/ButtonPrimary";
+
+const schema = z.object({
+    username: z.string().min(1),
+    email: z.string().email('Invalid email format').min(3),
+    password: z.string().min(8, {message: 'minimum 8 chracters required'}),
+});
+
+type FormValues = z.infer<typeof schema>
 
 export default function Signup(): JSX.Element{
 
     const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const {handleSubmit, control, formState:{errors}} = useForm<FormValues>({
+    resolver: zodResolver(schema)
+  })
   
+  const handleSignup = (data: FormValues) => {
+    console.log(data.email);
+
+};
 
     return(
         <div>
             <div className="bg-primary flex flex-col items-center justify-center h-screen ">
             <div className="bg-[#f1f1f1] w-full max-w-md rounded-lg shadow-md p-8">
             <h2 className="text-[28px] font-bold mb-6 text-center">Sign up</h2>
-            <form className="flex flex-col">
-            <TextInput placeholderProp="Username" nameProp="username" />
-            <TextInput placeholderProp="Email" nameProp="Email" />
-            <TextInput placeholderProp="Password" nameProp="Password"/>
-            <ButtonPrimary onClickProp = {handleOpen}>Sign up</ButtonPrimary>
+            <form className="flex flex-col" onSubmit={handleSubmit(handleSignup)}>
+            <TextInput placeholderProp="Username" nameProp="username" controlProp={control} errorProp={errors.username?.message} />
+            <TextInput placeholderProp="Email" nameProp="email" controlProp={control} errorProp={errors.email?.message} />
+            <TextInput placeholderProp="Password" nameProp="password" controlProp={control} errorProp={errors.password?.message} />
+            <ButtonPrimary type="submit" onClickProp={handleOpen}>Sign up</ButtonPrimary>
             
              <Modal
               open={open}
