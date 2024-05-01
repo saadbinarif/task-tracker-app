@@ -26,7 +26,7 @@ const TaskCard:React.FC<TaskCardProps> = ({taskData})=>{
     {console.log(open)}
     return (
         <>
-        <div className="bg-white w-3/5 min-w-60 p-4 rounded-xl mb-4" id="main-card" onClick={handleOpen}>
+        <div className="bg-white shadow-lg min-w-60 p-4 rounded-xl mb-4" onClick={handleOpen}>
             <p className="font-semibold text-xl">{taskData.title}</p>
             
             <p className="font-light text-sm truncate-3-lines">{taskData.description}</p>

@@ -1,15 +1,31 @@
+import { FormValues } from "../../pages/Signin"
+
 export enum AuthActions {
-    LOGIN = 'LOGIN',
+    LOGIN_REQUEST = 'LOGIN_REQUEST',
+    LOGIN_SUCCESS = 'LOGIN_SUCCESS',
+    LOGIN_FAILURE = 'LOGIN_FAILURE',
     LOGOUT = 'LOGOUT'
 
 }
 
-const setToken = (token: string) => ({
-    action: AuthActions.LOGIN,
-    payload: token
+export const LoginRequest = (data: any ):any =>  ({
+    type: AuthActions.LOGIN_REQUEST,
+    payload: data,    
 
 })
 
-const logout = () => ({
+export const LoginSuccess = (data: any ):any => ({
+    type: AuthActions.LOGIN_SUCCESS,
+    payload: data,    
+
+})
+
+export const LoginFailure = (error: any ):any => ({
+    type: AuthActions.LOGIN_FAILURE,
+    payload: error,    
+
+})
+
+export const logout = () => ({
     action: AuthActions.LOGOUT
 })

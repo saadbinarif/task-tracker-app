@@ -2,27 +2,31 @@ import React from "react";
 import TextInput from "../common/ui/TextInput";
 import ButtonPrimary from "../common/ui/ButtonPrimary";
 import { useForm } from 'react-hook-form';
+import { useDispatch, useSelector } from "react-redux";
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import { LoginRequest } from "../common/actions/AuthActions";
 
 const schema = z.object({
     email: z.string().email('Invalid email format').min(3),
     password: z.string().min(8, {message: 'minimum 8 chracters required'}),
 });
 
-type FormValues = z.infer<typeof schema>;
+export type FormValues = z.infer<typeof schema>;
 
 export default function Signin(): JSX.Element {
-
+    const dispatch = useDispatch();
+    const loading = useSelector((state: any) => state.auth?.loading);
     const { handleSubmit, control, formState: { errors } } = useForm<FormValues>({
         resolver: zodResolver(schema)
     })
 
     const handleSignin = (data: FormValues) => {
-        console.log(data);
+        
+        dispatch(LoginRequest(data));
 
     };
-
+  
     return (
         <div>
 
@@ -46,3 +50,4 @@ export default function Signin(): JSX.Element {
 
     );
 }
+

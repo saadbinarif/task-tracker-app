@@ -13,26 +13,24 @@ const initialState: IAuthState = {
     loading: false,
     error: false,
 };
-const PENDING = "_PENDING"
-const FULFILLED = "_FULFILLED"
-const REJECT = "_REJECT"
+
 
 const authReducer: Reducer = (state = initialState, action: IAction) => {
     switch (action.type) {
-        case AuthActions.LOGIN + PENDING:
+        case AuthActions.LOGIN_REQUEST:
             return {
                 ...state,
                 loading: true
 
             }
-        case AuthActions.LOGIN + FULFILLED:
+        case AuthActions.LOGIN_SUCCESS:
             return {
                 ...state,
                 loading: false,
                 user: action.payload
 
             }
-        case AuthActions.LOGIN + REJECT:
+        case AuthActions.LOGIN_FAILURE:
             return {
                 ...state,
                 loading: false,
