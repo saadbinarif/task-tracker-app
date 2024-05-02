@@ -26,6 +26,6 @@ export const LoginFailure = (error: any ):any => ({
 
 })
 
-export const logout = () => ({
+export const logoutRequest = () => ({
     action: AuthActions.LOGOUT
 })

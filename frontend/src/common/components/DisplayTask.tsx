@@ -60,12 +60,17 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ isOpen, onClose }) => {
             <div className="p-2">
                 <div className="container flex items-center">
                   <input  type="checkbox" className="w-4 h-4 bg-green-400  border-green-400 rounded-full focus:ring-green-500 " />
-                    <label className="ms-2 text-sm font-medium ">Default checkbox</label>
+                    <label className="ms-2 text-sm font-medium ">subtask 1</label>
                 </div>
                 <hr className="my-2" />
                 <div className="container flex items-center ">
                   <input  type="checkbox" className="w-4 h-4 bg-green-400  border-green-400 rounded-full focus:ring-green-500 " />
-                    <label className="ms-2 text-sm font-medium ">Default checkbox</label>
+                    <label className="ms-2 text-sm font-medium ">subtask 2</label>
+                </div>
+                <hr className="my-2" />
+                <div className="container flex items-center ">
+                  <input  type="checkbox" className="w-4 h-4 bg-green-400  border-green-400 rounded-full focus:ring-green-500 " />
+                    <label className="ms-2 text-sm font-medium ">subtask 2</label>
                 </div>
                 <hr className="my-2" />
               </div>

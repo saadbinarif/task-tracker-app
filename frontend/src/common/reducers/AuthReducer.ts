@@ -6,12 +6,14 @@ interface IAuthState {
     user: IUser[];
     loading: boolean;
     error: boolean;
+    isAuthenticted: boolean;
 }
 
 const initialState: IAuthState = {
     user: [],
     loading: false,
     error: false,
+    isAuthenticted: false
 };
 
 
@@ -27,7 +29,8 @@ const authReducer: Reducer = (state = initialState, action: IAction) => {
             return {
                 ...state,
                 loading: false,
-                user: action.payload
+                user: action.payload,
+                isAuthenticated: true
 
             }
         case AuthActions.LOGIN_FAILURE:
@@ -40,7 +43,8 @@ const authReducer: Reducer = (state = initialState, action: IAction) => {
         case AuthActions.LOGOUT:
             return {
                 ...state,
-                user: null
+                user: null,
+                isAuthenticated: false
             }
         default:
             return state
@@ -49,3 +53,5 @@ const authReducer: Reducer = (state = initialState, action: IAction) => {
 
     }
 }
+
+export default authReducer

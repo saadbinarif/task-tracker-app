@@ -18,7 +18,7 @@ function App(): JSX.Element {
         <div className="pages">
           <Routes>
             <Route 
-              path="/" 
+              path="/dashboard" 
               element={<Dashboard />} 
             />
             <Route 
