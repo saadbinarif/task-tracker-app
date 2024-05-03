@@ -5,6 +5,7 @@ import TagCard from "./TagCard";
 import DisplayTask from "../components/DisplayTask";
 
 
+
 interface TaskCardProps {
     taskData: ITask
 
@@ -23,7 +24,7 @@ const TaskCard:React.FC<TaskCardProps> = ({taskData})=>{
     }
     
 
-    {console.log(open)}
+        
     return (
         <>
         <div className="bg-white shadow-lg min-w-60 p-4 rounded-xl mb-4" onClick={handleOpen}>
@@ -50,7 +51,8 @@ const TaskCard:React.FC<TaskCardProps> = ({taskData})=>{
             </div>
             
         </div>
-        <DisplayTask isOpen={open} onClose={handleClose} />
+       
+        <DisplayTask isOpen={open} onClose={handleClose} taskData={taskData}/>
         </>
 
         

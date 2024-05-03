@@ -1,6 +1,8 @@
 // Action Types
 export enum TaskActions {
-  FETCH_ALL_TASKS = 'FETCH_ALL_TASKS',
+  FETCH_ALL_TASKS_REQUEST = 'FETCH_ALL_TASKS_REQUEST',
+  FETCH_ALL_TASKS_SUCCESS = 'FETCH_ALL_TASKS_SUCCESS',
+  FETCH_ALL_TASKS_FAILURE = 'FETCH_ALL_TASKS_FAILURE',
   CREATE_TASK = 'CREATE_TASK',
   UPDATE_TASK = 'UPDATE_TASK',
   DELETE_TASK = 'DELETE_TASK',
@@ -12,9 +14,19 @@ export enum TaskActions {
 
 // Action Creators
 
-export const fetchAllTasks = (tasks: ITask[]) => ({
-  type: TaskActions.FETCH_ALL_TASKS,
+export const fetchAllTasksRequest = (): any => ({
+  type: TaskActions.FETCH_ALL_TASKS_REQUEST,
+  
+});
+
+export const fetchAllTasksSuccess = (tasks: ITask[]): any => ({
+  type: TaskActions.FETCH_ALL_TASKS_SUCCESS,
   payload: tasks,
+});
+
+export const fetchAllTasksFailure = (error: any): any => ({
+  type: TaskActions.FETCH_ALL_TASKS_FAILURE,
+  payload: error,
 });
 
 

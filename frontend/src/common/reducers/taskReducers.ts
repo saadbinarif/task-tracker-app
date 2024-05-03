@@ -23,18 +23,18 @@ const REJECT = "_REJECT"
 // Task Reducer
 const taskReducer: Reducer = (state = initialState, action: IAction): ITaskState => {
   switch (action.type) {
-    case TaskActions.FETCH_ALL_TASKS + PENDING:
+    case TaskActions.FETCH_ALL_TASKS_REQUEST:
       return {
         ...state,
         loading: true,
       };
-    case TaskActions.FETCH_ALL_TASKS + FULFILLED:
+    case TaskActions.FETCH_ALL_TASKS_SUCCESS:
       return {
         ...state,
         loading: false,
         tasks: action.payload,
       };
-    case TaskActions.FETCH_ALL_TASKS + REJECT:
+    case TaskActions.FETCH_ALL_TASKS_FAILURE:
       return {
         ...state,
         loading: false,

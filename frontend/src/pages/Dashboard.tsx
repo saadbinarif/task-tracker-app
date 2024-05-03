@@ -1,14 +1,25 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Header from "../common/components/Header";
 // import TaskCard from "../common/ui/TaskCard";
 import TaskList from "../common/components/TaskList"
 import tasks from "../tasks";
 import CreateTask from "../common/components/CreateTask";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchAllTasksRequest } from "../common/actions/taskActions";
 
 
 
 
 const Dashboard: React.FC = ()=>{
+
+    const backendtasks = useSelector((state:any)=>state.tasks.tasks)
+    const pendingTasks = backendtasks.filter((t:any)=>t.status=="in progress")
+    const dispatch = useDispatch()
+
+    useEffect(()=>{
+        dispatch(fetchAllTasksRequest())
+    }, [])
+
     const statsBoxStyles = "bg-primary rounded-sm p-6 text-white text-center min-w-60"
     const statsBoxNumber = "text-6xl mb-4"
     return(
@@ -17,7 +28,7 @@ const Dashboard: React.FC = ()=>{
 
     <div className="grid grid-cols-3 justify-items-center p-20 ">
         <div className={statsBoxStyles}>
-            <h1 className={statsBoxNumber}>0</h1>
+            <h1 className={statsBoxNumber}>{backendtasks.length}</h1>
             <p>Total</p>
         </div>
         <div className={statsBoxStyles}>
@@ -25,7 +36,7 @@ const Dashboard: React.FC = ()=>{
             <p>Completed</p>
         </div>
         <div className={statsBoxStyles}>
-            <h2 className={statsBoxNumber}>0</h2>
+            <h2 className={statsBoxNumber}>{pendingTasks.length}</h2>
             <p>Pending</p>
         </div>
         
@@ -35,7 +46,7 @@ const Dashboard: React.FC = ()=>{
         {/* overdue grid */}
         <div className="  ">
         <div className="ps-4 pb-1 text-sm font strong">Overdue</div>
-        <div className="bg-blue-100 h-10  p-2 overflow-hidden h-2/3 ">
+        <div className="bg-blue-100 p-2 overflow-hidden h-2/3 ">
         <TaskList taskList={tasks}/>
        </div>
        
@@ -66,7 +77,7 @@ const Dashboard: React.FC = ()=>{
 
        <div className="p-10">
         <div className="w-3/5">
-        <TaskList taskList={tasks}/>
+        <TaskList taskList={backendtasks}/>
         </div>
         <div className="p-2 border-t border-black-500">
         <CreateTask />

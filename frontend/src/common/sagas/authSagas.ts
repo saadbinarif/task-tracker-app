@@ -31,3 +31,4 @@ function* watchLoginRequest() {
 export default function* authSagas() {
   yield watchLoginRequest();
 }
+
