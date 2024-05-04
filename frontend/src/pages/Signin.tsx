@@ -29,21 +29,8 @@ export default function Signin(): JSX.Element {
     const { isLoggedIn, login } = useAuth();
 
     const handleSignin = (data: FormValues) => {
-        login(data)
-        if(SigninError){
-            console.log('backend error', SigninError)
-        }else{
-            navigate('/dashboard')
-        }
-        
+        login(data)    
     };
-
-    // useEffect(()=>{
-    //     const token = localStorage.getItem('token')
-    //     if(token){
-    //         navigate('/dashboard')
-    //     }
-    // },[])
   
     return (
         <div>

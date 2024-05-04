@@ -77,7 +77,7 @@ const createTask = async (req, res) => {
   const creator_id = req.user._id;
   console.log(creator_id)
   const { title, description, status, dueDate, subtasks, tags } = req.body;
-
+  console.log('CTpayload', "title:", title, 'description:', description, 'status:', status, 'dueDate: ', dueDate, "subtasks:",subtasks, 'tags:', tags)
     
     // joi schema validation
     const result = taskSchema.validate(req.body)
@@ -85,21 +85,25 @@ const createTask = async (req, res) => {
        res.status(400).send(result.error.details[0].message)
        return;
     }
+    const defaultStatus = 'incomplete';
+    const defaultProgress = 0;
+    const defaultSubtasks = [];
+    const defaultTags = [];
     
     const progress = calculateProgress(subtasks || []) 
-  const parsedDueDate = new Date(dueDate);
+  const parsedDueDate = dueDate ? new Date(dueDate) : undefined;
   const task = await taskModel.create({
     title,
     description,
-    status,
-    subtasks,
+    status: status || defaultStatus,
+    subtasks: subtasks || defaultSubtasks,
     progress,
     dueDate: parsedDueDate,
     creator_id,
-    tags
+    tags: tags || defaultTags
   });
 
-  
+  console.log('createTaskApi', task)
 
   return res.status(200).json(task);
 

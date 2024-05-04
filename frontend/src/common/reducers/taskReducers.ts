@@ -40,17 +40,17 @@ const taskReducer: Reducer = (state = initialState, action: IAction): ITaskState
         loading: false,
         error: action.payload,
       };
-    case TaskActions.CREATE_TASK + PENDING:
+    case TaskActions.CREATE_TASK_REQUEST:
       return {
         ...state,
         loading: true,
       };
-    case TaskActions.CREATE_TASK + FULFILLED:
+    case TaskActions.CREATE_TASK_SUCCESS:
       return {
         ...state,
         tasks: [...state.tasks, action.payload],
       };
-    case TaskActions.CREATE_TASK + REJECT:
+    case TaskActions.CREATE_TASK_FAILURE:
       return {
         ...state,
         loading: false,

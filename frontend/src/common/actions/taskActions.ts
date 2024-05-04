@@ -3,7 +3,9 @@ export enum TaskActions {
   FETCH_ALL_TASKS_REQUEST = 'FETCH_ALL_TASKS_REQUEST',
   FETCH_ALL_TASKS_SUCCESS = 'FETCH_ALL_TASKS_SUCCESS',
   FETCH_ALL_TASKS_FAILURE = 'FETCH_ALL_TASKS_FAILURE',
-  CREATE_TASK = 'CREATE_TASK',
+  CREATE_TASK_REQUEST = 'CREATE_TASK_REQUEST',
+  CREATE_TASK_SUCCESS = 'CREATE_TASK_SUCCESS',
+  CREATE_TASK_FAILURE = 'CREATE_TASK_FAILURE',
   UPDATE_TASK = 'UPDATE_TASK',
   DELETE_TASK = 'DELETE_TASK',
   CREATE_SUBTASK = 'CREATE_SUBTASK'
@@ -30,9 +32,19 @@ export const fetchAllTasksFailure = (error: any): any => ({
 });
 
 
-export const createTask = (task: ITask) => ({
-  type: TaskActions.CREATE_TASK,
+export const createTaskRequest = (task: any) => ({
+  type: TaskActions.CREATE_TASK_REQUEST,
   payload: task,
+});
+
+export const createTaskSuccess = (task: ITask) => ({
+  type: TaskActions.CREATE_TASK_SUCCESS,
+  payload: task,
+});
+
+export const createTaskFailure = (error: any) => ({
+  type: TaskActions.CREATE_TASK_FAILURE,
+  payload: error,
 });
 
 

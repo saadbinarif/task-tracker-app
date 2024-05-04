@@ -27,5 +27,5 @@ export const LoginFailure = (error: any ):any => ({
 })
 
 export const logoutRequest = () => ({
-    action: AuthActions.LOGOUT
+    type: AuthActions.LOGOUT
 })

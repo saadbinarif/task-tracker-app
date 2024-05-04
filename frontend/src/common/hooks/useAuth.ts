@@ -3,13 +3,13 @@ import { useEffect, useState } from 'react';
 import { LoginRequest, logoutRequest } from "../actions/AuthActions";
 import { useDispatch, useSelector } from "react-redux";
 import { FormValues } from '../../pages/Signin';
-import { useNavigate } from 'react-router-dom';
+
 
 export const useAuth = () => {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  
  
   
   useEffect(() => {
@@ -23,7 +23,7 @@ export const useAuth = () => {
         setIsLoggedIn(false);
         
     }
-  }, []);
+  }, [isLoggedIn]);
 
   const login = (data: FormValues) => {
     dispatch(LoginRequest(data))
@@ -34,10 +34,11 @@ export const useAuth = () => {
   const logout = () => {
     // Clear token from local storage upon logging out
     localStorage.removeItem('token');
-    logoutRequest();
-    // setIsLoggedIn(false);
-    // Perform logout actions (e.g., redirect to home page)
-    // navigate('/signin')
+    dispatch(logoutRequest());
+
+    // another way
+    // dispatch({type:"LOGOUT"})
+    
   };
 
   return {

@@ -27,7 +27,7 @@ const TaskCard:React.FC<TaskCardProps> = ({taskData})=>{
         
     return (
         <>
-        <div className="bg-white shadow-lg min-w-60 p-4 rounded-xl mb-4" onClick={handleOpen}>
+        <div className="bg-white shadow-lg min-w-60 p-4 rounded-xl mb-4" onClick={handleOpen} key={taskData._id}>
             <p className="font-semibold text-xl">{taskData.title}</p>
             
             <p className="font-light text-sm truncate-3-lines">{taskData.description}</p>

@@ -7,6 +7,7 @@ import PlainTextInput from "../ui/PlainTextInput";
 import ButtonSecondary from "../ui/ButtonSecondary";
 import TagCard from "../ui/TagCard";
 import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
 import CreateTask from "./CreateTask";
 import CreateSubTask from "./CreateSubTask";
 import { useSelector } from "react-redux";
@@ -55,7 +56,9 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ isOpen, onClose, taskData }) 
     >
 
       <Box className="bg-white absolute top-1/2 left-80 transform -translate-x-1/2 -translate-y-1/2  border-1 border-black shadow-lg rounded-xl w-7/12 m-auto mx-96">
+      
         <div className="container shadow-sm shadow-grey-500 bg-white rounded-t-xl border-b border-grey-100 p-2 text-right ">
+          <DeleteIcon sx={{color: 'red'}} />
           <CloseIcon onClick={onClose} />
         </div>
         {/* main grid */}
@@ -86,7 +89,7 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ isOpen, onClose, taskData }) 
               {
                 taskData.subtasks.map((sTask: any) => (
                   <>
-                    <div className="container flex items-center">
+                    <div className="container flex items-center" key={sTask._id}>
                       <input type="checkbox" className="w-4 h-4 bg-green-400  border-green-400 rounded-full focus:ring-green-500 " />
                       <label className="ms-2 text-sm font-medium ">{sTask.title}</label>
                     </div>
