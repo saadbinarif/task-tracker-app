@@ -117,14 +117,14 @@ const Navigation: React.FC = () => {
             </Box>
             <hr />
             <List>
-              <ListItemButton>
+              <ListItemButton onClick={()=>navigate('/dashboard')}>
                 <ListItemIcon>
                   <Dashboard />
                 </ListItemIcon>
                 <ListItemText primary="Dashboard" />
               </ListItemButton>
 
-              <ListItemButton>
+              <ListItemButton onClick={()=>navigate('/taskpage')}>
                 <ListItemIcon>
                   <FilterAlt />
                 </ListItemIcon>

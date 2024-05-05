@@ -116,7 +116,7 @@ const deleteTask = async (req, res) => {
 
   const { id } = req.params;
   const validId = mongoose.Types.ObjectId.isValid(id);
-
+console.log('DTID:', id)
   if (!validId) {
     return res.status(400).json({ error: "Invalid Id" });
   }
@@ -126,8 +126,8 @@ const deleteTask = async (req, res) => {
   if (!task) {
     return res.status(404).json({ error: "task not found" });
   }
-  res.status(200).json(task);
-
+  return res.status(200).json({message:"Task deleted successfully", task});
+  
 };
 
 //to update task
@@ -140,23 +140,37 @@ const updateTask = async (req, res) => {
     return res.status(400).json({ error: "Invalid Id" });
   }
 
-  const result = taskSchema.validate(req.body)
-    if(result.error){
-       res.status(400).send(result.error.details[0].message)
-       return;
-    }
+  const task = await taskModel.findById(id)
+  if(!task) return res.status(404).json({ error: "no such task" });
 
-  const task = await taskModel.findOneAndUpdate(
-    { _id: id },
-    {
-      ...req.body,
-    }
-  );
+    task.title = req.body.title ? req.body.title : task.title
+    task.description =  req.body.description ? req.body.description : task.description,
+    task.status =  req.body.status ? req.body.status : task.status,
+    task.subtasks =  req.body.subtasks ? req.body.subtasks : task.subtasks,
+    task.progress =  req.body.progress ? req.body.progress : task.progress,
+    task.dueDate =  req.body.dueDate ? req.body.dueDate : task.dueDate,
+    task.creator_id,
+    task.tags =  req.body.tags ? req.body.tags : task.tags,
 
-  if (!task) {
-    return res.status(404).json({ error: "no such task" });
-  }
-  res.status(200).json(task);
+    await task.save();
+
+  // const result = taskSchema.validate(req.body)
+  //   if(result.error){
+  //      res.status(400).send(result.error.details[0].message)
+  //      return;
+  //   }
+
+  // const task = await taskModel.findOneAndUpdate(
+  //   { _id: id },
+  //   {
+  //     ...req.body,
+  //   }
+  // );
+
+  // if (!task) {
+  //   return res.status(404).json({ error: "no such task" });
+  // }
+  return res.status(200).json(task);
 
 };
 

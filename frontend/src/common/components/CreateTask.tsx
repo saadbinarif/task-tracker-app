@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, useEffect, useRef } from 'react'
+import React, { useState, } from 'react'
 import PlainTextInput from "../ui/PlainTextInput";
 import ButtonPrimary from "../ui/ButtonPrimary";
 import ButtonSecondary from "../ui/ButtonSecondary";
@@ -8,7 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import DateInput from '../ui/DateInput';
 import { useDispatch } from 'react-redux';
-import { TaskActions, createTaskRequest } from '../actions/taskActions';
+import { TaskActions, createTaskRequest, } from '../actions/taskActions';
 
 const schema = z.object({
     title: z.string(),
@@ -33,6 +33,7 @@ const CreateTask: React.FC = () => {
         dispatch({type:TaskActions.CREATE_TASK_REQUEST, payload:data})
         // dispatch({type:TaskActions.CREATE_TASK_REQUEST, payload:{title: data.title, descrption:data.description, dueDate: data.dueDate, status: 'isComplete', progress:50, subTasks:[{}], tags:[] }})
         // console.log(data)    
+        setEditMode(false)
       }
 
     return (
@@ -41,7 +42,7 @@ const CreateTask: React.FC = () => {
                 editMode ?
                     (
                         <form onSubmit={handleSubmit(onSubmit)}>
-                        <div className={"border border-black rounded-xl py-1 px-2 bg-white w-3/6"}>
+                        <div className={"border border-black rounded-xl py-1 px-2 bg-white "}>
                             <PlainTextInput placeHolderProp="Title" fontSizeProp="xl" nameProp='title' controlProp={control} changingVal={watch('title')}  />
                             <PlainTextInput placeHolderProp="Description" fontSizeProp="sm" nameProp='description' controlProp={control} changingVal={watch('description')} />
 

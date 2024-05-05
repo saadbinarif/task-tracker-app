@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Header from "../common/components/Header";
 // import TaskCard from "../common/ui/TaskCard";
 import TaskList from "../common/components/TaskList"
@@ -20,8 +20,13 @@ const Dashboard: React.FC = ()=>{
         dispatch(fetchAllTasksRequest())
     }, [])
 
+
+    
+
     const statsBoxStyles = "bg-primary rounded-sm p-6 text-white text-center min-w-60"
     const statsBoxNumber = "text-6xl mb-4"
+
+
     return(
         <>
         <Header title="Dashboard"/>
@@ -46,11 +51,18 @@ const Dashboard: React.FC = ()=>{
         {/* overdue grid */}
         <div className="  ">
         <div className="ps-4 pb-1 text-sm font strong">Overdue</div>
-        <div className="bg-blue-100 p-2 overflow-hidden h-2/3 ">
+        <div>
+        <div><p>up</p></div>                         
+        <div className="bg-blue-100 p-2 overflow-scroll h-[30rem] ">
+        <div className="p-2">
+
+        <CreateTask />
+        </div>
         <TaskList taskList={tasks}/>
        </div>
-       
-        <CreateTask />
+        <div><p>down</p></div>
+        </div>
+        
         
 
         </div>

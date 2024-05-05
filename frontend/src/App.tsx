@@ -10,6 +10,7 @@ import Navigation from "./common/components/Navigation"
 import Footer from './common/components/Footer';
 import { useSelector } from 'react-redux';
 import { useAuth } from './common/hooks/useAuth';
+import TaskPage from './pages/TaskPage';
 
 
 function App(): JSX.Element {
@@ -37,6 +38,10 @@ const {isLoggedIn} = useAuth();
             <Route 
             path="/signin"
             element={!isAuthenticated? <Signin /> : <Navigate to="/dashboard" />}
+            />
+            <Route 
+            path="/taskpage"
+            element={isAuthenticated ? <TaskPage /> : <Navigate to="/signin" />} 
             />
           </Routes>
         </div>

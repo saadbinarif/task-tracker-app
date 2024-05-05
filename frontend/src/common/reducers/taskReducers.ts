@@ -48,7 +48,8 @@ const taskReducer: Reducer = (state = initialState, action: IAction): ITaskState
     case TaskActions.CREATE_TASK_SUCCESS:
       return {
         ...state,
-        tasks: [...state.tasks, action.payload],
+        tasks: [action.payload, ...state.tasks],
+        loading:false
       };
     case TaskActions.CREATE_TASK_FAILURE:
       return {
@@ -56,35 +57,37 @@ const taskReducer: Reducer = (state = initialState, action: IAction): ITaskState
         loading: false,
         error: action.payload,
       };
-    case TaskActions.DELETE_TASK + PENDING:
+    case TaskActions.DELETE_TASK_REQUEST:
       return {
         ...state,
         loading: true,
       };
-    case TaskActions.DELETE_TASK + FULFILLED:
+    case TaskActions.DELETE_TASK_SUCCESS:
       return {
         ...state,
         tasks: state.tasks.filter((task: ITask) => task._id !== action.payload),
+        loading:false
       };
-    case TaskActions.DELETE_TASK + REJECT:
+    case TaskActions.DELETE_TASK_FAILURE:
       return {
         ...state,
         loading: false,
         error: action.payload,
       };
-    case TaskActions.UPDATE_TASK + PENDING:
+    case TaskActions.UPDATE_TASK_REQUEST:
       return {
         ...state,
         loading: true,
       };
-    case TaskActions.UPDATE_TASK + FULFILLED:
+    case TaskActions.UPDATE_TASK_SUCCESS:
       return {
         ...state,
         tasks: state.tasks.map((task: ITask) =>
           task._id === action.payload._id ? action.payload : task
         ),
+        loading:false
       };
-    case TaskActions.UPDATE_TASK + REJECT:
+    case TaskActions.UPDATE_TASK_FAILURE:
       return {
         ...state,
         loading: false,
