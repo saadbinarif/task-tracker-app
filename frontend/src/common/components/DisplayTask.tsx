@@ -100,7 +100,7 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ isOpen, onClose, taskData }) 
       open={isOpen}
     >
       <>
-        <Box className="bg-white absolute top-1/2 left-80 transform -translate-x-1/2 -translate-y-1/2  border-1 border-black shadow-lg rounded-xl w-7/12 m-auto mx-96 ">
+        <Box className="bg-white absolute top-1/2 left-90 transform -translate-x-1/2 -translate-y-1/2  border-1 border-black shadow-lg rounded-xl w-7/12 m-auto mx-[40rem]">
 
           {/* top div with close and options button */}
           <div className="container shadow-sm shadow-grey-500 bg-white rounded-t-xl border-b border-grey-100 p-2 text-right relative flex justify-end">
@@ -120,9 +120,9 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ isOpen, onClose, taskData }) 
             <CloseIcon onClick={onClose} sx={{ mr: '4px', p: "1px" }} />
           </div>
           {/* main grid */}
-          <div className="bg-[#fffff] grid grid-cols-3 ">
+          <div className="bg-[#fffff] grid grid-cols-3">
             {/* column-left */}
-            <div className="col-span-2 m-3 rounded-xl pb-60">
+            <div className="col-span-2 m-3 rounded-xl pb-60 overflow-scroll ">
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className={textEdit ? "border border-black rounded-xl py-1 px-2" : ''} onClick={() => setTextEdit(true)}>
 

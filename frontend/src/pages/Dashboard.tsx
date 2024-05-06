@@ -6,6 +6,8 @@ import tasks from "../tasks";
 import CreateTask from "../common/components/CreateTask";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchAllTasksRequest } from "../common/actions/taskActions";
+import { ToastContainer, toast } from "react-toastify";
+
 
 
 
@@ -18,7 +20,9 @@ const Dashboard: React.FC = ()=>{
 
     useEffect(()=>{
         dispatch(fetchAllTasksRequest())
+        
     }, [])
+
 
 
     
@@ -28,9 +32,20 @@ const Dashboard: React.FC = ()=>{
 
 
     return(
-        <>
+        <div>
         <Header title="Dashboard"/>
-
+        {/* <ToastContainer
+          position="top-right"
+          autoClose={2000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"        
+        /> */}
     <div className="grid grid-cols-3 justify-items-center p-20 ">
         <div className={statsBoxStyles}>
             <h1 className={statsBoxNumber}>{backendtasks.length}</h1>
@@ -98,7 +113,7 @@ const Dashboard: React.FC = ()=>{
        
 
         
-        </>
+        </div>
     )
 }
 

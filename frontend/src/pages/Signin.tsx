@@ -8,6 +8,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { LoginRequest } from "../common/actions/AuthActions";
 import { useAuth } from "../common/hooks/useAuth"
+import { ToastContainer, toast } from "react-toastify";
 
 
 const schema = z.object({
@@ -29,7 +30,8 @@ export default function Signin(): JSX.Element {
     const { isLoggedIn, login } = useAuth();
 
     const handleSignin = (data: FormValues) => {
-        login(data)    
+        login(data)  
+          
     };
   
     return (
@@ -50,7 +52,7 @@ export default function Signin(): JSX.Element {
                 </div>
 
             </div>
-
+            
         </div>
 
     );

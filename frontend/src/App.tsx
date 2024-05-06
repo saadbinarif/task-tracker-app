@@ -11,6 +11,8 @@ import Footer from './common/components/Footer';
 import { useSelector } from 'react-redux';
 import { useAuth } from './common/hooks/useAuth';
 import TaskPage from './pages/TaskPage';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 function App(): JSX.Element {
@@ -22,6 +24,7 @@ const {isLoggedIn} = useAuth();
       <BrowserRouter>
       <Navigation />
         <div className="pages">
+        
           <Routes>
           <Route 
               path="/" 
@@ -47,7 +50,18 @@ const {isLoggedIn} = useAuth();
         </div>
       </BrowserRouter>
       <Footer />
-      
+      <ToastContainer
+          position="bottom-left"
+          autoClose={2000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="dark"        
+        />
     </div>
   );
 }
