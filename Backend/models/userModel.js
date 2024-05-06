@@ -51,6 +51,50 @@ const userSchema = new Schema({
 })
 
 //Signup static function
+// userSchema.statics.signup = async function (u_name, email, password) {
+
+//     //validations
+//     if (!u_name || !email || !password) {
+//         throw Error("All fields must be filled")
+//     }
+//     if (!validator.isEmail(email)) {
+//         throw Error("Enter valid email")
+//     }
+//     // if (!validator.isStrongPassword(password)) {
+//     //     throw Error("Enter strong password")
+//     // }
+
+//     const exist = await this.findOne({ email })
+
+//     if (exist) {
+//         throw Error("Email already exist")
+//     }
+
+//     const salt = await bcrypt.genSalt(10)
+//     const hash = await bcrypt.hash(password, salt)
+
+//     const linkToken = uuidv4();
+//     const expiryDate = new Date();
+//     expiryDate.setMinutes(expiryDate.getMinutes() + 2); // Link expires in 2 minutes
+//     const expiryTimestamp = expiryDate.getTime();
+//     const verificationLink = `http://localhost:4000/auth/verify-email?linkemail=${email}&linktoken=${linkToken}&expiry=${expiryTimestamp}`;
+
+//     const sendMail = await transporter.sendMail({
+//         from: "<robertsmithrs97@outlook.com>",
+//         to: email,
+//         subject: 'Verification Link for Login',
+//         text: `This link will expire in 2 minutes. Please verify your email by clicking on this link: ${verificationLink}`
+//     });
+//     if (!sendMail) {
+//         return res.status(502).json({ error: "bad_gateway: wasn't able to send email at this time" })
+//     }
+
+//     const user = await this.create({ u_name, email, password: hash, linkToken, expiryTimestamp } )
+
+//     return user;
+
+// }
+
 userSchema.statics.signup = async function (u_name, email, password) {
 
     //validations
@@ -60,9 +104,9 @@ userSchema.statics.signup = async function (u_name, email, password) {
     if (!validator.isEmail(email)) {
         throw Error("Enter valid email")
     }
-    if (!validator.isStrongPassword(password)) {
-        throw Error("Enter strong password")
-    }
+    // if (!validator.isStrongPassword(password)) {
+    //     throw Error("Enter strong password")
+    // }
 
     const exist = await this.findOne({ email })
 
@@ -73,27 +117,12 @@ userSchema.statics.signup = async function (u_name, email, password) {
     const salt = await bcrypt.genSalt(10)
     const hash = await bcrypt.hash(password, salt)
 
-    const linkToken = uuidv4();
-    const expiryDate = new Date();
-    expiryDate.setMinutes(expiryDate.getMinutes() + 2); // Link expires in 2 minutes
-    const expiryTimestamp = expiryDate.getTime();
-    const verificationLink = `http://localhost:4000/auth/verify-email?linkemail=${email}&linktoken=${linkToken}&expiry=${expiryTimestamp}`;
-
-    const sendMail = await transporter.sendMail({
-        from: "<robertsmithrs97@outlook.com>",
-        to: email,
-        subject: 'Verification Link for Login',
-        text: `This link will expire in 2 minutes. Please verify your email by clicking on this link: ${verificationLink}`
-    });
-    if (!sendMail) {
-        return res.status(502).json({ error: "bad_gateway: wasn't able to send email at this time" })
-    }
-
-    const user = await this.create({ u_name, email, password: hash, linkToken, expiryTimestamp } )
+    const user = await this.create({ u_name, email, password: hash, } )
 
     return user;
 
 }
+
 
 
 
