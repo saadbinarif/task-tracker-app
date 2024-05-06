@@ -1,7 +1,7 @@
 // authSagas.ts
 import { takeLatest, call, put } from 'redux-saga/effects';
 import axiosInstance from '../services/axiosInstance';
-import { AuthActions, LoginSuccess, LoginFailure } from '../actions/AuthActions';
+import { AuthActions, LoginSuccess, LoginFailure, SignupFailure, SignupSuccess } from '../actions/AuthActions';
 import { FormValues } from '../../pages/Signin'
 import { ToastContainer, toast, } from 'react-toastify';
 
@@ -14,10 +14,15 @@ import { ToastContainer, toast, } from 'react-toastify';
 function* signupUser(action:{type:string, payload:any}):any {
   try{
     const response = yield call([axiosInstance, axiosInstance.post], '/auth/signup', action.payload);
+    // const response = yield call([axiosInstance, axiosInstance.post], '/auth/signup', action.payload);
+    // console.log(response)
+    console.log(response.data.message)
+    toast.success(response.data.message)
     
-    
-  }catch(error){
-
+  }catch(error:any){
+    yield put(SignupFailure(error.response.data.error));
+    console.log(error)
+    toast.error(error.response.data.error)
   }
 }
 
@@ -41,7 +46,14 @@ function* watchLoginRequest() {
   yield takeLatest(AuthActions.LOGIN_REQUEST, loginUser);
 }
 
+function* watchSignupRequest() {
+  yield takeLatest(AuthActions.SIGNUP_REQUEST, signupUser);
+}
+
 export default function* authSagas() {
-  yield watchLoginRequest();
+  // yield watchLoginRequest();
+  // yield watchSignupRequest()
+  yield takeLatest(AuthActions.SIGNUP_REQUEST, signupUser);
+  yield takeLatest(AuthActions.LOGIN_REQUEST, loginUser);
 }
 

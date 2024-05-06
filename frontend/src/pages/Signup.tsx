@@ -9,9 +9,11 @@ import { z } from "zod";
 import Modal from '@mui/material/Modal';
 import { Box } from "@mui/material";
 import PrimaryButton from "../common/ui/ButtonPrimary";
+import { useDispatch } from "react-redux";
+import { AuthActions, SignupRequest } from "../common/actions/AuthActions";
 
 const schema = z.object({
-    username: z.string().min(1),
+    u_name: z.string().min(1),
     email: z.string().email('Invalid email format').min(3),
     password: z.string().min(8, {message: 'minimum 8 chracters required'}),
 });
@@ -23,13 +25,16 @@ export default function Signup(): JSX.Element{
     const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const dispatch = useDispatch();
 
   const {handleSubmit, control, formState:{errors}} = useForm<FormValues>({
     resolver: zodResolver(schema)
   })
   
   const handleSignup = (data: FormValues) => {
-    console.log(data.email);
+    // dispatch(SignupRequest(data))
+    dispatch({type: AuthActions.SIGNUP_REQUEST, payload: data})
+    console.log(data)
 
 };
 
@@ -39,10 +44,10 @@ export default function Signup(): JSX.Element{
             <div className="bg-[#f1f1f1] w-full max-w-md rounded-lg shadow-md p-8">
             <h2 className="text-[28px] font-bold mb-6 text-center">Sign up</h2>
             <form className="flex flex-col" onSubmit={handleSubmit(handleSignup)}>
-            <TextInput placeholderProp="Username" nameProp="username" controlProp={control} errorProp={errors.username?.message} />
+            <TextInput placeholderProp="Username" nameProp="u_name" controlProp={control} errorProp={errors.u_name?.message} />
             <TextInput placeholderProp="Email" nameProp="email" controlProp={control} errorProp={errors.email?.message} />
             <TextInput placeholderProp="Password" nameProp="password" controlProp={control} errorProp={errors.password?.message} />
-            <ButtonPrimary type="submit" onClickProp={handleOpen}>Sign up</ButtonPrimary>
+            <ButtonPrimary type="submit" >Sign up</ButtonPrimary>
             
              <Modal
               open={open}

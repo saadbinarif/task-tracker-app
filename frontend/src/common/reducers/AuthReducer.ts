@@ -3,22 +3,34 @@ import { AuthActions } from "../actions/AuthActions";
 
 
 interface IAuthState {
-    user: IUser[];
+    AuthToken: string | null;
     loading: boolean;
     error: boolean;
-    isAuthenticted: boolean;
+
 }
 
 const initialState: IAuthState = {
-    user: [],
+    AuthToken: null,
     loading: false,
     error: false,
-    isAuthenticted: false
+
 };
 
 
 const authReducer: Reducer = (state = initialState, action: IAction) => {
     switch (action.type) {
+        case AuthActions.SIGNUP_REQUEST:
+            return {
+                ...state,
+                loading: true
+            }
+        case AuthActions.SIGNUP_FAILURE:
+            return {
+                ...state,
+                loading: false,
+                error: action.payload
+
+            }
         case AuthActions.LOGIN_REQUEST:
             return {
                 ...state,
@@ -29,8 +41,8 @@ const authReducer: Reducer = (state = initialState, action: IAction) => {
             return {
                 ...state,
                 loading: false,
-                user: action.payload,
-                isAuthenticated: true
+                AuthToken: action.payload,
+
 
             }
         case AuthActions.LOGIN_FAILURE:
@@ -43,8 +55,8 @@ const authReducer: Reducer = (state = initialState, action: IAction) => {
         case AuthActions.LOGOUT:
             return {
                 ...state,
-                user: null,
-                isAuthenticated: false
+                AuthToken: null,
+
             }
         default:
             return state

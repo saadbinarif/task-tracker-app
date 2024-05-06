@@ -14,7 +14,7 @@ const Navigation: React.FC = () => {
 
   const { logout } = useAuth();
   const navigate = useNavigate();
-  const isAuthenticated = useSelector((state: any) => state.auth.isAuthenticated)
+  const AuthToken = useSelector((state: any) => state.auth.AuthToken)
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [drawerOpen, setDrawerOpen] = React.useState(false); //to open and close sidebar
@@ -39,8 +39,8 @@ const Navigation: React.FC = () => {
   
 
   //styles
-  const backgroundColor = isAuthenticated ? '#1aac83' : '#ffffff';
-  const color = isAuthenticated ? '' : '#1aac83'
+  const backgroundColor = AuthToken ? '#1aac83' : '#ffffff';
+  const color = AuthToken ? '' : '#1aac83'
 
   return (
     <>
@@ -50,7 +50,7 @@ const Navigation: React.FC = () => {
 
             <div className='flex justify-between container'>
               <div className='flex gap-1 items-center'>
-                {isAuthenticated && <IconButton edge="start" color="inherit" onClick={()=>setDrawerOpen(true)}>
+                {AuthToken && <IconButton edge="start" color="inherit" onClick={()=>setDrawerOpen(true)}>
                   <MenuIcon />
                 </IconButton>}
                 <Typography variant="h6" component="div">
@@ -60,7 +60,7 @@ const Navigation: React.FC = () => {
               </div>
 
               {
-                !isAuthenticated ?
+                !AuthToken ?
                   (
                     <div className='flex gap-2 items-center'>
                       <p className='cursor-pointer hover:text-black' onClick={() => navigate('/signup')}>Signup</p>
@@ -102,7 +102,7 @@ const Navigation: React.FC = () => {
         </AppBar>
       </div>
       {
-        isAuthenticated && <div>
+        AuthToken && <div>
           <Drawer
             variant="persistent"
             anchor="left"

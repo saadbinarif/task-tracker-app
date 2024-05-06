@@ -16,7 +16,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 function App(): JSX.Element {
-const isAuthenticated = useSelector((s: any)=>s.auth.isAuthenticated)
+const AuthToken = useSelector((s: any)=>s.auth.AuthToken)
 
 const {isLoggedIn} = useAuth();
   return (
@@ -32,19 +32,19 @@ const {isLoggedIn} = useAuth();
             />
             <Route 
               path="/dashboard" 
-              element={isAuthenticated ? <Dashboard /> : <Navigate to="/signin" />} 
+              element={AuthToken ? <Dashboard /> : <Navigate to="/signin" />} 
             />
             <Route 
             path="/signup"
-            element={!isAuthenticated? <Signup /> : <Navigate to="/dashboard" />}
+            element={!AuthToken? <Signup /> : <Navigate to="/dashboard" />}
             />
             <Route 
             path="/signin"
-            element={!isAuthenticated? <Signin /> : <Navigate to="/dashboard" />}
+            element={!AuthToken? <Signin /> : <Navigate to="/dashboard" />}
             />
             <Route 
             path="/taskpage"
-            element={isAuthenticated ? <TaskPage /> : <Navigate to="/signin" />} 
+            element={AuthToken ? <TaskPage /> : <Navigate to="/signin" />} 
             />
           </Routes>
         </div>
