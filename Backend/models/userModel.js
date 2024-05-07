@@ -25,7 +25,7 @@ const userSchema = new Schema({
     },
     isTwoFA: {
         type: Boolean,
-        default: false
+        default: true
 
     },
     otp: {

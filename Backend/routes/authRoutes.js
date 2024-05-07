@@ -21,7 +21,7 @@ router.post('/login', usePosgres? loginUserPosgres : tryCatch(loginUser))
 router.post('/signup', usePosgres? signupUserPosgres : tryCatch(signupUser))
 
 //email Verification link
-router.get('/verify-email', tryCatch(verifyEmail))
+router.post('/verify-email/:linkToken', tryCatch(verifyEmail))
 
 //resend veriication link
 router.post('/resend-link', tryCatch(resendLink))

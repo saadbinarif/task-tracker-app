@@ -38,7 +38,7 @@ function* loginUser(action: { type: string, payload: FormValues }) {
   } catch (error:any) {
     console.error('Login error:', error);
     yield put(LoginFailure(error.response.data.error));
-    toast.error(error.response.data.error)
+    toast.error(error.response.data.message)
   }
 }
 

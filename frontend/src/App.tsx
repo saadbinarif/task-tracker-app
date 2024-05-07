@@ -13,6 +13,7 @@ import { useAuth } from './common/hooks/useAuth';
 import TaskPage from './pages/TaskPage';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import VerifyEmail from './pages/VerifyEmail';
 
 
 function App(): JSX.Element {
@@ -37,6 +38,10 @@ const {isLoggedIn} = useAuth();
             <Route 
             path="/signup"
             element={!AuthToken? <Signup /> : <Navigate to="/dashboard" />}
+            />
+            <Route 
+            path="/auth/verify-email/:linkToken"
+            element={<VerifyEmail/>}
             />
             <Route 
             path="/signin"

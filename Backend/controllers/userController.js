@@ -10,7 +10,7 @@ let usePosgres = require("../db/connect");
 
 console.log("value in userCont", usePosgres);
 
-//to get all users for admin
+//to get all users for testing
 const getUsers = async (req, res) => {
   
     
