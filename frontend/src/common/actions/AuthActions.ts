@@ -1,6 +1,9 @@
 import { FormValues } from "../../pages/Signin"
 
 export enum AuthActions {
+    VERIFY_EMAIL_REQUEST = 'VERIFY_EMAIL_REQUEST',
+    VERIFY_EMAIL_SUCCESS = 'VERIFY_EMAIL_SUCCESS',
+    VERIFY_EMAIL_FAILURE = 'VERIFY_EMAIL_FAILURE',
     SIGNUP_REQUEST = 'SIGNUP_REQUEST',
     SIGNUP_SUCCESS = 'SIGNUP_SUCCESS',
     SIGNUP_FAILURE = 'SIGNUP_FAILURE',
@@ -10,6 +13,20 @@ export enum AuthActions {
     LOGOUT = 'LOGOUT'
 
 }
+
+export const verifyEmailRequest = (linkToken: any): any => ({
+    type: AuthActions.VERIFY_EMAIL_REQUEST,
+    payload: linkToken,
+});
+
+export const verifyEmailSuccess = (linkToken: any): any => ({
+    type: AuthActions.VERIFY_EMAIL_SUCCESS,
+    payload: linkToken,
+});
+export const verifyEmailFailure= (linkToken: any): any => ({
+    type: AuthActions.VERIFY_EMAIL_FAILURE,
+    payload: linkToken,
+});
 
 export const SignupRequest = (data: any): any => ({
     type: AuthActions.SIGNUP_REQUEST,

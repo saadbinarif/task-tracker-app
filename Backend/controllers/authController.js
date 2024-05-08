@@ -189,20 +189,21 @@ const verifyEmail = async (req, res) => {
       });
     }
     if (user.isEmailVerified) {
-      return res.status(209).json({
+      return res.status(400).json({
         message: "email is already verified",
         success: true,
       });
     } else {
       user.isEmailVerified = true;
-      await user.save();
+      
+    }
+    await user.save();
       const token = createToken(user._id);
-      res.status(200).json({
+      return res.status(200).json({
         token,
         message: "Email successfully verified",
         success: true,
       });
-    }
   });
 };
 
@@ -210,22 +211,22 @@ const verifyEmail = async (req, res) => {
 const resendLink = async (req, res) => {
   const { email } = req.body;
 
-  if (!email) return res.status(400).json({ error: "Email required" });
+  if (!email) return res.status(400).json({ message: "Email required", success: false });
   if (!validator.isEmail(email))
-    res.status(400).json({ error: "Invalid Email" });
+    res.status(400).json({ message: "Invalid Email", success: false});
 
   const user = await userModel.findOne({ email });
-  if (!user) res.status(404).json({ error: "User not found" });
+  if (!user) res.status(404).json({ message: "User not found", success: false });
 
   const currentTimestamp = new Date().getTime();
 
   if (currentTimestamp < user.expiryTimestamp) {
     return res
-      .status(409)
-      .json({ error: "Error 409 - conflict: Link already sent" });
+      .status(409) //conflict
+      .json({ message: "Link already sent", success: false });
   }
   if (user.isEmailVerified)
-    return res.status(409).json({ error: "email already verified" });
+    return res.status(409).json({ message: "email already verified" });
   const linkToken = uuidv4();
   const expiryDate = new Date();
   expiryDate.setMinutes(expiryDate.getMinutes() + 2); // Link expires in 2 minutes
@@ -241,7 +242,7 @@ const resendLink = async (req, res) => {
   if (!sendMail) {
     return res
       .status(502)
-      .json({ error: "bad_gateway: wasn't able to send email at this time" });
+      .json({ message: "bad_gateway: wasn't able to send email at this time" });
   }
   user.linkToken = linkToken;
   user.expiryTimestamp = expiryTimestamp;

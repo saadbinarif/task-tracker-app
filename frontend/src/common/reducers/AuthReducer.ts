@@ -19,6 +19,24 @@ const initialState: IAuthState = {
 
 const authReducer: Reducer = (state = initialState, action: IAction) => {
     switch (action.type) {
+        case AuthActions.VERIFY_EMAIL_REQUEST:
+            return {
+                ...state,
+                loading: true
+            }
+        case AuthActions.VERIFY_EMAIL_SUCCESS:
+            return {
+                ...state,
+                loading: false,
+                AuthToken: action.payload,
+            }
+        case AuthActions.VERIFY_EMAIL_FAILURE:
+            return {
+                ...state,
+                loading: false,
+                error: action.payload
+    
+            }
         case AuthActions.SIGNUP_REQUEST:
             return {
                 ...state,

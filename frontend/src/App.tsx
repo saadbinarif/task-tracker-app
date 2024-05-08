@@ -14,6 +14,7 @@ import TaskPage from './pages/TaskPage';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import VerifyEmail from './pages/VerifyEmail';
+import ResendEmail from './common/components/ResendEmail';
 
 
 function App(): JSX.Element {
@@ -41,7 +42,7 @@ const {isLoggedIn} = useAuth();
             />
             <Route 
             path="/auth/verify-email/:linkToken"
-            element={<VerifyEmail/>}
+            element={!AuthToken? <VerifyEmail /> : <Navigate to="/dashboard" />}
             />
             <Route 
             path="/signin"
@@ -50,6 +51,10 @@ const {isLoggedIn} = useAuth();
             <Route 
             path="/taskpage"
             element={AuthToken ? <TaskPage /> : <Navigate to="/signin" />} 
+            />
+             <Route 
+            path="/resendemail"
+            element={!AuthToken? <ResendEmail /> : <Navigate to="/dashboard" />} 
             />
           </Routes>
         </div>
