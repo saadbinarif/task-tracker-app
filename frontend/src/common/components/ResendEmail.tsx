@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 
 import TextInput from "../ui/TextInput";
 import ButtonPrimary from "../ui/ButtonPrimary";
@@ -8,6 +8,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { ToastContainer, toast } from "react-toastify";
+import axiosInsance from '../services/axiosInstance'
 
 
 
@@ -19,15 +20,47 @@ const schema = z.object({
 export type FormValues = z.infer<typeof schema>;
 
 export default function ResendEmail(): JSX.Element {
+
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const { handleSubmit, control, formState: { errors } } = useForm<FormValues>({
         resolver: zodResolver(schema)
     })
-    
+    // const [email, setEmail] = useState<any>()
 
-    const handleResendEmail = (data: FormValues) => {
-        
+    // useEffect(()=>{
+    //     const resendEmail = async(data: any)=>{
+    //         try{
+    //             console.log('email:', data)
+    //             const response = await axiosInsance.post('/auth/resend-email', data)
+    //             toast(response.data.message)
+    //             console.log(response)
+    
+    //         }catch(err:any){
+    //             toast(err.response.data.message)
+    //             console.log(err)
+    //         }
+
+    //     }
+    //     resendEmail(email);
+    // },[email])
+    
+    const [submitting, setSubmitting] = useState(false);
+    const handleResendEmail = async(data: FormValues) => {
+        try{
+            setSubmitting(true);
+            const response = await axiosInsance.post('/auth/resend-email', data)
+            toast.success(response.data.message)
+            setSubmitting(false);
+        }catch(err:any){
+            if(err.response.data.success === true){
+                toast.success(err.response.data.message)
+            }else{
+                toast.error(err.response.data.message)
+            }
+            setSubmitting(false);
+        }
+    //    setEmail(data)
           
     };
   

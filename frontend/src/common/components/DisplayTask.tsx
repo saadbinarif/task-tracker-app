@@ -67,13 +67,20 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ isOpen, onClose, taskData }) 
   const error= useSelector((s:any)=>s.tasks.error);
   const taskdt= useSelector((s:any)=>s.tasks.tasks);
   
-  useEffect(()=>{
-    if(error) {setTextEdit(true)}
-  }, [onSubmit])
+  // useEffect(()=>{
+  //   if(error) {setTextEdit(true)}
+  // }, [onSubmit])
+
+  // useEffect(()=>{
+  //   dispatch(fetchAllTasksRequest())
+  // },[isOpen])
+
   
   const handleDeleteTask = (taskId:string)=>{
       // dispatch({type:TaskActions.CREATE_TASK_REQUEST, payload: taskId})
       dispatch({type:TaskActions.DELETE_TASK_REQUEST, payload: taskData._id})
+      
+      onClose();
       // dispatch(deleteTaskRequest(taskData._id))
       // console.log('loading dt:', loading)
       // console.log('error dt:', error)

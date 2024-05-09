@@ -1,8 +1,10 @@
 
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 import TagCard from "./TagCard";
 import DisplayTask from "../components/DisplayTask";
+import { useDispatch } from "react-redux";
+import { fetchAllTasksRequest } from "../actions/taskActions";
 
 
 
@@ -12,7 +14,8 @@ interface TaskCardProps {
 }
 
 const TaskCard:React.FC<TaskCardProps> = ({taskData})=>{
-
+    
+const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
     const handleOpen = () => {
         setOpen(true);
@@ -22,6 +25,10 @@ const TaskCard:React.FC<TaskCardProps> = ({taskData})=>{
         setOpen(false);
         console.log('onHandleClose', open)
     }
+
+    useEffect(()=>{
+        dispatch(fetchAllTasksRequest())
+      },[open])
     
 
         

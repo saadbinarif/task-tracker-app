@@ -3,7 +3,7 @@ import PlainTextInput from "../ui/PlainTextInput";
 import ButtonPrimary from "../ui/ButtonPrimary";
 import ButtonSecondary from "../ui/ButtonSecondary";
 
-import {useForm} from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import DateInput from '../ui/DateInput';
@@ -11,30 +11,27 @@ import { useDispatch } from 'react-redux';
 import { TaskActions, createTaskRequest, } from '../actions/taskActions';
 
 const schema = z.object({
-    title: z.string(),
+    title: z.string().min(1),
     description: z.string(),
-    dueDate: z.coerce.date()
-  });
+    dueDate: z.coerce.date().optional()
+});
 
-  export type FormValues = z.infer<typeof schema>;
-  
+export type FormValues = z.infer<typeof schema>;
+
 
 const CreateTask: React.FC = () => {
+    const dispatch = useDispatch()
     const [editMode, setEditMode] = useState(false)
 
     const { handleSubmit, control, watch, formState: { errors } } = useForm<FormValues>({
         resolver: zodResolver(schema)
-      })
-      
-      const dispatch = useDispatch()
-      const onSubmit = (data: FormValues)=>{
-        // dispatch(createTaskRequest(data))
-        // createTaskRequest(data)
-        dispatch({type:TaskActions.CREATE_TASK_REQUEST, payload:data})
-        // dispatch({type:TaskActions.CREATE_TASK_REQUEST, payload:{title: data.title, descrption:data.description, dueDate: data.dueDate, status: 'isComplete', progress:50, subTasks:[{}], tags:[] }})
-        // console.log(data)    
+    })
+
+    
+    const onSubmit = (data: FormValues) => {
+        dispatch({ type: TaskActions.CREATE_TASK_REQUEST, payload: data })
         setEditMode(false)
-      }
+    }
 
     return (
         <>
@@ -42,22 +39,22 @@ const CreateTask: React.FC = () => {
                 editMode ?
                     (
                         <form onSubmit={handleSubmit(onSubmit)}>
-                        <div className={"border border-black rounded-xl py-1 px-2 bg-white "}>
-                            <PlainTextInput placeHolderProp="Title" fontSizeProp="xl" nameProp='title' controlProp={control} changingVal={watch('title')}  />
-                            <PlainTextInput placeHolderProp="Description" fontSizeProp="sm" nameProp='description' controlProp={control} changingVal={watch('description')} />
+                            <div className={"border border-black rounded-xl py-1 px-2 bg-white "}>
+                                <PlainTextInput placeHolderProp="Title" fontSizeProp="xl" nameProp='title' controlProp={control} changingVal={watch('title')} />
+                                <PlainTextInput placeHolderProp="Description" fontSizeProp="sm" nameProp='description' controlProp={control} changingVal={watch('description')} />
 
-                            <div className='flex gap-4 ps-2'>
-                                {/* <input type='date' className='border border-black rounded-sm text-sm' /> */}
-                                <DateInput placeholderProp='dueDate' nameProp='dueDate' controlProp={control} />
-                                <p className='border-2 border-black rounded-sm p-1 text-sm'>+ add tags </p>
+                                <div className='flex gap-4 ps-2'>
+                                    {/* <input type='date' className='border border-black rounded-sm text-sm' /> */}
+                                    <DateInput placeholderProp='dueDate' nameProp='dueDate' controlProp={control} />
+                                    <p className='border-2 border-black rounded-sm p-1 text-sm'>+ add tags </p>
+                                </div>
+                                <div className="container p-2 mt-4 text-right border-t border-black">
+                                    <span className="mr-1">
+                                        <ButtonSecondary paddingProp={2} onClickProp={() => setEditMode(false)}>Cancel</ButtonSecondary>
+                                    </span>
+                                    <ButtonPrimary paddingProp={2} type='submit'>Save</ButtonPrimary>
+                                </div>
                             </div>
-                            <div className="container p-2 mt-4 text-right border-t border-black">
-                                <span className="mr-1">
-                                    <ButtonSecondary paddingProp={2} onClickProp={() => setEditMode(false)}>Cancel</ButtonSecondary>
-                                </span>
-                                <ButtonPrimary paddingProp={2} type='submit'>Save</ButtonPrimary>
-                            </div>
-                        </div>
                         </form>
                     ) :
                     (

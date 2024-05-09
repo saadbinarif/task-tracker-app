@@ -46,7 +46,8 @@ const userSchema = new Schema({
         default: false
     },
     expiryTimestamp: {
-        type: Date
+        type: Date,
+        default: null
     }
 })
 
