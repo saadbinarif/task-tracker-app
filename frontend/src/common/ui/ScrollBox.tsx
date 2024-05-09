@@ -3,9 +3,17 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 import TaskList from '../components/TaskList';
+import CreateTask from '../components/CreateTask';
 
+interface ScrollBoxProps {
+    scrollButtonColor?: string,
+    scrollBoxColor?: string,
+    createTaskOption?: Boolean
+    taskList?:any
+}
 
-const ScrollBox: React.FC = () => {
+const ScrollBox: React.FC<ScrollBoxProps> = ({scrollBoxColor, scrollButtonColor, taskList, createTaskOption = true}) => {
+
     const [scrollTop, setScrollTop] = useState(0);
     const scrollDivRef = useRef<HTMLDivElement>(null);
 
@@ -27,15 +35,17 @@ const ScrollBox: React.FC = () => {
     return (
 
         <div>
-            <div className="bg-red-400 border-b border-black shadow-lg rounded-t-lg p-1 text-center"><p onClick={handleScrollUp}><KeyboardArrowUpIcon /></p></div>
-            <div id="scrolldiv" ref={scrollDivRef} className="bg-red-600 shadow-lg p-2 overflow-hidden h-[30rem]">
-                {/* <div className="p-2">
-                                <CreateTask />
-                            </div> */}
+            <div className={`bg-${scrollButtonColor} border-b border-black shadow-lg rounded-t-lg p-1 text-center`}><p onClick={handleScrollUp}><KeyboardArrowUpIcon /></p></div>
+            <div id="scrolldiv" ref={scrollDivRef} className={`bg-${scrollBoxColor} shadow-lg p-2 overflow-hidden h-[30rem]`}>
+                {
+                   createTaskOption && <div className="p-2">
+                        <CreateTask />
+                    </div>
+                }
                 {/* TaskList component here */}
-                <TaskList taskList={ } />
+                <TaskList taskList={taskList} />
             </div>
-            <div className="bg-red-400 border-t border-black shadow-lg rounded-b-lg  p-1 text-center"><p onClick={handleScrollDown}><KeyboardArrowDownIcon /></p></div>
+            <div className={`bg-${scrollButtonColor} border-t border-black shadow-lg rounded-b-lg  p-1 text-center`}><p onClick={handleScrollDown}><KeyboardArrowDownIcon /></p></div>
         </div>
 
 

@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { fetchAllTasksRequest } from "../common/actions/taskActions";
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import ScrollBox from "../common/ui/ScrollBox";
+import ScrollBoxSection from "../common/components/ScrollBoxSection";
 
 
 
@@ -16,24 +18,24 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 const Dashboard: React.FC = () => {
 
-    const [scrollTop, setScrollTop] = useState(0);
-    const scrollDivRef = useRef<HTMLDivElement>(null);
+    // const [scrollTop, setScrollTop] = useState(0);
+    // const scrollDivRef = useRef<HTMLDivElement>(null);
 
-    const handleScrollUp = () => {
-        if (scrollDivRef.current) {
-            const scrollHeight = scrollDivRef.current.scrollHeight;
-            setScrollTop(prevScrollTop => Math.max(prevScrollTop - 100, 0));
-            scrollDivRef.current.scrollTop -= 100;
-        }
-    };
+    // const handleScrollUp = () => {
+    //     if (scrollDivRef.current) {
+    //         const scrollHeight = scrollDivRef.current.scrollHeight;
+    //         setScrollTop(prevScrollTop => Math.max(prevScrollTop - 100, 0));
+    //         scrollDivRef.current.scrollTop -= 100;
+    //     }
+    // };
 
-    const handleScrollDown = () => {
-        if (scrollDivRef.current) {
-            const scrollHeight = scrollDivRef.current.scrollHeight;
-            setScrollTop(prevScrollTop => Math.min(prevScrollTop + 100, scrollHeight));
-            scrollDivRef.current.scrollTop += 100;
-        }
-    };
+    // const handleScrollDown = () => {
+    //     if (scrollDivRef.current) {
+    //         const scrollHeight = scrollDivRef.current.scrollHeight;
+    //         setScrollTop(prevScrollTop => Math.min(prevScrollTop + 100, scrollHeight));
+    //         scrollDivRef.current.scrollTop += 100;
+    //     }
+    // };
 
     const backendtasks = useSelector((state: any) => state.tasks.tasks)
     const pendingTasks = backendtasks.filter((t: any) => t.status == "in progress")
@@ -72,56 +74,7 @@ const Dashboard: React.FC = () => {
 
             </div>
 
-            <div className="grid grid-cols-3 px-6 pb-11  gap-3">
-                {/* overdue grid */}
-                <div>
-                    <div className="ps-4 pb-1 text-lg font-bold text-red-500">Overdue</div>
-                    <div>
-                        <div className="bg-red-400 border-b border-black shadow-lg rounded-t-lg p-1 text-center"><p onClick={handleScrollUp}><KeyboardArrowUpIcon /></p></div>
-                        <div id="scrolldiv" ref={scrollDivRef} className="bg-red-600 shadow-lg p-2 overflow-hidden h-[30rem]">
-                            {/* <div className="p-2">
-                                <CreateTask />
-                            </div> */}
-                            {/* TaskList component here */}
-                            <TaskList taskList={tasks} />
-                        </div>
-                        <div className="bg-red-400 border-t border-black shadow-lg rounded-b-lg  p-1 text-center"><p onClick={handleScrollDown}><KeyboardArrowDownIcon /></p></div>
-                    </div>
-                </div>
-
-                {/* today grid */}
-                <div>
-                    <div className="ps-4 pb-1 text-lg font-bold text-yellow-500">Today</div>
-                    <div>
-                        <div className="bg-yellow-400 border-b border-black shadow-lg rounded-t-lg p-1 text-center"><p onClick={handleScrollUp}><KeyboardArrowUpIcon /></p></div>
-                        <div id="scrolldiv" ref={scrollDivRef} className="bg-yellow-600 shadow-lg p-2 overflow-hidden h-[30rem]">
-                            <div className="p-2">
-                                <CreateTask />
-                            </div>
-                            {/* TaskList component here */}
-                            <TaskList taskList={tasks} />
-                        </div>
-                        <div className="bg-yellow-400 border-t border-black shadow-lg rounded-b-lg  p-1 text-center"><p onClick={handleScrollDown}><KeyboardArrowDownIcon /></p></div>
-                    </div>
-                </div>
-
-                {/* tommorow Grid */}
-                <div>
-                    <div className="ps-4 pb-1 text-lg font-bold text-blue-500">Tommorow</div>
-                    <div>
-                        <div className="bg-blue-400 border-b border-black shadow-lg rounded-t-lg p-1 text-center"><p onClick={handleScrollUp}><KeyboardArrowUpIcon /></p></div>
-                        <div id="scrolldiv" ref={scrollDivRef} className="bg-blue-600 shadow-lg p-2 overflow-hidden h-[30rem]">
-                            <div className="p-2">
-                                <CreateTask />
-                            </div>
-                            {/* TaskList component here */}
-                            <TaskList taskList={tasks} />
-                        </div>
-                        <div className="bg-blue-400 border-t border-black shadow-lg rounded-b-lg  p-1 text-center"><p onClick={handleScrollDown}><KeyboardArrowDownIcon /></p></div>
-                    </div>
-                </div>
-
-            </div>
+            <ScrollBoxSection />
 
             {/* <div className="p-10">
                 <div className="w-3/5">
@@ -131,8 +84,6 @@ const Dashboard: React.FC = () => {
                     <CreateTask />
                 </div>
             </div> */}
-
-
 
         </div>
     )

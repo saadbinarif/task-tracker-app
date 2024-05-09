@@ -13,7 +13,7 @@ import { useAuth } from './common/hooks/useAuth';
 import TaskPage from './pages/TaskPage';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import VerifyEmail from './pages/VerifyEmail';
+import VerifyEmail from './pages/verifyEmail';
 import ResendEmail from './common/components/ResendEmail';
 
 

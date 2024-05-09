@@ -10,6 +10,7 @@ import DateInput from '../ui/DateInput';
 import { useDispatch } from 'react-redux';
 import { TaskActions, createTaskRequest, } from '../actions/taskActions';
 
+
 const schema = z.object({
     title: z.string().min(1),
     description: z.string(),
@@ -27,42 +28,43 @@ const CreateTask: React.FC = () => {
         resolver: zodResolver(schema)
     })
 
-    
+
     const onSubmit = (data: FormValues) => {
+        
         dispatch({ type: TaskActions.CREATE_TASK_REQUEST, payload: data })
         setEditMode(false)
     }
 
-    return (
-        <>
-            {
-                editMode ?
-                    (
-                        <form onSubmit={handleSubmit(onSubmit)}>
-                            <div className={"border border-black rounded-xl py-1 px-2 bg-white "}>
-                                <PlainTextInput placeHolderProp="Title" fontSizeProp="xl" nameProp='title' controlProp={control} changingVal={watch('title')} />
-                                <PlainTextInput placeHolderProp="Description" fontSizeProp="sm" nameProp='description' controlProp={control} changingVal={watch('description')} />
+return (
+    <>
+        {
+            editMode ?
+                (
+                    <form onSubmit={handleSubmit(onSubmit)}>
+                        <div className={"border border-black rounded-xl py-1 px-2 bg-white "}>
+                            <PlainTextInput placeHolderProp="Title" fontSizeProp="xl" nameProp='title' controlProp={control} changingVal={watch('title')} />
+                            <PlainTextInput placeHolderProp="Description" fontSizeProp="sm" nameProp='description' controlProp={control} changingVal={watch('description')} />
 
-                                <div className='flex gap-4 ps-2'>
-                                    {/* <input type='date' className='border border-black rounded-sm text-sm' /> */}
-                                    <DateInput placeholderProp='dueDate' nameProp='dueDate' controlProp={control} />
-                                    <p className='border-2 border-black rounded-sm p-1 text-sm'>+ add tags </p>
-                                </div>
-                                <div className="container p-2 mt-4 text-right border-t border-black">
-                                    <span className="mr-1">
-                                        <ButtonSecondary paddingProp={2} onClickProp={() => setEditMode(false)}>Cancel</ButtonSecondary>
-                                    </span>
-                                    <ButtonPrimary paddingProp={2} type='submit'>Save</ButtonPrimary>
-                                </div>
+                            <div className='flex gap-4 ps-2'>
+                                {/* <input type='date' className='border border-black rounded-sm text-sm' /> */}
+                                <DateInput placeholderProp='dueDate' nameProp='dueDate' controlProp={control} />
+                                <p className='border-2 border-black rounded-sm p-1 text-sm'>+ add tags </p>
                             </div>
-                        </form>
-                    ) :
-                    (
-                        <p className='text-sm font-medium cursor-pointer hover:text-primary' onClick={() => setEditMode(true)}><span className='text-lg mr-1 hover:bg-white rounded-xl'>+</span> Add Task</p>
-                    )
-            }
-        </>
-    )
+                            <div className="container p-2 mt-4 text-right border-t border-black">
+                                <span className="mr-1">
+                                    <ButtonSecondary paddingProp={2} onClickProp={() => setEditMode(false)}>Cancel</ButtonSecondary>
+                                </span>
+                                <ButtonPrimary paddingProp={2} type='submit'>Save</ButtonPrimary>
+                            </div>
+                        </div>
+                    </form>
+                ) :
+                (
+                    <p className='text-sm font-medium cursor-pointer hover:text-primary' onClick={() => setEditMode(true)}><span className='text-lg mr-1 hover:bg-white rounded-xl'>+</span> Add Task</p>
+                )
+        }
+    </>
+)
 
 }
 
