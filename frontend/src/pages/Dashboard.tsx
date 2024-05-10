@@ -18,25 +18,6 @@ import ScrollBoxSection from "../common/components/ScrollBoxSection";
 
 const Dashboard: React.FC = () => {
 
-    // const [scrollTop, setScrollTop] = useState(0);
-    // const scrollDivRef = useRef<HTMLDivElement>(null);
-
-    // const handleScrollUp = () => {
-    //     if (scrollDivRef.current) {
-    //         const scrollHeight = scrollDivRef.current.scrollHeight;
-    //         setScrollTop(prevScrollTop => Math.max(prevScrollTop - 100, 0));
-    //         scrollDivRef.current.scrollTop -= 100;
-    //     }
-    // };
-
-    // const handleScrollDown = () => {
-    //     if (scrollDivRef.current) {
-    //         const scrollHeight = scrollDivRef.current.scrollHeight;
-    //         setScrollTop(prevScrollTop => Math.min(prevScrollTop + 100, scrollHeight));
-    //         scrollDivRef.current.scrollTop += 100;
-    //     }
-    // };
-
     const backendtasks = useSelector((state: any) => state.tasks.tasks)
     const pendingTasks = backendtasks.filter((t: any) => t.status == "in progress")
     const dispatch = useDispatch()

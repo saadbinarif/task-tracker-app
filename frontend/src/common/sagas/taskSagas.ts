@@ -26,7 +26,7 @@ function* handleFetchAllTasks(): any {
       },
     });
     yield put(fetchAllTasksSuccess(response.data));
-    console.log(response.data)
+    console.log("ctsaga",response)
   } catch (error) {
     // Handle error
     console.error('Error fetching tasks:', error);
@@ -51,7 +51,7 @@ function* handleCreateTask(action: { type: string, payload: any }): any {
     console.log("createTask", response.data)
 
   } catch (error: any) {
-    console.log(error.message)
+    console.log(error)
     // Dispatch failure action with error message
     yield put(createTaskFailure(error.message));
 

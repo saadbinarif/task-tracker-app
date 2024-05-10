@@ -22,7 +22,7 @@ export declare global {
         description: string;
         status: string;
         progress?: number;
-        dueDate?: string;
+        dueDate?: any;
         creator_id: string;
         subtasks: ISubtask[];
         tags: ITag[];

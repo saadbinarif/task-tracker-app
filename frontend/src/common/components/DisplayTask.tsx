@@ -12,6 +12,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import CreateTask from "./CreateTask";
 import CreateSubTask from "./CreateSubTask";
 import { useDispatch, useSelector } from "react-redux";
+import { format, isEqual, add, sub } from 'date-fns'
 
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -92,6 +93,43 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ isOpen, onClose, taskData }) 
   console.log('loading dt after click:', loading)
       console.log('error dt after click:', error)
       console.log('taskdt dt after click:', taskdt)
+
+      let iconColor=''
+    const formatDate = (date: any) => {
+        const currentDate = format(new Date(), 'yyyy/MM/dd')
+        const dueDate = format(new Date(date), 'yyyy/MM/dd')
+        console.log('duedate!!!!!', dueDate)
+        const tomorrow = add(new Date(currentDate), { days: 1 })
+        //   const tomorrow= format(new Date(tomorrowf), 'dd/MM/yyyy')
+        console.log('tomorrow#######', tomorrow)
+        const yesterday = sub(currentDate, { days: 1 })
+        //   const yesterday= format(new Date(yesterdayf), 'dd/MM/yyyy')
+        const nullDate = format(new Date(1970, 0, 1), 'yyyy/MM/dd')
+        console.log('nullDate', nullDate)
+
+        if (isEqual(dueDate, currentDate)) {
+            iconColor = 'text-yellow-600'
+            return 'Today'
+        
+        }
+        else if (isEqual(tomorrow, dueDate)) {
+            iconColor = 'text-green-600'
+            return 'Tommorow'
+        }
+        else if (isEqual(dueDate, yesterday)) {
+            iconColor = 'text-red-500'
+            return 'Yesterday'
+        }
+        else if(dueDate === nullDate ){
+            return 'not set'
+        }
+        else {
+            iconColor = 'text-green-600'
+            return format(new Date(date), 'dd MMMM yyyy')
+        }
+
+    }
+    const dueDate = formatDate(taskData.dueDate)
 
 
   //styles
@@ -183,7 +221,10 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ isOpen, onClose, taskData }) 
               <br />
               <div >
                 <p className={rightDivHeadings}>Due date</p>
-                <p className={rightDivValues}>{taskData.dueDate}</p>
+                <p className={rightDivValues}>{
+                dueDate
+                }
+              </p>
               </div>
               <br />
               <div >
