@@ -25,7 +25,7 @@ const taskSchema = new Schema({
         type: Number
     },
     dueDate: {
-        type: Date
+        type: Date 
     },
     creator_id: {
         type: String,
