@@ -12,7 +12,15 @@ export enum TaskActions {
   DELETE_TASK_REQUEST = 'DELETE_TASK_REQUEST',
   DELETE_TASK_SUCCESS = 'DELETE_TASK_SUCCESS',
   DELETE_TASK_FAILURE = 'DELETE_TASK_FAILURE',
-  CREATE_SUBTASK = 'CREATE_SUBTASK'
+  CREATE_SUBTASK_REQUEST = 'CREATE_SUBTASK_REQUEST',
+  CREATE_SUBTASK_SUCCESS = 'CREATE_SUBTASK_SUCCESS',
+  CREATE_SUBTASK_FAILURE = 'CREATE_SUBTASK_FAILURE',
+  UPDATE_SUBTASK_REQUEST = 'UPDATE_SUBTASK_REQUEST',
+  UPDATE_SUBTASK_SUCCESS = 'UPDATE_SUBTASK_SUCCESS',
+  UPDATE_SUBTASK_FAILURE = 'UPDATE_SUBTASK_FAILURE',
+  DELETE_SUBTASK_REQUEST = 'DELETE_SUBTASK_REQUEST',
+  DELETE_SUBTASK_SUCCESS = 'DELETE_SUBTASK_SUCCESS',
+  DELETE_SUBTASK_FAILURE = 'DELETE_SUBTASK_FAILURE',
 
 
 }
@@ -82,6 +90,47 @@ export const updateTaskFailure = (task: ITask) => ({
   payload: task,
 });
 
-export const createSubtask = (task: ITask) => ({
-  type: TaskActions.CREATE_SUBTASK
+export const createSubtaskRequest = (taskId: any, subTask: any) => ({
+  type: TaskActions.CREATE_SUBTASK_REQUEST,
+  payload: {taskId, subTask}
+})
+
+export const createSubtaskSuccess = (task:any) => ({
+  type: TaskActions.CREATE_SUBTASK_SUCCESS,
+  payload: task
+})
+
+export const createSubtaskFailure = (error: any) => ({
+  type: TaskActions.CREATE_SUBTASK_FAILURE,
+  payload: error
+})
+
+export const updateSubtaskRequest = (taskId: any, subtaskId: any, subTask:any) => ({
+  type: TaskActions.UPDATE_SUBTASK_REQUEST,
+  payload: {taskId, subtaskId, subTask}
+})
+
+export const updateSubtaskSuccess = (subTask:any) => ({
+  type: TaskActions.UPDATE_SUBTASK_SUCCESS,
+  payload: subTask
+})
+
+export const updateSubtaskFailure = (error: any) => ({
+  type: TaskActions.UPDATE_SUBTASK_FAILURE,
+  payload: error
+})
+
+export const deleteSubtaskRequest = (taskId: any, subtaskId: any) => ({
+  type: TaskActions.DELETE_SUBTASK_REQUEST,
+  payload: {taskId, subtaskId}
+})
+
+export const deleteSubtaskSuccess = (subTask:any) => ({
+  type: TaskActions.DELETE_SUBTASK_SUCCESS,
+  payload: subTask
+})
+
+export const deleteSubtaskFailure = (error: any) => ({
+  type: TaskActions.DELETE_SUBTASK_FAILURE,
+  payload: error
 })

@@ -33,7 +33,8 @@ const calculateProgress = (subtasks)=>{
   const totalSubtasks = subtasks.length;
   if(subtasks.length === 0) return 0;
   const CompletedSubtasks = subtasks.filter(subtask=>subtask.isComplete).length;
-  return (CompletedSubtasks / totalSubtasks) * 100
+  const percentage = (CompletedSubtasks / totalSubtasks) * 100
+  return Math.round(percentage)
   
 }
 
@@ -187,16 +188,20 @@ const createSubtask = async(req, res)=>{
             return res.status(404).json({ message: "Task not found" });
         }
 
-        const result = subtaskSchema.validate(req.body)
-        if(result.error){
-        return res.status(400).send(result.error.details[0].message)
+        // const result = subtaskSchema.validate(req.body)
+        // if(result.error){
+        // return res.status(400).send(result.error.details[0].message)
         
-        }
+        // }
+        const title = req.body.title ? req.body.title : title
+        const isCompleteCheck = req.body.isComplete ? req.body.isComplete : false
 
         const newSubtask = {
-            title: req.body.title,
-            isComplete: req.body.isComplete
+            title,
+            // isComplete: req.body.isComplete
+            isComplete: isCompleteCheck
         };
+        console.log('req subtask:', newSubtask)
 
         task.subtasks.push(newSubtask);
         task.progress = calculateProgress(task.subtasks)
@@ -209,7 +214,11 @@ const createSubtask = async(req, res)=>{
 
 const updateSubtask = async(req, res)=>{
   const {taskid, subtaskid} = req.params;
-  const {title, isComplete} = req.body;
+  // const {title, isComplete} = req.body;
+console.log("ustTaskId", taskid,
+"\nustSubTaskId", subtaskid)
+console.log("ustTitle", req.body.title,
+"\nustIscomplete", req.body.isComplete)
 
   const task = await taskModel.findById(taskid)
   if(!task) return res.status(404).json({error: "task not found"})
@@ -217,19 +226,21 @@ const updateSubtask = async(req, res)=>{
   const subtask = task.subtasks.id(subtaskid)
   if(!subtask) return res.status(404).json({error: "subtask not found"})
 
-  const result = subtaskSchema.validate(req.body)
-        if(result.error){
-        return res.status(400).send(result.error.details[0].message)
+  // const result = subtaskSchema.validate(req.body)
+  //       if(result.error){
+  //       return res.status(400).send(result.error.details[0].message)
         
-        }
+  //       }
 
-  subtask.title = title
-  subtask.isComplete = isComplete;
+  const title = req.body.title ? req.body.title : subtask.title
+
+  subtask.title = title 
+  subtask.isComplete = req.body.isComplete;
   task.progress = calculateProgress(task.subtasks)
 
   await task.save();
 
-  return res.status(200).json(subtask)
+  return res.status(200).json({message:'subtask updated', task: task})
   
 }
 
@@ -237,7 +248,7 @@ const updateSubtask = async(req, res)=>{
 const deleteSubtask = async(req, res)=>{
   const {taskid, subtaskid} = req.params
   const task = await taskModel.findById(taskid);
-        if (!task) return res.status(404).json({ error: "Task not found" })
+        if (!task) return res.status(404).json({ message: "Task not found" })
 
         const subtaskIndex = task.subtasks.findIndex(subtask => subtask._id.toString() === subtaskid);
         if (subtaskIndex === -1) {
@@ -248,7 +259,7 @@ const deleteSubtask = async(req, res)=>{
         task.progress = calculateProgress(task.subtasks)
         await task.save();
 
-        return res.status(200).json(task.subtasks);
+        return res.status(200).json({message:'subtask Deleted', task: task});
 }
 
 

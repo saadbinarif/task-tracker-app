@@ -8,6 +8,8 @@ import ButtonSecondary from "../ui/ButtonSecondary";
 import TagCard from "../ui/TagCard";
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import DoneIcon from '@mui/icons-material/Done';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import CreateTask from "./CreateTask";
 import CreateSubTask from "./CreateSubTask";
@@ -17,7 +19,8 @@ import { format, isEqual, add, sub } from 'date-fns'
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { TaskActions, deleteTaskRequest, fetchAllTasksRequest, updateTaskRequest } from "../actions/taskActions";
+import { TaskActions, deleteSubtaskRequest, deleteTaskRequest, fetchAllTasksRequest, updateSubtaskRequest, updateTaskRequest } from "../actions/taskActions";
+import DateInput from "../ui/DateInput";
 
 
 const schema = z.object({
@@ -26,6 +29,13 @@ const schema = z.object({
 });
 
 export type FormValues = z.infer<typeof schema>;
+
+const dateSchema = z.object({
+  dueDate: z.string(),
+  
+});
+
+export type DateValues = z.infer<typeof dateSchema>;
 
 
 interface DisplayTaskProps {
@@ -38,6 +48,7 @@ interface DisplayTaskProps {
 const DisplayTask: React.FC<DisplayTaskProps> = ({ isOpen, onClose, taskData }) => {
 
   const [textEdit, setTextEdit] = useState(false)
+  const [dateEdit, setDateEdit] = useState(false)
   const [optionsDropDown, setOptionsDropDown] = useState<any>();
   const [deleteModal, setDeleteModal] = useState(false)
 
@@ -58,83 +69,114 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ isOpen, onClose, taskData }) 
     resolver: zodResolver(schema)
   })
 
+  const { handleSubmit: handleDateSubmit, control: DateControl, watch: DateWatch, formState: { errors: DateErrors } } = useForm<DateValues>({
+    resolver: zodResolver(dateSchema)
+  })
+
   const onSubmit = (data: FormValues) => {
     console.log(data)
     dispatch(updateTaskRequest(taskData._id, data))
     setTextEdit(false)
   }
-  const dispatch= useDispatch();
-  const loading = useSelector((s:any)=>s.tasks.loading);
-  const error= useSelector((s:any)=>s.tasks.error);
-  const taskdt= useSelector((s:any)=>s.tasks.tasks);
-  
+
+  const onDateSubmit = (data:DateValues)=>{
+    console.log(data)
+    dispatch(updateTaskRequest(taskData._id, data))
+  }
+
+  const dispatch = useDispatch();
+  const loading = useSelector((s: any) => s.tasks.loading);
+  const error = useSelector((s: any) => s.tasks.error);
+  const taskdt = useSelector((s: any) => s.tasks.tasks);
+
   // useEffect(()=>{
   //   if(error) {setTextEdit(true)}
   // }, [onSubmit])
 
   // useEffect(()=>{
   //   dispatch(fetchAllTasksRequest())
-  // },[isOpen])
-
+  // },[taskdt])
   
-  const handleDeleteTask = (taskId:string)=>{
-      // dispatch({type:TaskActions.CREATE_TASK_REQUEST, payload: taskId})
-      dispatch({type:TaskActions.DELETE_TASK_REQUEST, payload: taskData._id})
-      
-      onClose();
-      // dispatch(deleteTaskRequest(taskData._id))
-      // console.log('loading dt:', loading)
-      // console.log('error dt:', error)
-      // console.log('taskdt dt:', taskdt)
+  // console.log('Displaytask component rendered')
+  const [localTask, setLocalTAsk] = (taskdt)
+
+  const handleDeleteTask = (taskId: string) => {
+    // dispatch({type:TaskActions.CREATE_TASK_REQUEST, payload: taskId})
+    dispatch({ type: TaskActions.DELETE_TASK_REQUEST, payload: taskData._id })
+
+    onClose();
+    // dispatch(deleteTaskRequest(taskData._id))
+    // console.log('loading dt:', loading)
+    // console.log('error dt:', error)
+    // console.log('taskdt dt:', taskdt)
   }
 
-  
+  const handleDeleteSubtask = (taskId: string, subtaskId: string)=>{
 
-  console.log('loading dt after click:', loading)
-      console.log('error dt after click:', error)
-      console.log('taskdt dt after click:', taskdt)
+    dispatch(deleteSubtaskRequest(taskId, subtaskId));
+    // dispatch({ type: TaskActions.DELETE_SUBTASK_REQUEST, payload: {taskId:taskData._id, subtaskId:subtaskId} })
+    // // dispatch(fetchAllTasksRequest())
+  }
 
-      let iconColor=''
-    const formatDate = (date: any) => {
-        const currentDate = format(new Date(), 'yyyy/MM/dd')
-        const dueDate = format(new Date(date), 'yyyy/MM/dd')
-        console.log('duedate!!!!!', dueDate)
-        const tomorrow = add(new Date(currentDate), { days: 1 })
-        //   const tomorrow= format(new Date(tomorrowf), 'dd/MM/yyyy')
-        console.log('tomorrow#######', tomorrow)
-        const yesterday = sub(currentDate, { days: 1 })
-        //   const yesterday= format(new Date(yesterdayf), 'dd/MM/yyyy')
-        const nullDate = format(new Date(1970, 0, 1), 'yyyy/MM/dd')
-        console.log('nullDate', nullDate)
+  const handleCheckboxChange = (e:any, taskId:any, subtaskId:any )=>{
 
-        if (isEqual(dueDate, currentDate)) {
-            iconColor = 'text-yellow-600'
-            return 'Today'
-        
-        }
-        else if (isEqual(tomorrow, dueDate)) {
-            iconColor = 'text-green-600'
-            return 'Tommorow'
-        }
-        else if (isEqual(dueDate, yesterday)) {
-            iconColor = 'text-red-500'
-            return 'Yesterday'
-        }
-        else if(dueDate === nullDate ){
-            return 'not set'
-        }
-        else {
-            iconColor = 'text-green-600'
-            return format(new Date(date), 'dd MMMM yyyy')
-        }
+    const isComplete = e.target.checked;
+
+    dispatch(updateSubtaskRequest(taskId, subtaskId, {isComplete}))
+    console.log('checkbox', isComplete)
+
+  }
+
+ 
+
+
+
+  // console.log('loading dt after click:', loading)
+  // console.log('error dt after click:', error)
+  // console.log('taskdt dt after click:', taskdt)
+
+  let iconColor = ''
+  const formatDate = (date: any) => {
+    const currentDate = format(new Date(), 'yyyy/MM/dd')
+    const dueDate = format(new Date(date), 'yyyy/MM/dd')
+    // console.log('duedate!!!!!', dueDate)
+    const tomorrow = add(new Date(currentDate), { days: 1 })
+    //   const tomorrow= format(new Date(tomorrowf), 'dd/MM/yyyy')
+    // console.log('tomorrow#######', tomorrow)
+    const yesterday = sub(currentDate, { days: 1 })
+    //   const yesterday= format(new Date(yesterdayf), 'dd/MM/yyyy')
+    const nullDate = format(new Date(1970, 0, 1), 'yyyy/MM/dd')
+    // console.log('nullDate', nullDate)
+
+    if (isEqual(dueDate, currentDate)) {
+      iconColor = 'text-yellow-600'
+      return 'Today'
 
     }
-    const dueDate = formatDate(taskData.dueDate)
+    else if (isEqual(tomorrow, dueDate)) {
+      iconColor = 'text-green-600'
+      return 'Tommorow'
+    }
+    else if (isEqual(dueDate, yesterday)) {
+      iconColor = 'text-red-500'
+      return 'Yesterday'
+    }
+    else if (dueDate === nullDate) {
+      return 'not set'
+    }
+    else {
+      iconColor = 'text-green-600'
+      return format(new Date(date), 'dd MMMM yyyy')
+    }
+
+  }
+  const dueDate = formatDate(taskData.dueDate)
 
 
   //styles
   const rightDivHeadings = "text-[#999999] text-xs"
   const rightDivValues = "ms-6 mt-2 text-xs"
+
 
 
 
@@ -190,11 +232,20 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ isOpen, onClose, taskData }) 
               </div>
               <div className="p-2">
                 {
-                  taskData.subtasks.map((sTask: any) => (
+                  localTask.subtasks.map((sTask: any) => (
                     <>
-                      <div className="container flex items-center" key={sTask._id}>
-                        <input type="checkbox" className="w-4 h-4 bg-green-400  border-green-400 rounded-full focus:ring-green-500 " />
+                      <div id="outers" className="container relative flex items-center" key={sTask._id}>
+                        <input 
+                        type="checkbox" 
+                        className="w-4 h-4 bg-green-400  border-green-400 rounded-full focus:ring-green-500 " 
+                        checked={sTask.isComplete ? true : false} 
+                        onChange={(e) => handleCheckboxChange(e, localTask._id, sTask._id)}
+                        />
                         <label className="ms-2 text-sm font-medium ">{sTask.title}</label>
+                        <div id='inners' className=" bg-white drop-shadow-md shadow-inner absolute ms-14 left-3/4 ps-12 " onClick = {()=>handleDeleteSubtask(localTask._id, sTask._id)}>
+                          <DeleteIcon className="text-red-600"/>
+
+                        </div>
                       </div>
                       <hr className="my-2" />
                     </>
@@ -203,7 +254,7 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ isOpen, onClose, taskData }) 
                 }
               </div>
               <div>
-                <CreateSubTask />
+                <CreateSubTask taskIdProp={taskData._id}/>
               </div>
 
             </div>
@@ -219,13 +270,43 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ isOpen, onClose, taskData }) 
                 <p className={rightDivValues}>{taskData.progress}%</p>
               </div>
               <br />
+              
               <div >
-                <p className={rightDivHeadings}>Due date</p>
-                <p className={rightDivValues}>{
-                dueDate
+              <div className="flex justify-between">
+                  <p className={rightDivHeadings}>Due date</p>
+                  {
+                    dateEdit ?
+                    (
+                      
+                      <div>
+                      <CloseIcon fontSize="small" style={{ color: 'red', marginRight: '2px' }} onClick={()=>setDateEdit(false) } />
+                      {/* <DoneIcon fontSize="small" style={{ color: 'green', marginRight: '6px'}} type="submit" /> */}
+                      </div>
+                    ):
+                    (
+                      <EditIcon fontSize="small" style={{ color: '#999999', marginRight: '6px' }} onClick={()=>setDateEdit(true)} />
+
+                    )
+                  }
+                </div>
+                {
+                  dateEdit?
+                  (
+                    <form onSubmit={handleDateSubmit(onDateSubmit)}>
+                      <DateInput placeholderProp="dueDate" nameProp="dueDate" controlProp={DateControl}/>
+                      <button type="submit">
+                      <DoneIcon fontSize="small" style={{ color: 'green', marginRight: '6px'}} type="submit" />
+                      </button>
+                    </form>
+                  ):
+                  (
+                    
+                    <p className={rightDivValues}>{ dueDate}</p>
+                    
+                  )
                 }
-              </p>
               </div>
+              
               <br />
               <div >
                 <div className="flex justify-between">
@@ -258,7 +339,7 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ isOpen, onClose, taskData }) 
 
                 <ButtonSecondary onClickProp={closeDeleteModal}>Cancel</ButtonSecondary>
               </span>
-              <ButtonPrimary onClickProp={()=>handleDeleteTask(taskData._id)}>{loading? 'loading' : 'Yes'}</ButtonPrimary>
+              <ButtonPrimary onClickProp={() => handleDeleteTask(taskData._id)}>{loading ? 'loading' : 'Yes'}</ButtonPrimary>
             </div>
           </Box>
         </Modal>

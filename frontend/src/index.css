@@ -127,3 +127,7 @@ input.error {
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3; /* Adjust this value to truncate after 2-3 lines */
 }
+
+#outer:hover #inner {
+  display: block;
+}

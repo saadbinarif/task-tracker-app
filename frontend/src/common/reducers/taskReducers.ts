@@ -93,6 +93,106 @@ const taskReducer: Reducer = (state = initialState, action: IAction): ITaskState
         loading: false,
         error: action.payload,
       };
+      case TaskActions.CREATE_SUBTASK_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case TaskActions.CREATE_SUBTASK_SUCCESS:
+      return {
+        loading:false,
+        error: null,
+        tasks: state.tasks.map((task: ITask) => {
+          if (task._id === action.payload._id) {
+            return {
+              ...task,
+              subtasks: [...task.subtasks, action.payload.subTask],
+            };
+          }
+          return task;
+        }),
+      
+      
+      };
+    case TaskActions.CREATE_SUBTASK_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+    case TaskActions.DELETE_SUBTASK_REQUEST:
+      return{
+        ...state,
+        loading: true
+      }
+    case TaskActions.DELETE_SUBTASK_SUCCESS:
+      return{
+        ...state,
+        loading: false,
+        tasks: state.tasks.map((task: any)=>{
+          if(task._id === action.payload._id){
+            return{
+              ...task,
+              subtasks: task.subtasks.filter((subtask: any)=> subtask._id !== action.payload.subtask._id)
+            }
+          }
+          console.log('stateTasks',state.tasks)
+        }),       
+      }
+    case TaskActions.DELETE_SUBTASK_FAILURE:
+    return{
+      ...state,
+      loading: false,
+      error: action.payload
+    }
+    case TaskActions.UPDATE_SUBTASK_REQUEST:
+      return{
+        ...state,
+        loading: true
+      }
+    // case TaskActions.UPDATE_SUBTASK_SUCCESS:
+    //   return {
+    //     ...state,
+    //     loading: false,
+    //     tasks: state.tasks.map((task: ITask) => {
+    //       if (task._id === action.payload.taskId) {
+    //         return {
+    //           ...task,
+    //           subtasks: task.subtasks.map((subtask) =>
+    //             subtask._id === action.payload.subTask._id
+    //               ? action.payload.subTask
+    //               : subtask
+    //           ),
+    //         };
+    //       }
+    //       return task;
+    //     }),
+    //   };
+      case TaskActions.UPDATE_SUBTASK_SUCCESS:
+  return {
+    ...state,
+    loading: false,
+    tasks: state.tasks.map((task: ITask) => {
+      if (task._id === action.payload.taskId) {
+        const updatedSubtasks = task.subtasks.map((subtask) =>
+          subtask._id === action.payload.subTask._id
+            ? action.payload.subTask
+            : subtask
+        );
+        return {
+          ...task,
+          subtasks: updatedSubtasks,
+        };
+      }
+      return task;
+    }),
+  };
+    case TaskActions.UPDATE_SUBTASK_FAILURE:
+    return{
+      ...state,
+      loading: false,
+      error: action.payload
+    }
     default:
       return state;
   }

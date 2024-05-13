@@ -27,22 +27,22 @@ const TaskCard: React.FC<TaskCardProps> = ({ taskData }) => {
         console.log('onHandleClose', open)
     }
 
-    useEffect(() => {
-        dispatch(fetchAllTasksRequest())
-    }, [open])
+    // useEffect(() => {
+    //     dispatch(fetchAllTasksRequest())
+    // }, [open])
 
     let iconColor=''
     const formatDate = (date: any) => {
         const currentDate = format(new Date(), 'yyyy/MM/dd')
         const dueDate = format(new Date(date), 'yyyy/MM/dd')
-        console.log('duedate!!!!!', dueDate)
+        // console.log('duedate!!!!!', dueDate)
         const tomorrow = add(new Date(currentDate), { days: 1 })
         //   const tomorrow= format(new Date(tomorrowf), 'dd/MM/yyyy')
-        console.log('tomorrow#######', tomorrow)
+        // console.log('tomorrow#######', tomorrow)
         const yesterday = sub(currentDate, { days: 1 })
         //   const yesterday= format(new Date(yesterdayf), 'dd/MM/yyyy')
         const nullDate = format(new Date(1970, 0, 1), 'yyyy/MM/dd')
-        console.log('nullDate', nullDate)
+        // console.log('nullDate', nullDate)
 
         if (isEqual(dueDate, currentDate)) {
             iconColor = 'text-yellow-600'

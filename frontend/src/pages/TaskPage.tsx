@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../common/components/Header";
 import TaskList from "../common/components/TaskList";
 import CreateTask from "../common/components/CreateTask";
@@ -9,11 +9,15 @@ const TaskPage: React.FC = () => {
 
     const tasks = useSelector((state: any) => state.tasks.tasks)
 
+   
+    
+
     const dispatch = useDispatch()
 
-    useEffect(() => {
-        dispatch(fetchAllTasksRequest())
-    }, [])
+    // useEffect(() => {
+    //     dispatch(fetchAllTasksRequest())
+        
+    // }, [])
 
     return (
         <>
