@@ -7,8 +7,9 @@ import { fetchAllTasksRequest } from "../common/actions/taskActions";
 
 const TaskPage: React.FC = () => {
 
-    const tasks = useSelector((state: any) => state.tasks.tasks)
-
+    const tasks = useSelector((state: any) => state.tasks?.tasks)
+    const abc = useSelector((state: any) => state.tasks)
+    console.log("taskPage====",abc)
    
     
 

@@ -15,6 +15,7 @@ interface TaskCardProps {
 }
 
 const TaskCard: React.FC<TaskCardProps> = ({ taskData }) => {
+    console.log("taskcard======",taskData)
 
     const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
@@ -66,7 +67,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ taskData }) => {
         }
 
     }
-    const dueDate = formatDate(taskData.dueDate)
+    const dueDate = formatDate(taskData?.dueDate)
     //   const displayDate = (
     //     if(isEqual(currentDate, dueDate)){
 

@@ -21,6 +21,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { TaskActions, deleteSubtaskRequest, deleteTaskRequest, fetchAllTasksRequest, updateSubtaskRequest, updateTaskRequest } from "../actions/taskActions";
 import DateInput from "../ui/DateInput";
+import DisplaySubtask from "./DisplaySubtask";
 
 
 const schema = z.object({
@@ -80,6 +81,10 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ isOpen, onClose, taskData }) 
   }
 
   const onDateSubmit = (data:DateValues)=>{
+    if (!data.dueDate) {
+      data.dueDate = format(new Date(1970, 0, 1), 'yyyy/MM/dd')
+      console.log('input dueDate', data.dueDate)
+  }
     console.log(data)
     dispatch(updateTaskRequest(taskData._id, data))
   }
@@ -231,18 +236,18 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ isOpen, onClose, taskData }) 
 
               </div>
               <div className="p-2">
-                {
-                  localTask.subtasks.map((sTask: any) => (
+                {/* {
+                  taskData.subtasks.map((sTask: any) => (
                     <>
                       <div id="outers" className="container relative flex items-center" key={sTask._id}>
                         <input 
                         type="checkbox" 
                         className="w-4 h-4 bg-green-400  border-green-400 rounded-full focus:ring-green-500 " 
                         checked={sTask.isComplete ? true : false} 
-                        onChange={(e) => handleCheckboxChange(e, localTask._id, sTask._id)}
+                        onChange={(e) => handleCheckboxChange(e, taskData._id, sTask._id)}
                         />
                         <label className="ms-2 text-sm font-medium ">{sTask.title}</label>
-                        <div id='inners' className=" bg-white drop-shadow-md shadow-inner absolute ms-14 left-3/4 ps-12 " onClick = {()=>handleDeleteSubtask(localTask._id, sTask._id)}>
+                        <div id='inners' className=" bg-white drop-shadow-md shadow-inner absolute ms-14 left-3/4 ps-12 " onClick = {()=>handleDeleteSubtask(taskData._id, sTask._id)}>
                           <DeleteIcon className="text-red-600"/>
 
                         </div>
@@ -251,7 +256,8 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ isOpen, onClose, taskData }) 
                     </>
                   ))
 
-                }
+                } */}
+                <DisplaySubtask taskData={taskData} />
               </div>
               <div>
                 <CreateSubTask taskIdProp={taskData._id}/>
@@ -330,7 +336,7 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ isOpen, onClose, taskData }) 
           open={deleteModal}
         >
 
-          <Box className="absolute bg-white absolute top-1/2 left-80 transform -translate-x-1/2 -translate-y-1/2  border-1 border-black shadow-lg rounded-lg  m-auto mx-96 p-4 ">
+          <Box className="absolute bg-white top-1/2 left-80 transform -translate-x-1/2 -translate-y-1/2  border-1 border-black shadow-lg rounded-lg  m-auto mx-96 p-4 ">
             <div className="container py-4">
               <p>Are you sure that you want to delete this task?</p>
             </div>

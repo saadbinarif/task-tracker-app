@@ -7,6 +7,7 @@ interface TaskListProps {
     taskList: ITask[];
 }
 const TaskList:React.FC<TaskListProps> = ({taskList})=>{
+    console.log('tasklist+++++', taskList)
     const dispatch = useDispatch();
 
     useEffect(()=>{
@@ -16,8 +17,8 @@ const TaskList:React.FC<TaskListProps> = ({taskList})=>{
     return(
         <>
             {
-                taskList.map(task => (
-                    <TaskCard key={task._id} taskData={task} />
+                taskList?.map(task => (
+                    <TaskCard key={task?._id} taskData={task} />
                 ))
             }
         </>

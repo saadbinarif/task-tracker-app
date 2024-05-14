@@ -147,7 +147,7 @@ function* handleDeleteSubTask(action: { type: string, payload: any }): any {
     // Dispatch success action with message
     yield put(deleteSubtaskSuccess(response.data.task));
     
-    console.log('del',response)
+    console.log('del',response.data.task)
   } catch (error: any) {
     // Dispatch failure action with error message
     yield put(deleteSubtaskFailure(error));
