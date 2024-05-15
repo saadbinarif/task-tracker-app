@@ -22,6 +22,7 @@ import { z } from 'zod';
 import { TaskActions, deleteSubtaskRequest, deleteTaskRequest, fetchAllTasksRequest, updateSubtaskRequest, updateTaskRequest } from "../actions/taskActions";
 import DateInput from "../ui/DateInput";
 import DisplaySubtask from "./DisplaySubtask";
+import CreateTags from "./CreateTags";
 
 
 const schema = z.object({
@@ -318,6 +319,9 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ isOpen, onClose, taskData }) 
                 <div className="flex justify-between">
                   <p className={rightDivHeadings}>Tags</p>
                   <AddIcon fontSize="small" style={{ color: '#999999', marginRight: '6px' }} />
+                </div>
+                <div>
+                  <CreateTags />
                 </div>
                 <div className=" bg-red-200 flex flex-wrap gap-1 p-2 container">
                   <TagCard isEditable={true} />

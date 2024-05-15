@@ -16,7 +16,7 @@ const createTag = async(req, res)=>{
     if(!tag_name) return res.status(400).json({error: "no such tag"})
 
     const tag = await tagModel.create({ tag_name, creator_id })
-    res.status(200).json(tag);
+    res.status(200).json({message: 'Tag created successfully', tag});
 
     
 }

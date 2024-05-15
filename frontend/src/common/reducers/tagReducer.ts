@@ -21,35 +21,36 @@ const REJECT = "_REJECT"
 
 const tagReducer: Reducer = (state = initialState, action: IAction) => {
     switch (action.type) {
-        case TagActions.FETCH_TAGS + PENDING:
+        case TagActions.FETCH_TAGS_REQUEST:
             return {
                 ...state,
                 loading: true
             };
-        case TagActions.FETCH_TAGS + FULFILLED:
+        case TagActions.FETCH_TAGS_SUCCESS:
             return {
                 ...state,
                 loading: false,
-                tags: action.payload
+                tags: action.payload,
+                error: null
             };
-        case TagActions.FETCH_TAGS + REJECT:
+        case TagActions.FETCH_TAGS_FAILURE:
             return {
                 ...state,
                 loading: false,
                 error: action.payload
             };
-        case TagActions.CREATE_TAG + PENDING:
+        case TagActions.CREATE_TAG_REQUEST:
             return {
                 ...state,
                 loading: true
             }
-        case TagActions.CREATE_TAG + FULFILLED:
+        case TagActions.CREATE_TAG_SUCCESS:
             return {
                 ...state,
                 loading: false,
                 tags: [...state.tags, action.payload]
             }
-        case TagActions.CREATE_TAG + REJECT:
+        case TagActions.CREATE_TAG_FAILURE:
             return {
                 ...state,
                 loading: false,

@@ -30,7 +30,7 @@ const CreateSubTask: React.FC<ICreateSubTaskProps> = ({taskIdProp}) => {
 const dispatch = useDispatch()
 
     const onSubmit = (data: FormValues)=>{
-        dispatch(createSubtaskRequest(taskIdProp, data))
+       dispatch(createSubtaskRequest(taskIdProp, data))
         // dispatch({ type: TaskActions.CREATE_SUBTASK_REQUEST, payload: {taskId: taskIdProp, subTask: data} })
         console.log('subtask form values', data)
         setEditMode(false)
