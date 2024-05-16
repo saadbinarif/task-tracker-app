@@ -48,7 +48,7 @@ const tagReducer: Reducer = (state = initialState, action: IAction) => {
             return {
                 ...state,
                 loading: false,
-                tags: [...state.tags, action.payload]
+                tags: [action.payload, ...state.tags]
             }
         case TagActions.CREATE_TAG_FAILURE:
             return {

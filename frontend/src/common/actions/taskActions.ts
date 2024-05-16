@@ -21,7 +21,12 @@ export enum TaskActions {
   DELETE_SUBTASK_REQUEST = 'DELETE_SUBTASK_REQUEST',
   DELETE_SUBTASK_SUCCESS = 'DELETE_SUBTASK_SUCCESS',
   DELETE_SUBTASK_FAILURE = 'DELETE_SUBTASK_FAILURE',
-
+  ADD_TAG_REQUEST = 'ADD_TAG_REQUEST',
+  ADD_TAG_SUCCESS = 'ADD_TAG_SUCCESS',
+  ADD_TAG_FAILURE = 'ADD_TAG_FAILURE',
+  REMOVE_TAG_REQUEST = 'REMOVE_TAG_REQUEST',
+  REMOVE_TAG_SUCCESS = 'REMOVE_TAG_SUCCESS',
+  REMOVE_TAG_FAILURE = 'REMOVE_TAG_FAILURE'
 
 }
 
@@ -132,5 +137,35 @@ export const deleteSubtaskSuccess = (subTask:any) => ({
 
 export const deleteSubtaskFailure = (error: any) => ({
   type: TaskActions.DELETE_SUBTASK_FAILURE,
+  payload: error
+})
+
+export const addTagRequest = (taskId: any, tagId: any) => ({
+  type: TaskActions.ADD_TAG_REQUEST,
+  payload: {taskId, tagId}
+})
+
+export const addTagSuccess = (task:any) => ({
+  type: TaskActions.ADD_TAG_SUCCESS,
+  payload: task
+})
+
+export const addTagFailure = (error: any) => ({
+  type: TaskActions.ADD_TAG_FAILURE,
+  payload: error
+})
+
+export const removeTagRequest = (taskId: any, tagId: any) => ({
+  type: TaskActions.REMOVE_TAG_REQUEST,
+  payload: {taskId, tagId}
+})
+
+export const removeTagSuccess = (task:any) => ({
+  type: TaskActions.REMOVE_TAG_SUCCESS,
+  payload: task
+})
+
+export const removeTagFailure = (error: any) => ({
+  type: TaskActions.REMOVE_TAG_FAILURE,
   payload: error
 })

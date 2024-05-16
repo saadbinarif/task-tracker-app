@@ -11,7 +11,9 @@ const {
     autoComplete,
     createSubtask,
     updateSubtask,
-    deleteSubtask
+    deleteSubtask,
+    AddTags,
+    RemoveTags,
 
 } = require('../controllers/taskController');
 
@@ -47,6 +49,12 @@ router.put('/:taskid/subtask/:subtaskid', tryCatch(updateSubtask))
 
 //delete subtask
 router.delete('/:taskid/subtask/:subtaskid', tryCatch(deleteSubtask))
+
+//add Tags
+router.put('/:taskId/addtag/:tagId', tryCatch(AddTags))
+
+//remove tags
+router.delete('/:taskId/removetag/:tagId', tryCatch(RemoveTags))
 
 
 

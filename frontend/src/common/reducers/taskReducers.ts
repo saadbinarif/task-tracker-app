@@ -222,6 +222,53 @@ const taskReducer: Reducer = (state = initialState, action: IAction): ITaskState
       loading: false,
       error: action.payload
     }
+    case TaskActions.ADD_TAG_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case TaskActions.ADD_TAG_SUCCESS:
+      console.log('PayloadATAG', action.payload)
+      return {
+        loading:false,
+        error: null,
+        tasks: state.tasks.map((task: ITask) => (
+          task._id === action.payload._id ? action.payload : task
+        )),
+      
+      
+    };
+   
+    case TaskActions.ADD_TAG_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+      case TaskActions.REMOVE_TAG_REQUEST:
+      return {
+        ...state,
+        loading: true,
+      };
+    case TaskActions.REMOVE_TAG_SUCCESS:
+      console.log('PayloadATAG', action.payload)
+      return {
+        loading:false,
+        error: null,
+        tasks: state.tasks.map((task: ITask) => (
+          task._id === action.payload._id ? action.payload : task
+        )),
+      
+      
+    };
+   
+    case TaskActions.REMOVE_TAG_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: action.payload,
+      };
+      
     default:
       return state;
   }

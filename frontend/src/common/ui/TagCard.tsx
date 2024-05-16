@@ -1,5 +1,7 @@
-import React from "react";
+import React, { useEffect } from "react";
 import CloseIcon from '@mui/icons-material/Close';
+import { useDispatch } from "react-redux";
+import { fetchAllTasksRequest, removeTagRequest } from "../actions/taskActions";
 
 interface TagCardProps{
     isEditable?: boolean;
@@ -7,12 +9,22 @@ interface TagCardProps{
     taskId?: string
 }
 
-const TagCard: React.FC<TagCardProps> = ({tag, isEditable=false}) => {
+const TagCard: React.FC<TagCardProps> = ({tag, taskId, isEditable=false}) => {
+    const dispatch = useDispatch()
+    useEffect(()=>{
+        dispatch(fetchAllTasksRequest())
+    },[])
+
+const handleDelete = (tagId:any)=>{
+    dispatch(removeTagRequest(taskId, tagId))
+
+}
+
     return (
         <div className="bg-[#e3e3e3] p-1 text-xs rounded-sm cursor-pointer hover:bg-[#c9c9c9]">
-            <p className="p-0.5">{tag?.tag_name ? tag.tag_name : 'working'}
+            <p className="p-0.5">{tag?.tag_name}
                 <span className={`hover:bg-[#a3a2a2] rounded-sm ml-1 px-0.5 ${isEditable ? '' : 'hidden'}`}>
-                    <CloseIcon sx={{ fontSize: 'small' }} />
+                    <CloseIcon sx={{ fontSize: 'small' }} onClick={()=>handleDelete(tag?._id)} />
                 </span>
             </p>
         </div>

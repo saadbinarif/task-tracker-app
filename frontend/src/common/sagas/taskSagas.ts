@@ -1,6 +1,5 @@
 import { takeLatest, put, call } from 'redux-saga/effects';
 import axiosInstance from '../services/axiosInstance'
-import { AxiosResponse } from 'axios';
 import {
   TaskActions,
   fetchAllTasksSuccess,
@@ -17,7 +16,9 @@ import {
   deleteSubtaskFailure,
   updateSubtaskSuccess,
   updateSubtaskFailure,
-  fetchAllTasksRequest
+  addTagSuccess,
+  addTagFailure,
+  removeTagSuccess
 
 } from '../actions/taskActions';
 
@@ -176,22 +177,56 @@ function* handleUpdateSubTask(action: { type: string, payload: any }):any {
   }
 }
 
+function* addTagToTask(action:{type:string, payload: any}):any{
+  try{
+  const token = localStorage.getItem('token');
+  const {taskId, tagId} = action.payload
+  const response = yield call(axiosInstance.put, `/tasks/${taskId}/addtag/${tagId}`,{}, {
+    headers:{
+      Authorization: `Bearer ${token}`
+    }
+  })
+  yield put(addTagSuccess(response.data.task))
+  console.log('addTagToTask', response.data.task)
+
+  }catch(error){
+    yield put(addTagFailure(error))
+    console.log('addTagToTask', error)
+  }
+}
+
+function* removeTagFromTask(action:{type:string, payload:any}):any {
+  try{
+    const token = localStorage.getItem('token');
+    const {taskId, tagId} = action.payload
+    const response = yield call(axiosInstance.delete, `/tasks/${taskId}/removetag/${tagId}`, {
+      headers:{
+        Authorization: `Bearer ${token}`
+      }
+    })
+    yield put(removeTagSuccess(response.data.task))
+    console.log('removetTagSaga', response.data.task)
+  }catch(error:any){
+    yield put(removeTagSuccess(error.data.message))
+  }
+}
+
 //============watchers==============================================================================================
-function* watchTaskFetchRequest() {
-  yield takeLatest(TaskActions.FETCH_ALL_TASKS_REQUEST, handleFetchAllTasks);
-}
+// function* watchTaskFetchRequest() {
+//   yield takeLatest(TaskActions.FETCH_ALL_TASKS_REQUEST, handleFetchAllTasks);
+// }
 
-function* watchCreateTaskRequest() {
-  yield takeLatest(TaskActions.CREATE_TASK_REQUEST, handleCreateTask);
-}
+// function* watchCreateTaskRequest() {
+//   yield takeLatest(TaskActions.CREATE_TASK_REQUEST, handleCreateTask);
+// }
 
-function* watchDeleteTaskRequest() {
-  yield takeLatest(TaskActions.DELETE_TASK_REQUEST, handleDeleteTask);
-}
+// function* watchDeleteTaskRequest() {
+//   yield takeLatest(TaskActions.DELETE_TASK_REQUEST, handleDeleteTask);
+// }
 
-function* watchUpdateTaskRequest() {
-  yield takeLatest(TaskActions.UPDATE_TASK_REQUEST, handleUpdateTask);
-}
+// function* watchUpdateTaskRequest() {
+//   yield takeLatest(TaskActions.UPDATE_TASK_REQUEST, handleUpdateTask);
+// }
 
 export default function* TaskSagas() {
   // yield watchTaskFetchRequest();
@@ -203,4 +238,6 @@ export default function* TaskSagas() {
   yield takeLatest(TaskActions.UPDATE_TASK_REQUEST, handleUpdateTask);
   yield takeLatest(TaskActions.CREATE_SUBTASK_REQUEST, handleCreateSubTask);
   yield takeLatest(TaskActions.UPDATE_SUBTASK_REQUEST, handleUpdateSubTask);
+  yield takeLatest(TaskActions.ADD_TAG_REQUEST, addTagToTask);
+  yield takeLatest(TaskActions.REMOVE_TAG_REQUEST, removeTagFromTask);
 }

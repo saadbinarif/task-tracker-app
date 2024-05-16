@@ -51,6 +51,7 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ isOpen, onClose, taskData }) 
 
   const [textEdit, setTextEdit] = useState(false)
   const [dateEdit, setDateEdit] = useState(false)
+  const [tagsEdit, setTagsEdit] = useState(false)
   const [optionsDropDown, setOptionsDropDown] = useState<any>();
   const [deleteModal, setDeleteModal] = useState(false)
 
@@ -318,17 +319,45 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ isOpen, onClose, taskData }) 
               <div >
                 <div className="flex justify-between">
                   <p className={rightDivHeadings}>Tags</p>
-                  <AddIcon fontSize="small" style={{ color: '#999999', marginRight: '6px' }} />
+                  {
+                    tagsEdit ? 
+                    (
+                      <DoneIcon 
+                      fontSize="small" 
+                      style={{ color: 'green', marginRight: '6px'}} 
+                      onClick={()=>setTagsEdit(false)}
+                      />
+                    ):
+                    (
+
+                      <AddIcon 
+                      fontSize="small" 
+                      style={{ color: '#999999', marginRight: '6px' }} 
+                      onClick={()=>setTagsEdit(true)} 
+                      />
+                    )
+                  }
                 </div>
-                <div>
-                  <CreateTags />
+                {tagsEdit && <div>
+                  <CreateTags taskId={taskData._id} taskTags={taskData.tags}/>
+                </div>}
+                {
+                taskData.tags.length===0 && 
+                <div className="ps-4">
+                  <p className="text-xs text-black-200">
+                    No tags
+                    </p>
+                    </div>}
+                {
+                  taskData.tags.length > 0 && 
+                  <div className=" bg-red-200 flex flex-wrap gap-1 p-2 container">
+                  {
+                    taskData.tags.map((tag:any)=>(
+                      <TagCard isEditable={true} key={tag._id} tag={tag} taskId={taskData._id}/>
+                    ))
+                  }
                 </div>
-                <div className=" bg-red-200 flex flex-wrap gap-1 p-2 container">
-                  <TagCard isEditable={true} />
-                  <TagCard isEditable={true} />
-                  <TagCard isEditable={true} />
-                  <TagCard isEditable={true} />
-                </div>
+                }
               </div>
             </div>
           </div>

@@ -2,7 +2,7 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 const taskModel = require("../models/taskModel");
 const taskModelp = require("../models/postgresModels/taskModelp");
-const joi = require('joi');
+const joi = require("joi");
 const tagModel = require("../models/tagModel");
 
 //validation schema for task
@@ -12,44 +12,44 @@ const taskSchema = joi.object({
   status: joi.string().min(1).max(20),
   dueDate: joi.date(),
   creator_id: joi.string().regex(/^[0-9a-fA-F]{24}$/),
-  subtasks:joi.array().items(
+  subtasks: joi.array().items(
     joi.object({
-    title: joi.string().min(1).max(500).required(),
-    isComplete: joi.boolean().required()
+      title: joi.string().min(1).max(500).required(),
+      isComplete: joi.boolean().required(),
     })
   ),
-  tags:joi.array().items(joi.string())
-})
+  tags: joi.array().items(joi.string()),
+});
 
 //validation schema for subtask
 const subtaskSchema = joi.object({
   title: joi.string().min(1).max(500).required(),
-  isComplete: joi.boolean().required()
-  })
+  isComplete: joi.boolean().required(),
+});
 
 //To calculate progress while creating and updating task
-const calculateProgress = (subtasks)=>{
- 
+const calculateProgress = (subtasks) => {
   const totalSubtasks = subtasks.length;
-  if(subtasks.length === 0) return 0;
-  const CompletedSubtasks = subtasks.filter(subtask=>subtask.isComplete).length;
-  const percentage = (CompletedSubtasks / totalSubtasks) * 100
-  return Math.round(percentage)
-  
-}
+  if (subtasks.length === 0) return 0;
+  const CompletedSubtasks = subtasks.filter(
+    (subtask) => subtask.isComplete
+  ).length;
+  const percentage = (CompletedSubtasks / totalSubtasks) * 100;
+  return Math.round(percentage);
+};
 
 // to get all tasks
 const getAllTasks = async (req, res) => {
-
   const creator_id = req.user._id;
-  const task = await taskModel.find({creator_id}).sort({ createdAt: -1 }).populate("tags");
+  const task = await taskModel
+    .find({ creator_id })
+    .sort({ createdAt: -1 })
+    .populate("tags");
   return res.status(200).json(task);
 };
 
 //to get a single task
 const getTask = async (req, res) => {
-
-  
   const { id } = req.params;
 
   //to check valid mongoID
@@ -57,45 +57,40 @@ const getTask = async (req, res) => {
 
   if (!validId) {
     return res.status(400).json({ error: "Invalid Id" });
-
   }
 
   const task = await taskModel.findById(id);
 
   if (!task) {
     return res.status(404).json({ error: "task not found" });
-    
   }
   return res.status(200).json(task);
-
 };
 
 //creator_id="6619a78db6b20d62a6bb56e0",
 //to create a task
 const createTask = async (req, res) => {
-  
   // coming from req headers via requireAuth middleware
   const creator_id = req.user._id;
   // console.log(creator_id)
   const { title, description, status, dueDate, subtasks, tags } = req.body;
   // console.log('CTpayload', "title:", title, 'description:', description, 'status:', status, 'dueDate: ', dueDate, "subtasks:",subtasks, 'tags:', tags)
-    console.log('date recieved', dueDate)
-    // joi schema validation
-    const result = taskSchema.validate(req.body)
-    if(result.error){
-       res.status(400).send(result.error.details[0].message)
-       return;
-    }
-    const defaultStatus = 'in progress';
-    const defaultProgress = 0;
-    const defaultSubtasks = [];
-    const defaultTags = [];
-    
-    
-    const progress = calculateProgress(subtasks || []) 
-  
+  console.log("date recieved", dueDate);
+  // joi schema validation
+  const result = taskSchema.validate(req.body);
+  if (result.error) {
+    res.status(400).send(result.error.details[0].message);
+    return;
+  }
+  const defaultStatus = "in progress";
+  const defaultProgress = 0;
+  const defaultSubtasks = [];
+  const defaultTags = [];
+
+  const progress = calculateProgress(subtasks || []);
+
   // console.log(parsedDueDate)
-  
+
   const task = await taskModel.create({
     title,
     description,
@@ -104,23 +99,19 @@ const createTask = async (req, res) => {
     progress,
     dueDate: dueDate,
     creator_id,
-    tags: tags || defaultTags
+    tags: tags || defaultTags,
   });
 
-  console.log('createTaskApi', task.dueDate)
+  console.log("createTaskApi", task.dueDate);
 
   return res.status(200).json(task);
-
-
 };
 
 //to delete task
 const deleteTask = async (req, res) => {
-
-
   const { id } = req.params;
   const validId = mongoose.Types.ObjectId.isValid(id);
-console.log('DTID:', id)
+  console.log("DTID:", id);
   if (!validId) {
     return res.status(400).json({ error: "Invalid Id" });
   }
@@ -130,13 +121,11 @@ console.log('DTID:', id)
   if (!task) {
     return res.status(404).json({ error: "task not found" });
   }
-  return res.status(200).json({message:"Task deleted successfully", task});
-  
+  return res.status(200).json({ message: "Task deleted successfully", task });
 };
 
 //to update task
 const updateTask = async (req, res) => {
-
   const { id } = req.params;
   const validId = mongoose.Types.ObjectId.isValid(id);
 
@@ -144,18 +133,19 @@ const updateTask = async (req, res) => {
     return res.status(400).json({ error: "Invalid Id" });
   }
 
-  const task = await taskModel.findById(id)
-  if(!task) return res.status(404).json({ error: "no such task" });
+  const task = await taskModel.findById(id);
+  if (!task) return res.status(404).json({ error: "no such task" });
 
-    task.title = req.body.title ? req.body.title : task.title
-    task.description =  req.body.description ? req.body.description : task.description,
-    task.status =  req.body.status ? req.body.status : task.status,
-    task.subtasks =  req.body.subtasks ? req.body.subtasks : task.subtasks,
-    task.progress =  req.body.progress ? req.body.progress : task.progress,
-    task.dueDate =  req.body.dueDate ? req.body.dueDate : task.dueDate,
+  task.title = req.body.title ? req.body.title : task.title;
+  (task.description = req.body.description
+    ? req.body.description
+    : task.description),
+    (task.status = req.body.status ? req.body.status : task.status),
+    (task.subtasks = req.body.subtasks ? req.body.subtasks : task.subtasks),
+    (task.progress = req.body.progress ? req.body.progress : task.progress),
+    (task.dueDate = req.body.dueDate ? req.body.dueDate : task.dueDate),
     task.creator_id,
-    task.tags =  req.body.tags ? req.body.tags : task.tags,
-
+    (task.tags = req.body.tags ? req.body.tags : task.tags),
     await task.save();
 
   // const result = taskSchema.validate(req.body)
@@ -175,115 +165,148 @@ const updateTask = async (req, res) => {
   //   return res.status(404).json({ error: "no such task" });
   // }
   return res.status(200).json(task);
-
 };
 
 //to create subtasks
-const createSubtask = async(req, res)=>{
-
-  const { taskid } = req.params
+const createSubtask = async (req, res) => {
+  const { taskid } = req.params;
 
   const task = await taskModel.findById(taskid);
-        if (!task) {
-            return res.status(404).json({ message: "Task not found" });
-        }
+  if (!task) {
+    return res.status(404).json({ message: "Task not found" });
+  }
 
-        // const result = subtaskSchema.validate(req.body)
-        // if(result.error){
-        // return res.status(400).send(result.error.details[0].message)
-        
-        // }
-        const title = req.body.title ? req.body.title : title
-        const isCompleteCheck = req.body.isComplete ? req.body.isComplete : false
+  // const result = subtaskSchema.validate(req.body)
+  // if(result.error){
+  // return res.status(400).send(result.error.details[0].message)
 
-        const newSubtask = {
-            title,
-            // isComplete: req.body.isComplete
-            isComplete: isCompleteCheck
-        };
-        console.log('req subtask:', newSubtask)
+  // }
+  const title = req.body.title ? req.body.title : title;
+  const isCompleteCheck = req.body.isComplete ? req.body.isComplete : false;
 
-        task.subtasks.push(newSubtask);
-        task.progress = calculateProgress(task.subtasks)
-        await task.save();
+  const newSubtask = {
+    title,
+    // isComplete: req.body.isComplete
+    isComplete: isCompleteCheck,
+  };
+  console.log("req subtask:", newSubtask);
 
-        res.status(201).json(task.subtasks);
-}
+  task.subtasks.push(newSubtask);
+  task.progress = calculateProgress(task.subtasks);
+  await task.save();
+
+  res.status(201).json(task.subtasks);
+};
 
 //to update subtasks
 
-const updateSubtask = async(req, res)=>{
-  const {taskid, subtaskid} = req.params;
+const updateSubtask = async (req, res) => {
+  const { taskid, subtaskid } = req.params;
   // const {title, isComplete} = req.body;
-console.log("ustTaskId", taskid,
-"\nustSubTaskId", subtaskid)
-console.log("ustTitle", req.body.title,
-"\nustIscomplete", req.body.isComplete)
+  console.log("ustTaskId", taskid, "\nustSubTaskId", subtaskid);
+  console.log(
+    "ustTitle",
+    req.body.title,
+    "\nustIscomplete",
+    req.body.isComplete
+  );
 
-  const task = await taskModel.findById(taskid)
-  if(!task) return res.status(404).json({error: "task not found"})
+  const task = await taskModel.findById(taskid);
+  if (!task) return res.status(404).json({ error: "task not found" });
 
-  const subtask = task.subtasks.id(subtaskid)
-  if(!subtask) return res.status(404).json({error: "subtask not found"})
+  const subtask = task.subtasks.id(subtaskid);
+  if (!subtask) return res.status(404).json({ error: "subtask not found" });
 
   // const result = subtaskSchema.validate(req.body)
   //       if(result.error){
   //       return res.status(400).send(result.error.details[0].message)
-        
+
   //       }
 
-  const title = req.body.title ? req.body.title : subtask.title
+  const title = req.body.title ? req.body.title : subtask.title;
 
-  subtask.title = title 
+  subtask.title = title;
   subtask.isComplete = req.body.isComplete;
-  task.progress = calculateProgress(task.subtasks)
+  task.progress = calculateProgress(task.subtasks);
 
   await task.save();
 
-  return res.status(200).json({message:'subtask updated', task: task})
-  
-}
+  return res.status(200).json({ message: "subtask updated", task: task });
+};
 
 //to delete subtask
-const deleteSubtask = async(req, res)=>{
-  const {taskid, subtaskid} = req.params
+const deleteSubtask = async (req, res) => {
+  const { taskid, subtaskid } = req.params;
   const task = await taskModel.findById(taskid);
-        if (!task) return res.status(404).json({ message: "Task not found" })
+  if (!task) return res.status(404).json({ message: "Task not found" });
 
-        const subtaskIndex = task.subtasks.findIndex(subtask => subtask._id.toString() === subtaskid);
-        if (subtaskIndex === -1) {
-            return res.status(404).json({ message: "Subtask not found" });
-        }
-
-        task.subtasks.splice(subtaskIndex, 1);
-        task.progress = calculateProgress(task.subtasks)
-        await task.save();
-
-        return res.status(200).json({message:'subtask Deleted', task: task});
-}
-
-
-
-
-const autoComplete = async (req, res) => {
-
-  const { query } = req.query;
-  if (!query) {
-    return res.status(400).json({ error: 'Search field is empty' });
+  const subtaskIndex = task.subtasks.findIndex(
+    (subtask) => subtask._id.toString() === subtaskid
+  );
+  if (subtaskIndex === -1) {
+    return res.status(404).json({ message: "Subtask not found" });
   }
 
-  const suggestions = await taskModel.find({
-    $or: [
-      { title: { $regex: query, $options: 'i' } }, // Case-insensitive title match
-      { description: { $regex: query, $options: 'i' } }, // Case-insensitive description match
-      // { tags: { $regex: query, $options: 'i' } } // Case-insensitive tag match
-    ]
-  }).limit(10); // Limit to 10 suggestions
-  console.log(suggestions)
-  res.json(suggestions);
+  task.subtasks.splice(subtaskIndex, 1);
+  task.progress = calculateProgress(task.subtasks);
+  await task.save();
+
+  return res.status(200).json({ message: "subtask Deleted", task: task });
+};
+
+const AddTags = async (req, res) => {
+  const { taskId, tagId } = req.params;
+  const task = await taskModel.findById(taskId).populate("tags");
+  if (!task)
+    return res.status(404).json({ message: "task not found", success: false });
+  //   const tagExist = task.tags.find(existingtag => existingtag._id === tagId)
+  // if (!tagExist) return res.status(400).json({message:"tag already added", success: false})
+  task.tags.push(tagId);
+  await task.save();
+
+  res.status(200).json({ message: "tag added to the task", task });
+};
+
+const RemoveTags = async(req, res)=>{
+  const {taskId, tagId} = req.params
+  console.log('tagId:', tagId)
+  const task = await taskModel.findById(taskId)
+  if (!task)
+    return res.status(404).json({ message: "task not found", success: false });
+
+  // const foundTag = task.tags.find(tag=>tag._id == tagId)
+  //   task.tags.pop(foundTag)
+
+  const tagIndex = task.tags.findIndex(tag => tag._id == tagId);
+    if (tagIndex === -1) {
+      return res.status(404).json({ message: "Tag not found", success: false });
+    }
+
+    task.tags.splice(tagIndex, 1);
+  await task.save()
+
+  return res.status(200).json({message:"tag removed", success:'true', task})
 
 }
 
+const autoComplete = async (req, res) => {
+  const { query } = req.query;
+  if (!query) {
+    return res.status(400).json({ error: "Search field is empty" });
+  }
+
+  const suggestions = await taskModel
+    .find({
+      $or: [
+        { title: { $regex: query, $options: "i" } }, // Case-insensitive title match
+        { description: { $regex: query, $options: "i" } }, // Case-insensitive description match
+        // { tags: { $regex: query, $options: 'i' } } // Case-insensitive tag match
+      ],
+    })
+    .limit(10); // Limit to 10 suggestions
+  console.log(suggestions);
+  res.json(suggestions);
+};
 
 //-------------postgres controllers
 
@@ -405,5 +428,7 @@ module.exports = {
   autoComplete,
   createSubtask,
   updateSubtask,
-  deleteSubtask
+  deleteSubtask,
+  AddTags,
+  RemoveTags
 };
