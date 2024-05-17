@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {format, isEqual, add, sub } from 'date-fns'
 
 const ScrollBoxSection: React.FC = () => {
+
     const backendTasks = useSelector((state: any) => state.tasks.tasks)
     const tomorrowTasks = backendTasks.filter(
         (t: any) => {        
@@ -44,6 +45,10 @@ const ScrollBoxSection: React.FC = () => {
     console.log('today Tasks.....', todayTasks)
     const dispatch = useDispatch()
 
+    //current date to pass to createTask for today section
+    const todayDate = new Date()
+    const tommorowDate = add(todayDate, {days:1})
+
     return (
         <div className="grid grid-cols-3 px-6 pb-11  gap-3">
             {/* overdue grid */}
@@ -64,6 +69,7 @@ const ScrollBoxSection: React.FC = () => {
                     scrollButtonColor='bg-yellow-400'
                     scrollBoxColor='bg-yellow-600'
                     taskList={todayTasks}
+                    dateValue={todayDate}
                 />
             </div>
 
@@ -74,6 +80,7 @@ const ScrollBoxSection: React.FC = () => {
                     scrollButtonColor='bg-blue-600'
                     scrollBoxColor='bg-blue-400'
                     taskList={tomorrowTasks}
+                    dateValue={tommorowDate}
                 />
             </div>
 

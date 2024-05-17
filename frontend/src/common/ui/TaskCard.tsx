@@ -96,8 +96,9 @@ const TaskCard: React.FC<TaskCardProps> = ({ taskData }) => {
                     <hr />
                 </div>
                 <div className="text-[#999999] text-xs">
-                    <p className="mb-1">Status: <span className="text-black">{taskData.status}</span></p>
-                    <p className="mb-1">
+                    <p className="mb-1">Status: <span className={`${taskData.status === 'completed' ? 'text-primary':
+                taskData.status  === 'in progress'?'text-yellow-400': 'text-red-700'}`}>{taskData.status}</span></p>
+                    <p className={`mb-1  `}>
                         Due date: <span className={`text-black`}>
                             <CalendarTodayIcon sx={{ fontSize: "14px", mr: '4px' }} className={`${iconColor}`}/>
                             {dueDate}

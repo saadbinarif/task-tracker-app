@@ -21,7 +21,7 @@ export declare global {
         title: string;
         description: string;
         status: string;
-        progress?: number;
+        progress: number;
         dueDate?: any;
         creator_id: string;
         subtasks: ISubtask[];

@@ -102,31 +102,7 @@ const CreateTags: React.FC<CreateTagProps> = ({taskId, taskTags}) => {
                                 tagnameValue &&
 
                                 <div className="flex justify-between bg-white px-2 py-1 rounded-sm hover:bg-gradient-to-r from-green-400 to-emerald-300 hover:text-white">
-                                    {/* {
-                                        tags.map((tag: any) => {
-                                            if(tag.tag_name == tagnameValue ){
-                                               return (
-                                                    <>
-                                                        <p>{tag.tag_name}</p>
-                                                        <input
-                                                            type="checkbox"
-                                                            className="mr-1"
-                                                        />
-                                                    </>
-                                                ) 
-                                            }else{
-                                               return (
-                                                    <>
-                                                        <p >{tagnameValue}</p>
-                                                        <button type="submit" >
-                                                            <AddIcon className="hover:bg-white text-black rounded-lg " />
-                                                        </button>
-                                                    </>
-                                                )
-                                            }
-                                        })
-                                    } */}
-
+                                    
                                     {
                                         tags.map((tag: any) => {
                                             if (tag.tag_name === tagnameValue) {

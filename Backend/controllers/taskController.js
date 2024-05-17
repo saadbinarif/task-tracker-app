@@ -4,6 +4,7 @@ const taskModel = require("../models/taskModel");
 const taskModelp = require("../models/postgresModels/taskModelp");
 const joi = require("joi");
 const tagModel = require("../models/tagModel");
+const {format} = require("date-fns")
 
 //validation schema for task
 const taskSchema = joi.object({
@@ -143,9 +144,26 @@ const updateTask = async (req, res) => {
     (task.status = req.body.status ? req.body.status : task.status),
     (task.subtasks = req.body.subtasks ? req.body.subtasks : task.subtasks),
     (task.progress = req.body.progress ? req.body.progress : task.progress),
-    (task.dueDate = req.body.dueDate ? req.body.dueDate : task.dueDate),
+    (task.dueDate = req.body.dueDate ? new Date(req.body.dueDate) : task.dueDate),
     task.creator_id,
-    (task.tags = req.body.tags ? req.body.tags : task.tags),
+    (task.tags = req.body.tags ? req.body.tags : task.tags)
+
+    const currentDate = format(new Date(), 'dd-MM-yyyy')
+    const reqDate = format(task.dueDate, 'dd-MM-yyyy')
+    console.log("todayDate", currentDate)
+    console.log("Date", reqDate)
+    if(reqDate < currentDate){
+      task.status = 'overdue' 
+    }
+    else{
+      if(task.progress == 100){
+        task.status = 'completed'
+      }
+      else{
+        task.status = 'in progress'
+      }
+    }
+    
     await task.save();
 
   // const result = taskSchema.validate(req.body)
@@ -193,6 +211,17 @@ const createSubtask = async (req, res) => {
 
   task.subtasks.push(newSubtask);
   task.progress = calculateProgress(task.subtasks);
+  if(task.dueDate > new Date()){
+  if(task.progress == 100){
+    task.status = 'completed'
+  }
+  else{
+    task.status = 'in progress'
+  }
+}
+else{
+  task.status = 'overdue'
+}
   await task.save();
 
   res.status(201).json(task.subtasks);
@@ -222,12 +251,20 @@ const updateSubtask = async (req, res) => {
   //       return res.status(400).send(result.error.details[0].message)
 
   //       }
+  
+  
 
   const title = req.body.title ? req.body.title : subtask.title;
 
   subtask.title = title;
   subtask.isComplete = req.body.isComplete;
   task.progress = calculateProgress(task.subtasks);
+  if(task.progress == 100){
+    task.status = 'completed'
+  }
+  else{
+    task.status = 'in progress'
+  }
 
   await task.save();
 

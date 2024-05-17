@@ -10,12 +10,15 @@ interface ScrollBoxProps {
     scrollBoxColor?: any,
     createTaskOption?: Boolean
     taskList?:any
+    dateValue?: any
 }
 
-const ScrollBox: React.FC<ScrollBoxProps> = ({scrollBoxColor, scrollButtonColor, taskList, createTaskOption = true}) => {
+const ScrollBox: React.FC<ScrollBoxProps> = ({scrollBoxColor, scrollButtonColor, taskList, dateValue, createTaskOption = true}) => {
 
     const [scrollTop, setScrollTop] = useState(0);
     const scrollDivRef = useRef<HTMLDivElement>(null);
+
+    
 
     const handleScrollUp = () => {
         if (scrollDivRef.current) {
@@ -32,6 +35,8 @@ const ScrollBox: React.FC<ScrollBoxProps> = ({scrollBoxColor, scrollButtonColor,
             scrollDivRef.current.scrollTop += 100;
         }
     };
+
+
     return (
 
         <div>
@@ -39,7 +44,7 @@ const ScrollBox: React.FC<ScrollBoxProps> = ({scrollBoxColor, scrollButtonColor,
             <div id="scrolldiv" ref={scrollDivRef} className={`${scrollBoxColor} shadow-lg p-2 overflow-hidden h-[30rem]`}>
                 {
                    createTaskOption && <div className="p-2">
-                        <CreateTask />
+                        <CreateTask valueProp={dateValue}/>
                     </div>
                 }
                 {/* TaskList component here */}

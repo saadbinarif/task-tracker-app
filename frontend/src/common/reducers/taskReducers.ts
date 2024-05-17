@@ -66,6 +66,9 @@ const taskReducer: Reducer = (state = initialState, action: IAction): ITaskState
       return {
         ...state,
         tasks: state.tasks.filter((task: ITask) => task._id !== action.payload._id),
+        // tasks: state.tasks.map((task: ITask) =>
+        //   task._id === action.payload._id ? action.payload : task
+        // ),
         loading:false
       };
     case TaskActions.DELETE_TASK_FAILURE:
@@ -197,15 +200,16 @@ const taskReducer: Reducer = (state = initialState, action: IAction): ITaskState
 
     case TaskActions.UPDATE_SUBTASK_SUCCESS:
       const updatedTask = state.tasks.map((task: ITask) => {
-        if (task._id === action.payload.taskId) {
+        if (task._id === action.payload._id) {
           return {
             ...task,
             subtasks: task.subtasks.map((subtask) =>
-              subtask._id === action.payload.subTask._id
+              subtask._id === action.payload.subtasks._id
                 ? action.payload.subTask
                 : subtask
             ),
           };
+          return task
         }
         console.log('state.tasks------', state.tasks)
         return task;

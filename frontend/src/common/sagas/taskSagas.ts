@@ -18,9 +18,11 @@ import {
   updateSubtaskFailure,
   addTagSuccess,
   addTagFailure,
-  removeTagSuccess
+  removeTagSuccess,
+  fetchAllTasksRequest
 
 } from '../actions/taskActions';
+import { toast } from 'react-toastify';
 
 
 
@@ -79,9 +81,8 @@ function* handleDeleteTask(action: { type: string, payload: any }): any {
   });
 
     // Dispatch success action with message
-    yield put(deleteTaskSuccess(response.data.message));
-    yield put(deleteTaskFailure(response.data.message));
-    console.log(response)
+    yield put(deleteTaskSuccess(response.data.task));
+    toast.success("Task deleted successfully")
   } catch (error: any) {
     // Dispatch failure action with error message
     yield put(deleteTaskFailure(error.response.data.error));

@@ -20,8 +20,11 @@ const schema = z.object({
 
 export type FormValues = z.infer<typeof schema>;
 
+interface CreateTaskProps {
+    valueProp ?: any
+}
 
-const CreateTask: React.FC = () => {
+const CreateTask: React.FC<CreateTaskProps> = ({valueProp}) => {
     const dispatch = useDispatch()
     const [editMode, setEditMode] = useState(false)
 
@@ -35,6 +38,9 @@ const CreateTask: React.FC = () => {
         if (!data.dueDate) {
             data.dueDate = format(new Date(1970, 0, 1), 'yyyy/MM/dd')
             console.log('input dueDate', data.dueDate)
+        }
+        if(valueProp){
+            data.dueDate = format(new Date(valueProp), 'yyyy/MM/dd')
         }
         dispatch({ type: TaskActions.CREATE_TASK_REQUEST, payload: data })
         setEditMode(false)
