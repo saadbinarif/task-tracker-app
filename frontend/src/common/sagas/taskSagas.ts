@@ -123,9 +123,9 @@ function* handleCreateSubTask(action: { type: string, payload: any }): any {
       },
     });
     // Dispatch success action with created task data
-    yield put(createSubtaskSuccess(response.data));
+    yield put(createSubtaskSuccess(response.data.task));
     console.log("createSubtask", response.data)
-
+    toast.success(response.data.message)
   } catch (error: any) {
     console.log('create subtask error',error)
     // Dispatch failure action with error message
@@ -148,7 +148,7 @@ function* handleDeleteSubTask(action: { type: string, payload: any }): any {
 
     // Dispatch success action with message
     yield put(deleteSubtaskSuccess(response.data.task));
-    
+    toast.success("Subtask deleted successfully")
     console.log('del',response.data.task)
   } catch (error: any) {
     // Dispatch failure action with error message

@@ -209,22 +209,29 @@ const createSubtask = async (req, res) => {
   };
   console.log("req subtask:", newSubtask);
 
-  task.subtasks.push(newSubtask);
-  task.progress = calculateProgress(task.subtasks);
-  if(task.dueDate > new Date()){
-  if(task.progress == 100){
-    task.status = 'completed'
-  }
-  else{
-    task.status = 'in progress'
-  }
-}
-else{
-  task.status = 'overdue'
-}
+  const subtasks = task.subtasks.push(newSubtask);
+  console.log(task.subtasks)
+  const progress = calculateProgress(task.subtasks)
+  console.log('progress',progress)
+  task.progress = progress;
+    const currentDate = format(new Date(), 'dd-MM-yyyy')
+    const reqDate = format(task.dueDate, 'dd-MM-yyyy')
+    const nullDate = format(new Date(1970, 0, 1), 'dd-MM-yyyy')
+    
+    if(reqDate < currentDate && reqDate != nullDate){
+      task.status = 'overdue' 
+    }
+    else{
+      if(task.progress == 100){
+        task.status = 'completed'
+      }
+      else{
+        task.status = 'in progress'
+      }
+    }
   await task.save();
 
-  res.status(201).json(task.subtasks);
+  res.status(201).json({message:"Subtask created successfully", task});
 };
 
 //to update subtasks
@@ -300,12 +307,13 @@ const AddTags = async (req, res) => {
   // if (!tagExist) return res.status(400).json({message:"tag already added", success: false})
   task.tags.push(tagId);
   await task.save();
-
+  await task.populate('tags').execPopulate();
+  console.log(task)
   res.status(200).json({ message: "tag added to the task", task });
 };
 
 const RemoveTags = async(req, res)=>{
-  const {taskId, tagId} = req.params
+  const {taskId, tagId} = req.params  
   console.log('tagId:', tagId)
   const task = await taskModel.findById(taskId)
   if (!task)

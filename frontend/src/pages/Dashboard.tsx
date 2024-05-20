@@ -20,6 +20,7 @@ const Dashboard: React.FC = () => {
 
     const backendtasks = useSelector((state: any) => state.tasks.tasks)
     const pendingTasks = backendtasks.filter((t: any) => t.status == "in progress")
+    const completedTasks = backendtasks.filter((t: any) => t.status == "completed")
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -45,7 +46,7 @@ const Dashboard: React.FC = () => {
                     <p>Total</p>
                 </div>
                 <div className={statsBoxStyles}>
-                    <h2 className={statsBoxNumber}>0</h2>
+                    <h2 className={statsBoxNumber}>{completedTasks.length}</h2>
                     <p>Completed</p>
                 </div>
                 <div className={statsBoxStyles}>
