@@ -10,6 +10,8 @@ import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import DoneIcon from '@mui/icons-material/Done';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import ProgressBar from "@ramonak/react-progress-bar";
 import CreateSubTask from "./CreateSubTask";
@@ -19,7 +21,7 @@ import { format, isEqual, add, sub } from 'date-fns'
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { TaskActions, deleteSubtaskRequest, updateSubtaskRequest, updateTaskRequest } from "../actions/taskActions";
+import { TaskActions, updateTaskRequest } from "../actions/taskActions";
 import DateInput from "../ui/DateInput";
 import DisplaySubtask from "./DisplaySubtask";
 import CreateTags from "./CreateTags";
@@ -34,7 +36,7 @@ export type FormValues = z.infer<typeof schema>;
 
 const dateSchema = z.object({
   dueDate: z.string(),
-  
+
 });
 
 export type DateValues = z.infer<typeof dateSchema>;
@@ -54,6 +56,7 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ isOpen, onClose, taskData }) 
   const [tagsEdit, setTagsEdit] = useState(false)
   const [optionsDropDown, setOptionsDropDown] = useState<any>();
   const [deleteModal, setDeleteModal] = useState(false)
+  const [showSubtasks, setShowSubtasks] = useState(true)
 
   const handleOptionsDropdown = () => {
     setOptionsDropDown((prevState: any) => !prevState)
@@ -72,11 +75,11 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ isOpen, onClose, taskData }) 
     resolver: zodResolver(schema)
   })
 
-  const { handleSubmit: handleDateSubmit, control: DateControl, watch: DateWatch, setValue, formState: { errors: DateErrors } } = useForm<DateValues>({
+  const { handleSubmit: handleDateSubmit, control: DateControl, watch: DateWatch, formState: { errors: DateErrors } } = useForm<DateValues>({
     resolver: zodResolver(dateSchema)
   })
 
-  
+
 
   const onSubmit = (data: FormValues) => {
     console.log(data)
@@ -84,11 +87,11 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ isOpen, onClose, taskData }) 
     setTextEdit(false)
   }
 
-  const onDateSubmit = (data:DateValues)=>{
+  const onDateSubmit = (data: DateValues) => {
     if (!data.dueDate) {
       data.dueDate = format(new Date(1970, 0, 1), 'yyyy/MM/dd')
       console.log('input dueDate', data.dueDate)
-  }
+    }
     console.log(data)
     dispatch(updateTaskRequest(taskData._id, data))
   }
@@ -98,43 +101,17 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ isOpen, onClose, taskData }) 
   const error = useSelector((s: any) => s.tasks.error);
   const taskdt = useSelector((s: any) => s.tasks.tasks);
 
-  // useEffect(()=>{
-  //   if(error) {setTextEdit(true)}
-  // }, [onSubmit])
 
-  // useEffect(()=>{
-  //   dispatch(fetchAllTasksRequest())
-  // },[taskdt])
-  
-  // console.log('Displaytask component rendered')
-  const [localTask, setLocalTAsk] = (taskdt)
 
   const handleDeleteTask = (taskId: string) => {
-    // dispatch({type:TaskActions.CREATE_TASK_REQUEST, payload: taskId})
+
     dispatch({ type: TaskActions.DELETE_TASK_REQUEST, payload: taskData._id })
 
     onClose();
-    // dispatch(deleteTaskRequest(taskData._id))
-    // console.log('loading dt:', loading)
-    // console.log('error dt:', error)
-    // console.log('taskdt dt:', taskdt)
-  }
-
-  const handleDeleteSubtask = (taskId: string, subtaskId: string)=>{
-
-    dispatch(deleteSubtaskRequest(taskId, subtaskId));
-    // dispatch({ type: TaskActions.DELETE_SUBTASK_REQUEST, payload: {taskId:taskData._id, subtaskId:subtaskId} })
-    // // dispatch(fetchAllTasksRequest())
-  }
-
-  const handleCheckboxChange = (e:any, taskId:any, subtaskId:any )=>{
-
-    const isComplete = e.target.checked;
-
-    dispatch(updateSubtaskRequest(taskId, subtaskId, {isComplete}))
-    console.log('checkbox', isComplete)
 
   }
+
+
 
   //to set date
   let iconColor = ''
@@ -174,6 +151,15 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ isOpen, onClose, taskData }) 
   }
   const dueDate = formatDate(taskData.dueDate)
 
+  function handleClose() {
+    onClose()
+    setTextEdit(false);
+    setDateEdit(false)
+    setDeleteModal(false)
+    setTagsEdit(false)
+    setOptionsDropDown(false)
+  }
+
 
   //styles
   const rightDivHeadings = "text-[#999999] text-xs"
@@ -206,7 +192,7 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ isOpen, onClose, taskData }) 
               </div>
             </div >
             {/* <DeleteIcon sx={{color: 'red'}} /> */}
-            <CloseIcon onClick={onClose} sx={{ mr: '4px', p: "1px" }} />
+            <CloseIcon onClick={handleClose} sx={{ mr: '4px', p: "1px" }} />
           </div>
           {/* main grid */}
           <div className="bg-[#fffff] grid grid-cols-3">
@@ -228,17 +214,21 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ isOpen, onClose, taskData }) 
               </form>
               {/* subtask-main-div */}
 
-              <div className="mt-4 ms-2 pb-2 mb-1 border-b border-black-500">
-                <p className="text-sm">Subtasks</p>
+              <div className="mt-4 mx-2 pb-2 mb-1 border-b border-black-500 flex">
+               { showSubtasks ? <KeyboardArrowDownIcon onClick={()=>setShowSubtasks(false)} /> : <KeyboardArrowRightIcon onClick={()=>setShowSubtasks(true)} />}
+                <p className="text-sm font-semibold ms-2">Subtasks</p>
 
               </div>
-              <div className="p-2">
-                
+              {
+                showSubtasks && 
+                <div className="p-2 ps-3">
+
                 <DisplaySubtask taskData={taskData} />
-              </div>
+              </div>}
               <div>
-                <CreateSubTask taskIdProp={taskData._id}/>
+                <CreateSubTask taskIdProp={taskData._id} />
               </div>
+              
 
             </div>
             {/* column-right */}
@@ -246,11 +236,11 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ isOpen, onClose, taskData }) 
               <div>
                 <p className={rightDivHeadings}>
                   Status
-                  </p>
-                <p 
-                className={`${rightDivValues} 
-                ${taskData.status === 'completed' ? 'text-primary':
-                taskData.status  === 'in progress'?'text-yellow-400': 'text-red-700'}`}
+                </p>
+                <p
+                  className={`${rightDivValues} 
+                ${taskData.status === 'completed' ? 'text-primary' :
+                      taskData.status === 'in progress' ? 'text-yellow-400' : 'text-red-700'}`}
                 >
                   {taskData.status}
                 </p>
@@ -258,97 +248,97 @@ const DisplayTask: React.FC<DisplayTaskProps> = ({ isOpen, onClose, taskData }) 
               <br />
               <div>
                 <p className={rightDivHeadings}>Progress</p>
-                {/* <p className={rightDivValues}>{taskData.progress}%</p> */}
+                
                 <div className="mt-3 ms-5">
 
-                <ProgressBar 
-                completed={taskData.progress} 
-                bgColor="#1aac83" 
-                animateOnRender={true}
-                width="12rem"
-                />
+                  <ProgressBar
+                    completed={taskData.progress}
+                    bgColor="#1aac83"
+                    animateOnRender={true}
+                    width="12rem"
+                  />
                 </div>
               </div>
               <br />
-              
+
               <div >
-              <div className="flex justify-between">
+                <div className="flex justify-between">
                   <p className={rightDivHeadings}>Due date</p>
                   {
                     dateEdit ?
-                    (
-                      
-                      <div>
-                      <CloseIcon fontSize="small" style={{ color: 'red', marginRight: '2px' }} onClick={()=>setDateEdit(false) } />
-                      {/* <DoneIcon fontSize="small" style={{ color: 'green', marginRight: '6px'}} type="submit" /> */}
-                      </div>
-                    ):
-                    (
-                      <EditIcon fontSize="small" style={{ color: '#999999', marginRight: '6px' }} onClick={()=>setDateEdit(true)} />
+                      (
 
-                    )
+                        <div>
+                          <CloseIcon fontSize="small" style={{ color: 'red', marginRight: '2px' }} onClick={() => setDateEdit(false)} />
+                          {/* <DoneIcon fontSize="small" style={{ color: 'green', marginRight: '6px'}} type="submit" /> */}
+                        </div>
+                      ) :
+                      (
+                        <EditIcon fontSize="small" style={{ color: '#999999', marginRight: '6px' }} onClick={() => setDateEdit(true)} />
+
+                      )
                   }
                 </div>
                 {
-                  dateEdit?
-                  (
-                    <form onSubmit={handleDateSubmit(onDateSubmit)}>
-                      <DateInput placeholderProp="dueDate" nameProp="dueDate" controlProp={DateControl} dateValue={taskData.dueDate}/>
-                      <button type="submit">
-                      <DoneIcon fontSize="small" style={{ color: 'green', marginRight: '6px'}} type="submit" />
-                      </button>
-                    </form>
-                  ):
-                  (
-                    
-                    <p className={rightDivValues}>{ dueDate}</p>
-                    
-                  )
+                  dateEdit ?
+                    (
+                      <form onSubmit={handleDateSubmit(onDateSubmit)}>
+                        <DateInput placeholderProp="dueDate" nameProp="dueDate" controlProp={DateControl} dateValue={taskData.dueDate} />
+                        <button type="submit">
+                          <DoneIcon fontSize="small" style={{ color: 'green', marginRight: '6px' }} type="submit" />
+                        </button>
+                      </form>
+                    ) :
+                    (
+
+                      <p className={rightDivValues}>{dueDate}</p>
+
+                    )
                 }
               </div>
-              
+
               <br />
               <div >
                 <div className="flex justify-between">
                   <p className={rightDivHeadings}>Tags</p>
                   {
-                    tagsEdit ? 
-                    (
-                      <DoneIcon 
-                      fontSize="small" 
-                      style={{ color: 'green', marginRight: '6px'}} 
-                      onClick={()=>setTagsEdit(false)}
-                      />
-                    ):
-                    (
+                    tagsEdit ?
+                      (
+                        <DoneIcon
+                          fontSize="small"
+                          style={{ color: 'green', marginRight: '6px' }}
+                          onClick={() => setTagsEdit(false)}
+                        />
+                      ) :
+                      (
 
-                      <AddIcon 
-                      fontSize="small" 
-                      style={{ color: '#999999', marginRight: '6px' }} 
-                      onClick={()=>setTagsEdit(true)} 
-                      />
-                    )
+                        <AddIcon
+                          fontSize="small"
+                          style={{ color: '#999999', marginRight: '6px' }}
+                          onClick={() => setTagsEdit(true)}
+                        />
+                      )
                   }
                 </div>
                 {tagsEdit && <div>
-                  <CreateTags taskId={taskData._id} taskTags={taskData.tags}/>
+                  <CreateTags taskId={taskData._id} taskTags={taskData.tags} />
                 </div>}
                 {
-                taskData.tags.length===0 && 
-                <div className="ps-4">
-                  <p className="text-xs text-black-200">
-                    No tags
+                  taskData.tags.length === 0 &&
+                  <div className="ps-4">
+                    <p className="text-xs text-black-200">
+                      No tags
                     </p>
-                    </div>}
+                  </div>}
                 {
-                  taskData.tags.length > 0 && 
+                  taskData.tags.length > 0 &&
                   <div className="flex flex-wrap gap-1 p-2 container">
-                  {
-                    taskData.tags.map((tag:any)=>(
-                      <TagCard isEditable={true} key={tag._id} tag={tag} taskId={taskData._id}/>
-                    ))
-                  }
-                </div>
+                    {
+                      taskData.tags.map((tag: any) => (
+                        <TagCard isEditable={true} key={tag._id} tag={tag} taskId={taskData._id} />
+                      ))
+                    }
+                  </div>
                 }
               </div>
             </div>

@@ -189,7 +189,7 @@ function* addTagToTask(action:{type:string, payload: any}):any{
   })
   yield put(addTagSuccess(response.data.task))
   console.log('addTagToTask', response.data.task)
-
+  // yield put(fetchAllTasksRequest())
   }catch(error){
     yield put(addTagFailure(error))
     console.log('addTagToTask', error)
@@ -207,6 +207,7 @@ function* removeTagFromTask(action:{type:string, payload:any}):any {
     })
     yield put(removeTagSuccess(response.data.task))
     console.log('removetTagSaga', response.data.task)
+    // yield put(fetchAllTasksRequest())
   }catch(error:any){
     yield put(removeTagSuccess(error.data.message))
   }

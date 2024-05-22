@@ -14,6 +14,8 @@ export declare global {
     export interface ITag {
         _id: string;
         tag_name: string;
+        creator_id: string
+
     }
     
     export interface ITask {

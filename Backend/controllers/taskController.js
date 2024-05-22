@@ -134,7 +134,7 @@ const updateTask = async (req, res) => {
     return res.status(400).json({ error: "Invalid Id" });
   }
 
-  const task = await taskModel.findById(id);
+  const task = await taskModel.findById(id).populate('tags');
   if (!task) return res.status(404).json({ error: "no such task" });
 
   task.title = req.body.title ? req.body.title : task.title;
@@ -189,7 +189,7 @@ const updateTask = async (req, res) => {
 const createSubtask = async (req, res) => {
   const { taskid } = req.params;
 
-  const task = await taskModel.findById(taskid);
+  const task = await taskModel.findById(taskid).populate('tags');
   if (!task) {
     return res.status(404).json({ message: "Task not found" });
   }
@@ -247,7 +247,7 @@ const updateSubtask = async (req, res) => {
     req.body.isComplete
   );
 
-  const task = await taskModel.findById(taskid);
+  const task = await taskModel.findById(taskid).populate('tags');
   if (!task) return res.status(404).json({ error: "task not found" });
 
   const subtask = task.subtasks.id(subtaskid);
@@ -281,7 +281,7 @@ const updateSubtask = async (req, res) => {
 //to delete subtask
 const deleteSubtask = async (req, res) => {
   const { taskid, subtaskid } = req.params;
-  const task = await taskModel.findById(taskid);
+  const task = await taskModel.findById(taskid).populate('tags');
   if (!task) return res.status(404).json({ message: "Task not found" });
 
   const subtaskIndex = task.subtasks.findIndex(
@@ -298,24 +298,41 @@ const deleteSubtask = async (req, res) => {
   return res.status(200).json({ message: "subtask Deleted", task: task });
 };
 
-const AddTags = async (req, res) => {
+//to add tags to the task
+const AddTags = async(req,res)=>{
   const { taskId, tagId } = req.params;
-  const task = await taskModel.findById(taskId).populate("tags");
-  if (!task)
-    return res.status(404).json({ message: "task not found", success: false });
-  //   const tagExist = task.tags.find(existingtag => existingtag._id === tagId)
-  // if (!tagExist) return res.status(400).json({message:"tag already added", success: false})
-  task.tags.push(tagId);
-  await task.save();
-  await task.populate('tags').execPopulate();
-  console.log(task)
-  res.status(200).json({ message: "tag added to the task", task });
-};
 
+        // Find the task by ID
+        let task = await taskModel.findById(taskId).populate('tags');
+        if (!task) {
+            return res.status(404).json({ error: 'Task not found' });
+        }
+
+        // Find the tag by ID
+        const tag = await tagModel.findById(tagId);
+        if (!tag) {
+            return res.status(404).json({ error: 'Tag not found' });
+        }
+
+        // Check if the tag is already added to the task
+        if (task.tags.includes(tagId)) {
+            return res.status(400).json({ error: 'Tag already added to task' });
+        }
+
+        // Add the tag to the task
+        task.tags.push(tagId);
+        await task.populate('tags')
+        await task.save();
+
+        res.status(200).json({ message: "tag added to the task", task });
+}
+
+
+//remove tag from the task
 const RemoveTags = async(req, res)=>{
   const {taskId, tagId} = req.params  
   console.log('tagId:', tagId)
-  const task = await taskModel.findById(taskId)
+  const task = await taskModel.findById(taskId).populate('tags')
   if (!task)
     return res.status(404).json({ message: "task not found", success: false });
 

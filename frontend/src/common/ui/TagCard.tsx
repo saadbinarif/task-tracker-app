@@ -11,9 +11,9 @@ interface TagCardProps{
 
 const TagCard: React.FC<TagCardProps> = ({tag, taskId, isEditable=false}) => {
     const dispatch = useDispatch()
-    useEffect(()=>{
-        dispatch(fetchAllTasksRequest())
-    },[])
+    // useEffect(()=>{
+    //     dispatch(fetchAllTasksRequest())
+    // },[])
 
 const handleDelete = (tagId:any)=>{
     dispatch(removeTagRequest(taskId, tagId))

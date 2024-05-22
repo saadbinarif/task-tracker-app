@@ -84,7 +84,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ taskData }) => {
                 <p className="font-light text-sm truncate-3-lines">{taskData.description}</p>
                 <div className="flex gap-2 p-1">
                     {
-                        taskData.tags.map(tag => (
+                        taskData.tags.map((tag) => (
                             <TagCard
                                 key={tag._id}
                                 tag={tag}
